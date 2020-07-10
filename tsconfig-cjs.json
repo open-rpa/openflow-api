@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "module": "umd",
+        "target": "es5",
+        "outDir": "./lib/browser",
+        "lib": [
+            "es5",
+            "dom"
+        ],
+    },
+}
