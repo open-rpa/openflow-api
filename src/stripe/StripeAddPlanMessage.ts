@@ -1,6 +1,6 @@
 import { stripe_customer } from "./stripe_customer";
 
-export class StripeAddPlanMessage implements IReplyMessage {
+export class StripeAddPlanMessage {
     public error: string;
     public jwt: string;
 

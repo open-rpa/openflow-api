@@ -1,7 +1,7 @@
 import { Billing } from "../stripe/Billing";
 import { stripe_customer } from "../stripe/stripe_customer";
 
-export class EnsureStripeCustomerMessage implements IReplyMessage {
+export class EnsureStripeCustomerMessage {
     public error: string;
     public jwt: string;
 

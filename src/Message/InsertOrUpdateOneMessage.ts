@@ -1,3 +1,5 @@
+import { Base } from "../nodeclient/Base";
+
 export class InsertOrUpdateOneMessage {
     public error: string;
     public jwt: string;
@@ -9,10 +11,11 @@ export class InsertOrUpdateOneMessage {
     public w: number;
     // true, requests acknowledgment that the mongod instances have written to the on-disk journal
     public j: boolean;
-    public item: object;
+    public item: Base;
     public collectionname: string;
     public uniqeness: string;
     public result: any;
+    public opresult: any;
     static assign(o: any): InsertOrUpdateOneMessage {
         if (typeof o === 'string' || o instanceof String) {
             return Object.assign(new InsertOrUpdateOneMessage(), JSON.parse(o.toString()));

@@ -9,4 +9,5 @@ export class QueuedMessage {
     public cb: QueuedMessageCallback;
     public id: string;
     public message: any;
+    public error: string;
 }

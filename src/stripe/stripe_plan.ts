@@ -6,4 +6,6 @@ export class stripe_plan extends stripe_base {
     public nickname: string;
     public product: string;
     public amount: number;
+    // tslint:disable-next-line: variable-name
+    public usage_type: string;
 }

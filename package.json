@@ -1,25 +1,25 @@
 {
   "name": "openflow-api",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "",
   "files": [
     "lib/**/*"
   ],
-  "main": "./lib/browser/index.js",
+  "main": "./lib/node/index.js",
   "module": "./lib/node/index.js",
-  "types": "./lib/browser/index.d.ts",
-  "typings": "./lib/browser/index.d.ts",
+  "types": "./lib/node/index.d.ts",
+  "typings": "./lib/node/index.d.ts",
   "keywords": [],
   "author": "OpenRPA / Allan Zimmermann",
   "license": "MPL-2.0",
   "scripts": {
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-    "lint": "tslint -p tsconfig.json",
-    "build": "tsc -p tsconfig.json & tsc -p tsconfig-cjs.json"
+    "lint": "tslint -p tsconfig.json"
   },
   "dependencies": {
     "envfile": "^6.9.0",
-    "tsify": "^4.0.2",
+    "mongodb": "^3.5.9",
+    "mongodb-client-encryption": "^1.1.0",
     "universal-websocket-client": "^1.0.2"
   },
   "devDependencies": {
@@ -29,6 +29,7 @@
     "gulp-shell": "^0.8.0",
     "merge-stream": "^2.0.0",
     "prettier": "^2.0.5",
+    "tsify": "^4.0.2",
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.9.6"

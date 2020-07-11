@@ -84,10 +84,12 @@ export class WebSocketClient {
   private processqueuehandle: NodeJS.Timeout = null;
   // Remove again
   public version: string = "0.0.1";
+  public agent: string = "webapp";
   public usingCordova: boolean = false;
   public oneSignalId: string = "";
   public device: any = null;
   public location: any = null;
+  public lastheartbeat: Date = new Date();
   constructor(logger: any, url: string) {
     this._logger = logger;
     this._url = url;

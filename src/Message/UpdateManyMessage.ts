@@ -1,3 +1,5 @@
+import { Base } from "../nodeclient/Base";
+// import { UpdateWriteOpResult } from "mongodb";
 
 export class UpdateManyMessage {
     public error: string;
@@ -11,9 +13,10 @@ export class UpdateManyMessage {
     // true, requests acknowledgment that the mongod instances have written to the on-disk journal
     public j: boolean;
     public query: object;
-    public item: object;
+    public item: Base;
     public collectionname: string;
     public result: any[];
+    public opresult: any;
     static assign(o: any): UpdateManyMessage {
         if (typeof o === 'string' || o instanceof String) {
             return Object.assign(new UpdateManyMessage(), JSON.parse(o.toString()));

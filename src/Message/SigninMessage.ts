@@ -19,6 +19,9 @@ export class SigninMessage {
     public onesignalid: string;
     public device: any;
     public gpslocation: any;
+    public firebasetoken: string;
+    // tslint:disable-next-line: variable-name
+    public websocket_package_size: number;
 
     static assign(o: any): SigninMessage {
         if (typeof o === 'string' || o instanceof String) {

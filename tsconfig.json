@@ -1,46 +1,29 @@
 {
     "compilerOptions": {
-        "module": "umd",
-        "target": "es5",
-        "esModuleInterop": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "module": "commonjs",
+        "target": "es2017",
+        "outDir": "./lib/node",
+        "rootDir": "src",
+        "sourceMap": true,
         "declaration": true,
-        "forceConsistentCasingInFileNames": true,
-        "outDir": "./lib/node"
-    },
-    "include": [
-        "./src"
-    ]
+        "lib": [
+            "es2017",
+            "dom"
+        ]
+    }
 }
 // {
 //     "compilerOptions": {
-//         "emitDecoratorMetadata": true,
-//         "experimentalDecorators": true,
-//         "target": "ES5",
-//         "outDir": "lib",
-//         "rootDir": "src",
-//         "sourceMap": true,
+//         "module": "umd",
+//         "target": "es5",
+//         "esModuleInterop": true,
 //         "declaration": true,
-//         "lib": [
-//             "ES5",
-//             "dom"
-//         ],
-//         // "lib": ["es2015.promise", "dom"]
-//     }
-// }
-// {
-//     "compilerOptions": {
-//         "emitDecoratorMetadata": true,
-//         "experimentalDecorators": true,
-//         "module": "commonjs",
-//         "target": "es2017",
-//         "outDir": "lib",
-//         "rootDir": "src",
-//         "sourceMap": true,
-//         "declaration": true,
-//         "lib": [
-//             "es2017",
-//             "dom"
-//         ],
-//         // "lib": ["es2015.promise", "dom"]
-//     }
+//         "forceConsistentCasingInFileNames": true,
+//         "outDir": "./lib/node"
+//     },
+//     "include": [
+//         "./src"
+//     ]
 // }

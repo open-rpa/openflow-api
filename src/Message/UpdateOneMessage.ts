@@ -1,3 +1,5 @@
+import { Base } from "../index";
+
 export class UpdateOneMessage {
     public error: string;
     public jwt: string;
@@ -9,7 +11,7 @@ export class UpdateOneMessage {
     public w: number;
     // true, requests acknowledgment that the mongod instances have written to the on-disk journal
     public j: boolean;
-    public item: object;
+    public item: Base;
     public collectionname: string;
     public query: object;
     public result: any;

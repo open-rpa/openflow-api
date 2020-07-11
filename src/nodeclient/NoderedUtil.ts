@@ -57,6 +57,12 @@ export class NoderedUtil {
     }
     return obj[prop];
   }
+  public static isNodeJS(): boolean {
+    if (typeof process === 'object' && process + '' === '[object process]') {
+      return true;
+    }
+    return false;
+  }
   public static saveToObject(obj: any, path: string, value: any): any {
     const pList = path.split('.');
     const key = pList.pop();
@@ -98,18 +104,21 @@ export class NoderedUtil {
     }
   }
 
-  public static async SigninWithToken(jwt: string, rawAssertion: string, impersonate: string): Promise<SigninMessage> {
+  public static async SigninWithToken(jwt: string, rawAssertion: string, impersonate: string, longtoken: boolean = false, validateonly: boolean = false): Promise<SigninMessage> {
     const q: SigninMessage = new SigninMessage();
     q.jwt = jwt;
     q.rawAssertion = rawAssertion;
     q.realm = "browser";
-    q.clientagent = "webapp";
+    if (this.isNodeJS()) q.realm = "nodejs";
+    q.clientagent = WebSocketClient.instance.agent;
     q.clientversion = WebSocketClient.instance.version;
     if (WebSocketClient.instance.usingCordova) {
       q.realm = "mobile";
       q.clientagent = "mobileapp";
     }
     q.impersonate = impersonate;
+    q.longtoken = longtoken;
+    q.validate_only = validateonly;
     q.onesignalid = WebSocketClient.instance.oneSignalId;
     q.device = WebSocketClient.instance.device;
     q.gpslocation = WebSocketClient.instance.location;
@@ -120,18 +129,21 @@ export class NoderedUtil {
     // this.$rootScope.$broadcast("signin", result);
     return result;
   }
-  public static async SigninWithUsername(username: string, password: string, impersonate: string): Promise<SigninMessage> {
+  public static async SigninWithUsername(username: string, password: string, impersonate: string, longtoken: boolean = false, validateonly: boolean = false): Promise<SigninMessage> {
     const q: SigninMessage = new SigninMessage();
     q.username = username;
     q.password = password;
     q.realm = "browser";
-    q.clientagent = "webapp";
+    if (this.isNodeJS()) q.realm = "nodejs";
+    q.clientagent = WebSocketClient.instance.agent;
     q.clientversion = WebSocketClient.instance.version;
     if (WebSocketClient.instance.usingCordova) {
       q.realm = "mobile";
       q.clientagent = "mobileapp";
     }
     q.impersonate = impersonate;
+    q.longtoken = longtoken;
+    q.validate_only = validateonly;
     q.onesignalid = WebSocketClient.instance.oneSignalId;
     q.device = WebSocketClient.instance.device;
     q.gpslocation = WebSocketClient.instance.location;

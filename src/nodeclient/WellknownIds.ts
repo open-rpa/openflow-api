@@ -9,6 +9,8 @@ export class WellknownIds {
   // tslint:disable-next-line: variable-name
   static nodered_admins: string = '5a17f157c4815318c8536c20';
   // tslint:disable-next-line: variable-name
+  static nodered_api_users: string = "5a17f157c4815318c8536c22";
+  // tslint:disable-next-line: variable-name
   static filestore_users: string = '5b6ab63c8d4a64b7c47f4a8f';
   // tslint:disable-next-line: variable-name
   static filestore_admins: string = '5b6ab63c8d4a64b7c47f4a8e';

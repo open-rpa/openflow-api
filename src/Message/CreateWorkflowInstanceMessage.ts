@@ -11,6 +11,8 @@ export class CreateWorkflowInstanceMessage {
     public targetid: string;
     public parentid: string;
     public initialrun: boolean;
+    public form: string;
+    public name: string;
 
     public payload: any;
     static assign<T>(o: any): CreateWorkflowInstanceMessage {

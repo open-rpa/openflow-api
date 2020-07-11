@@ -13,4 +13,6 @@ export class stripe_subscription extends stripe_base {
     // tslint:disable-next-line: variable-name
     public tax_ids: stripe_list<stripe_tax_id>;
     public items: stripe_list<stripe_subscription_item>;
+    // tslint:disable-next-line: variable-name
+    public default_tax_rates: string[];
 }

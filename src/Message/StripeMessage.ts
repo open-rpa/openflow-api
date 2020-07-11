@@ -1,6 +1,6 @@
 import { stripe_base } from "../stripe/stripe_base";
 
-export class StripeMessage implements IReplyMessage {
+export class StripeMessage {
     public error: string;
     public jwt: any;
     public method: string;

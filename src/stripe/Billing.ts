@@ -1,4 +1,5 @@
-export class Billing {
+import { Base } from "../nodeclient/Base";
+export class Billing extends Base {
     public _id: string;
     public _type: string;
     public stripeid: string;
@@ -10,8 +11,17 @@ export class Billing {
     public vatnumber: string;
     public taxrate: string;
     public tax: number;
+    public coupon: string;
+
+    public hascard: boolean;
+    public memory: string;
+    public openflowuserplan: string;
+    public supportplan: string;
+    public supporthourplan: string;
+
     constructor(userid) {
-        // super();
+        super();
+        this.hascard = false;
         this._type = "billing";
         this.stripeid = "";
         this.userid = userid;
