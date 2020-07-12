@@ -268,7 +268,7 @@ export class WebSocketClient {
     }
     this.processqueuehandle = setTimeout(() => {
       this.ProcessQueue();
-    }, 500);
+    }, 10);
   }
   public chunkString(str: string, length: number): string[] {
     if (str === null || str === undefined) {
