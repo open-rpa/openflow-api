@@ -1,7 +1,7 @@
 export class DeleteNoderedInstanceMessage {
     public error: string;
     public jwt: any;
-    public name: string;
+    // public name: string;
     public _id: string;
     static assign(o: any): DeleteNoderedInstanceMessage {
         if (typeof o === "string" || o instanceof String) {
