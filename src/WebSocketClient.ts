@@ -153,12 +153,14 @@ export class WebSocketClient {
           rejectUnauthorized: false,
           strictSSL: false,
         };
-        try {
-          this._logger.debug('Create as javascript WebSocket, using options', options);
-          this._socketObject = new WebSocket(this._url, []);
-          // tslint:disable-next-line: no-empty
-        } catch (error) {
-          this._logger.error(error);
+        if (!NoderedUtil.isNodeJS()) {
+          try {
+            this._logger.debug('Create as javascript WebSocket, using options', options);
+            this._socketObject = new WebSocket(this._url, []);
+            // tslint:disable-next-line: no-empty
+          } catch (error) {
+            this._logger.error(error);
+          }
         }
         // tslint:disable-next-line: no-empty
         if (this._socketObject == null) {
