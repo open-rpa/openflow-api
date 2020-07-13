@@ -1,6 +1,9 @@
+import { TokenUser } from "../nodeclient/TokenUser";
+
 export class QueueMessage {
     public error: string;
     public jwt: any;
+    public user: TokenUser;
 
     public correlationId: string;
     public replyto: string;
