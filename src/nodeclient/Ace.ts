@@ -124,8 +124,10 @@ export class Ace {
     }
     isBitSet(bit: number): boolean {
         bit--;
-        // const buf = this._base64ToArrayBuffer(this.rights);
-        const rights = JSON.stringify(this.rights);
+        let rights = this.rights;
+        if (typeof rights !== "string") {
+            rights = JSON.stringify(this.rights);
+        }
         const buf = this._base64ToArrayBuffer(rights);
         const view = new Uint8Array(buf);
         const octet = Math.floor(bit / 8);
@@ -137,7 +139,10 @@ export class Ace {
     }
     setBit(bit: number) {
         bit--;
-        const rights = JSON.stringify(this.rights);
+        let rights = this.rights;
+        if (typeof rights !== "string") {
+            rights = JSON.stringify(this.rights);
+        }
         const buf = this._base64ToArrayBuffer(rights);
         const view = new Uint8Array(buf);
         const octet = Math.floor(bit / 8);
@@ -151,7 +156,10 @@ export class Ace {
     }
     unsetBit(bit: number) {
         bit--;
-        const rights = JSON.stringify(this.rights);
+        let rights = this.rights;
+        if (typeof rights !== "string") {
+            rights = JSON.stringify(this.rights);
+        }
         const buf = this._base64ToArrayBuffer(rights);
         const view = new Uint8Array(buf);
         const octet = Math.floor(bit / 8);
