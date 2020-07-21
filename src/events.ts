@@ -5,7 +5,8 @@ export class CustomEventEmitter {
         if (!(this.events[event] instanceof Array)) {
             this.events[event] = [];
         }
-        return this.events[event].push(callback) - 1;
+        const exists = this.events[event].filter(item => item === callback);
+        if (exists.length === 0) return this.events[event].push(callback) - 1;
     }
     emit(event: string, data: any = null) {
         const callbacks = this.events[event];
@@ -16,6 +17,12 @@ export class CustomEventEmitter {
                 }
             });
         }
+    }
+    removeListener(event: string, callback: any) {
+        if (!(this.events[event] instanceof Array)) {
+            this.events[event] = [];
+        }
+        this.events[event] = this.events[event].filter(item => item !== callback);
     }
     removeAllListeners() {
         this.events = [];
