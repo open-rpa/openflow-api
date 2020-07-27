@@ -4,6 +4,7 @@ import { QueuedMessage, QueuedMessageCallback } from './Message/QueuedMessage';
 import { SocketMessage } from './Message/SocketMessage';
 import { TokenUser } from './nodeclient/TokenUser';
 import { CustomEventEmitter } from './events';
+import { ApiConfig } from './ApiConfig';
 interface IHashTable<T> {
   [key: string]: T;
 }
@@ -234,7 +235,8 @@ export class WebSocketClient {
     if (message.command !== 'pong') {
       let reply = message.replyto;
       if (NoderedUtil.IsNullEmpty(reply)) reply = '';
-      this._logger.verbose('[SEND][' + message.command + '][' + message.id + '][' + reply + ']');
+      if (ApiConfig.log_trafic_verbose) this._logger.verbose('[SEND][' + message.command + '][' + message.id + '][' + reply + ']');
+      if (ApiConfig.log_trafic_silly) this._logger.silly('[SEND][' + message.command + '][' + message.id + '][' + reply + ']');
     }
     return new Promise<T>(async (resolve, reject) => {
       this._Send(

@@ -1,7 +1,7 @@
 import { WebSocketClient } from '../WebSocketClient';
 import { Base } from './Base';
 import { NoderedUtil } from './NoderedUtil';
-import { Config } from '../Config';
+import { ApiConfig } from '../ApiConfig';
 import { QueuedMessage } from '../Message/QueuedMessage';
 import { SocketMessage } from '../Message/SocketMessage';
 import { TokenUser } from './TokenUser';
@@ -44,18 +44,21 @@ export class Message {
                 if (this.replyto !== null && this.replyto !== undefined) {
                     const qmsg: QueuedMessage = cli.messageQueue[this.replyto];
                     if (qmsg !== undefined && qmsg !== null) {
-                        cli._logger.verbose('[RESC][' + this.command + '][' + this.id + '][' + this.replyto + '][CB]');
+                        if (ApiConfig.log_trafic_verbose) cli._logger.verbose('[RESC][' + this.command + '][' + this.id + '][' + this.replyto + '][CB]');
+                        if (ApiConfig.log_trafic_silly) cli._logger.silly('[RESC][' + this.command + '][' + this.id + '][' + this.replyto + '][CB]');
                         qmsg.message = Object.assign(qmsg.message, JSON.parse(this.data));
                         if (qmsg.cb !== undefined && qmsg.cb !== null) {
                             qmsg.cb(qmsg.message);
                         }
                         delete cli.messageQueue[this.id];
                     } else {
-                        cli._logger.verbose('[RESC][' + this.command + '][' + this.id + '][' + this.replyto + '][NO CB!]');
+                        if (ApiConfig.log_trafic_verbose) cli._logger.verbose('[RESC][' + this.command + '][' + this.id + '][' + this.replyto + '][NO CB!]');
+                        if (ApiConfig.log_trafic_silly) cli._logger.silly('[RESC][' + this.command + '][' + this.id + '][' + this.replyto + '][NO CB!]');
                     }
                     return;
                 } else {
-                    cli._logger.verbose('[RESC][' + this.command + '][' + this.id + '][' + this.replyto + ']');
+                    if (ApiConfig.log_trafic_verbose) cli._logger.verbose('[RESC][' + this.command + '][' + this.id + '][' + this.replyto + ']');
+                    if (ApiConfig.log_trafic_silly) cli._logger.silly('[RESC][' + this.command + '][' + this.id + '][' + this.replyto + ']');
                 }
             }
             switch (command) {
@@ -164,7 +167,7 @@ export class Message {
                                     '',
                                     result,
                                     msg.correlationId,
-                                    Config.amqpReplyExpiration,
+                                    ApiConfig.amqpReplyExpiration,
                                 );
                             } catch (error) {
                                 cli._logger.error('Error sending response to ' + msg.replyto + ' ' + JSON.stringify(error));

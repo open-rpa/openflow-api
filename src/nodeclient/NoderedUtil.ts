@@ -1,5 +1,4 @@
 import { WebSocketClient } from '../WebSocketClient';
-import { Config } from '../Config';
 import { Base } from './Base';
 import { QueueMessage } from '../Message/QueueMessage';
 import { QueryMessage } from '../Message/QueryMessage';
