@@ -8,6 +8,7 @@ export class TokenUser {
     public username: string;
     public roles: Rolemember[] = [];
     public impostor: string;
+    public disabled: boolean;
 
     static From(user: User | TokenUser): TokenUser {
         if (user === null || user === undefined) { return; }
@@ -18,6 +19,7 @@ export class TokenUser {
         result.name = user.name;
         result.username = user.username;
         result.roles = user.roles;
+        result.disabled = user.disabled;
         return result;
     }
 

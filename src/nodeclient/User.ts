@@ -33,6 +33,7 @@ export class User extends Base {
     impersonating: string;
     federationids: FederationId[] = [];
     roles: Rolemember[] = [];
+    public disabled: boolean;
     HasRoleName(name: string): boolean {
         const hits: Rolemember[] = this.roles.filter(member => member.name === name);
         return (hits.length === 1);
