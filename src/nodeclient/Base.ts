@@ -84,6 +84,7 @@ export class Base implements IBase {
         let right: Ace = this.getRight(_id, deny);
         if (!right) {
             right = new Ace();
+            right.resetnone();
             this._acl.push(right);
         }
         if (right.setBit === undefined) {
@@ -93,14 +94,20 @@ export class Base implements IBase {
         right._id = _id;
         right.name = name;
         const me = this;
-        rights.forEach((bit) => {
-            try {
-                const t = me;
-                right.setBit(bit);
-            } catch (error) {
-                throw error;
+        if (rights[0] === -1) {
+            for (let i: number = 0; i < 1000; i++) {
+                right.setBit(i);
             }
-        });
+        } else {
+            rights.forEach((bit) => {
+                try {
+                    const t = me;
+                    right.setBit(bit);
+                } catch (error) {
+                    throw error;
+                }
+            });
+        }
         this.setRight(right);
     }
     /**
@@ -118,9 +125,13 @@ export class Base implements IBase {
         if (!right) {
             return;
         }
-        rights.forEach((bit) => {
-            right.unsetBit(bit);
-        });
+        if (rights[0] === -1) {
+            this._acl = this._acl.filter(x => x._id !== _id);
+        } else {
+            rights.forEach((bit) => {
+                right.unsetBit(bit);
+            });
+        }
         this.setRight(right);
     }
     hasRight(_id: string, bit: number, deny: boolean = false): boolean {

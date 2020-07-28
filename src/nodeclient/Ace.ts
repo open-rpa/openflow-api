@@ -93,6 +93,12 @@ export class Ace {
     static assign(o: any): Ace {
         return Object.assign(new Ace(), o);
     }
+    resetfullcontrol() {
+        this.rights = "//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8=";
+    }
+    resetnone() {
+        this.rights = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA="
+    }
     _base64ToArrayBuffer(base64): ArrayBuffer {
         let binarystring: string = null;
         if (NoderedUtil.isNodeJS()) {
@@ -152,7 +158,8 @@ export class Ace {
         // tslint:disable-next-line: no-bitwise
         const newValue = currentValue | mask;
         view[octet] = newValue;
-        return this._arrayBufferToBase64(view);
+        this.rights = this._arrayBufferToBase64(view);
+        return this.rights;
     }
     unsetBit(bit: number) {
         bit--;
@@ -169,7 +176,8 @@ export class Ace {
         // tslint:disable-next-line: no-bitwise
         const newValue = currentValue &= ~mask;
         view[octet] = newValue;
-        return this._arrayBufferToBase64(view);
+        this.rights = this._arrayBufferToBase64(view);
+        return this.rights;
     }
     toogleBit(bit: number) {
         if (this.isBitSet(bit)) {
