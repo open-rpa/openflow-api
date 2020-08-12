@@ -18,7 +18,7 @@ import { CreateWorkflowInstanceMessage } from '../Message/CreateWorkflowInstance
 import { SigninMessage } from '../Message/SigninMessage';
 import { RegisterQueueMessage } from '../Message/RegisterQueueMessage';
 import { ListCollectionsMessage } from '../Message/ListCollectionsMessage';
-import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage } from '..';
+import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser } from '..';
 import { Billing } from '../stripe/Billing';
 
 // export type messageQueueCallback = (msg: QueueMessage) => void;
@@ -593,5 +593,15 @@ export class NoderedUtil {
         _msg.data = JSON.stringify(q);
         const result = await WebSocketClient.instance.Send<StripeMessage>(_msg);
         return result.payload as T;
+    }
+    public static async RegisterUser(name: string, username: string, password: string, jwt: string): Promise<TokenUser> {
+        const q: RegisterUserMessage = new RegisterUserMessage();
+        q.name = name; q.username = username; q.password = password;
+        q.jwt = jwt;
+        const msg: Message = new Message();
+        msg.command = 'registeruser';
+        msg.data = JSONfn.stringify(q);
+        const result: RegisterUserMessage = await WebSocketClient.instance.Send<RegisterUserMessage>(msg);
+        return result.user;
     }
 }
