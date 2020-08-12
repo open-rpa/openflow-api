@@ -20,4 +20,6 @@ export class WellknownIds {
   static robot_admins: string = '5aef0142f3683977b0aa3dd2';
   // tslint:disable-next-line: variable-name
   static personal_nodered_users: string = '5a23f18a2e8987292ddbe062';
+  // tslint:disable-next-line: variable-name
+  static robot_agent_users: string = '5f33c29d8fe78504bd259a04';
 }
