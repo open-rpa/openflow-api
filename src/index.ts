@@ -30,6 +30,10 @@ export { GetNoderedInstanceLogMessage } from "./Message/GetNoderedInstanceLogMes
 export { GetNoderedInstanceMessage } from "./Message/GetNoderedInstanceMessage";
 export { InsertOneMessage } from "./Message/InsertOneMessage";
 export { InsertOrUpdateOneMessage } from "./Message/InsertOrUpdateOneMessage";
+export { UnWatchMessage } from "./Message/UnWatchMessage";
+export { WatchEventMessage } from "./Message/WatchEventMessage";
+export { WatchMessage } from "./Message/WatchMessage";
+
 
 export { ListCollectionsMessage } from "./Message/ListCollectionsMessage";
 export { MapReduceMessage, emit, mapFunc, reduceFunc, finalizeFunc } from "./Message/MapReduceMessage";

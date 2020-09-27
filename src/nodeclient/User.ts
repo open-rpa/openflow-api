@@ -18,10 +18,12 @@ export class User extends Base {
     _heartbeat: Date;
     _rpaheartbeat: Date;
     _noderedheartbeat: Date;
+    _powershellheartbeat: Date;
     _lastclientagent: string;
     _lastclientversion: string;
     _lastopenrpaclientversion: string;
     _lastnoderedclientversion: string;
+    _lastpowershellclientversion: string;
     _hasbilling: boolean;
     username: string;
     passwordhash: string;

@@ -8,6 +8,7 @@ import { TokenUser } from './TokenUser';
 import { SigninMessage } from '../Message/SigninMessage';
 import { QueryMessage } from '../Message/QueryMessage';
 import { QueueMessage } from '../Message/QueueMessage';
+import { WatchEventMessage } from '../Message/WatchEventMessage';
 
 function isNumber(value: string | number): boolean {
     return value != null && !isNaN(Number(value.toString()));
@@ -75,6 +76,9 @@ export class Message {
                     break;
                 case 'queuemessage':
                     this.QueueMessage(cli);
+                    break;
+                case 'watchevent':
+                    this.Watch(cli)
                     break;
                 default:
                     this.UnknownCommand(cli);
@@ -144,6 +148,25 @@ export class Message {
             delete cli.messageQueue[this.id];
         }
     }
+    private async Watch(cli: WebSocketClient): Promise<void> {
+        this.Reply(this.command);
+        const msg: WatchEventMessage = WatchEventMessage.assign(this.data);
+        if (!NoderedUtil.IsNullEmpty(msg.id)) {
+            if (!NoderedUtil.IsNullUndefinded(NoderedUtil.watchcb[msg.id])) {
+                try {
+                    NoderedUtil.watchcb[msg.id](msg.result);
+                } catch (error) {
+                    cli._logger.error('Error calling watch event callback to ' + msg.id + ' ' + JSON.stringify(error));
+                }
+            }
+        }
+        try {
+            await this.Send(cli);
+        } catch (error) {
+            throw error;
+        }
+    }
+
     private async QueueMessage(cli: WebSocketClient): Promise<void> {
         this.Reply(this.command);
         let handled: boolean = false;

@@ -18,11 +18,13 @@ import { CreateWorkflowInstanceMessage } from '../Message/CreateWorkflowInstance
 import { SigninMessage } from '../Message/SigninMessage';
 import { RegisterQueueMessage } from '../Message/RegisterQueueMessage';
 import { ListCollectionsMessage } from '../Message/ListCollectionsMessage';
-import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser } from '..';
+import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage } from '..';
+import { WatchMessage } from '../Message/WatchMessage';
 import { Billing } from '../stripe/Billing';
 
 // export type messageQueueCallback = (msg: QueueMessage) => void;
 export type QueueOnMessage = (msg: QueueMessage, ack: any) => void;
+export type WatchOnMessage = (msg: any) => void;
 export interface IHashTable<T> {
     [key: string]: T;
 }
@@ -319,6 +321,30 @@ export class NoderedUtil {
         msg.data = JSONfn.stringify(q);
         const result: QueryMessage = await WebSocketClient.instance.Send<QueryMessage>(msg);
         return result.result;
+    }
+    public static watchcb: IHashTable<WatchOnMessage> = {};
+    public static async Watch(collection: string, aggregates: object[], jwt: string, callback: any): Promise<any> {
+        const q: WatchMessage = new WatchMessage();
+        q.collectionname = collection;
+        q.aggregates = aggregates;
+        q.jwt = jwt;
+        const msg: Message = new Message();
+        msg.command = 'watch';
+        msg.data = JSONfn.stringify(q);
+        const result: WatchMessage = await WebSocketClient.instance.Send<WatchMessage>(msg);
+        if (!NoderedUtil.IsNullEmpty(result.id)) this.watchcb[result.id] = callback;
+        return result.id;
+    }
+    public static async UnWatch(id: string, jwt: string): Promise<void> {
+        const q: UnWatchMessage = new UnWatchMessage();
+        q.id = id; q.jwt = jwt;
+        const msg: Message = new Message();
+        msg.command = 'unwatch';
+        msg.data = JSONfn.stringify(q);
+        const result: WatchMessage = await WebSocketClient.instance.Send<WatchMessage>(msg);
+        if (this.watchcb != null && this.watchcb[id] != null) {
+            delete this.watchcb[id];
+        }
     }
 
     public static async GetFile(filename: string, id: string, jwt: string): Promise<GetFileMessage> {
