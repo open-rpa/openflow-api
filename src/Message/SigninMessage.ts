@@ -13,6 +13,8 @@ export class SigninMessage {
     public jwt: string;
     public rawAssertion: string;
     public longtoken: boolean = false;
+    // tslint:disable-next-line: variable-name
+    public supports_watch: boolean = false;
 
     public realm: string;
     public impersonate: string;
