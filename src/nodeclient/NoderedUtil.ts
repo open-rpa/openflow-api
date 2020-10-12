@@ -18,7 +18,7 @@ import { CreateWorkflowInstanceMessage } from '../Message/CreateWorkflowInstance
 import { SigninMessage } from '../Message/SigninMessage';
 import { RegisterQueueMessage } from '../Message/RegisterQueueMessage';
 import { ListCollectionsMessage } from '../Message/ListCollectionsMessage';
-import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage } from '..';
+import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage } from '..';
 import { WatchMessage } from '../Message/WatchMessage';
 import { Billing } from '../stripe/Billing';
 
@@ -207,6 +207,18 @@ export class NoderedUtil {
         _msg.command = 'query';
         _msg.data = JSON.stringify(q);
         const result: QueryMessage = await WebSocketClient.instance.Send<QueryMessage>(_msg);
+        return result.result;
+    }
+    public static async GetDocumentVersion(collectionname: string, id: string, version: number, jwt: string): Promise<any> {
+        const q: GetDocumentVersionMessage = new GetDocumentVersionMessage();
+        q.collectionname = collectionname;
+        q._id = id;
+        q.version = version;
+        q.jwt = jwt;
+        const _msg: Message = new Message();
+        _msg.command = 'getdocumentversion';
+        _msg.data = JSON.stringify(q);
+        const result: GetDocumentVersionMessage = await WebSocketClient.instance.Send<GetDocumentVersionMessage>(_msg);
         return result.result;
     }
     public static async InsertOne(collection: string, item: any, w: number, j: boolean, jwt: string): Promise<any> {

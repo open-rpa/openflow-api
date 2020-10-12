@@ -38,6 +38,7 @@ export { WatchMessage } from "./Message/WatchMessage";
 export { ListCollectionsMessage } from "./Message/ListCollectionsMessage";
 export { MapReduceMessage, emit, mapFunc, reduceFunc, finalizeFunc } from "./Message/MapReduceMessage";
 export { QueryMessage } from "./Message/QueryMessage";
+export { GetDocumentVersionMessage } from "./Message/GetDocumentVersionMessage";
 export { QueuedMessage, QueuedMessageCallback } from "./Message/QueuedMessage";
 export { QueueMessage } from "./Message/QueueMessage";
 export { RegisterQueueMessage } from "./Message/RegisterQueueMessage";
