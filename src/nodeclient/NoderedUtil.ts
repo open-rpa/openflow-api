@@ -129,6 +129,7 @@ export class NoderedUtil {
         const result = await WebSocketClient.instance.Send<SigninMessage>(msg);
         WebSocketClient.instance.user = result.user;
         WebSocketClient.instance.jwt = result.jwt;
+        WebSocketClient.instance.supports_watch = result.supports_watch;
         // this.$rootScope.$broadcast("signin", result);
         return result;
     }
@@ -154,6 +155,7 @@ export class NoderedUtil {
         const result = await WebSocketClient.instance.Send<SigninMessage>(msg);
         WebSocketClient.instance.user = result.user;
         WebSocketClient.instance.jwt = result.jwt;
+        WebSocketClient.instance.supports_watch = result.supports_watch;
         // this.$rootScope.$broadcast("signin", result);
         return result;
     }

@@ -79,6 +79,8 @@ export class WebSocketClient {
   private _sendQueue: SocketMessage[] = [];
   public user: TokenUser;
   public jwt: string;
+  // tslint:disable-next-line: variable-name
+  public supports_watch: boolean = false;
   public messageQueue: IHashTable<QueuedMessage> = {};
   public events: CustomEventEmitter = null;
   private pinghandle: NodeJS.Timeout = null;
