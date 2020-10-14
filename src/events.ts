@@ -22,7 +22,14 @@ export class CustomEventEmitter {
         if (!(this.events[event] instanceof Array)) {
             this.events[event] = [];
         }
+        const before = this.events[event].length;
         this.events[event] = this.events[event].filter(item => item !== callback);
+        const after = this.events[event].length;
+        if (before == after) {
+            console.log("********************************************");
+            console.log(" remove " + event + " failed " + before + "/" + after);
+            console.log("********************************************");
+        }
     }
     removeAllListeners() {
         this.events = [];

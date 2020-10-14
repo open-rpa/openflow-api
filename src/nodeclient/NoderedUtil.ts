@@ -522,18 +522,9 @@ export class NoderedUtil {
             }
         });
     }
-    public static async QueueMessage(
-        websocket: WebSocketClient,
-        queuename: string,
-        replyto: string,
-        data: any,
-        correlationId: string,
-        expiration: number,
-    ): Promise<void> {
-        if (!websocket.isConnected()) throw new Error('Cannot send, not connected');
+    public static async QueueMessage(websocket: WebSocketClient, queuename: string, replyto: string, data: any, correlationId: string, expiration: number): Promise<void> {
         await this._QueueMessage(websocket, queuename, replyto, data, correlationId, expiration);
     }
-
     public static async ListCollections(jwt: string): Promise<any[]> {
         const q: ListCollectionsMessage = new ListCollectionsMessage();
         q.jwt = jwt;

@@ -5,6 +5,10 @@ import { SocketMessage } from './Message/SocketMessage';
 import { TokenUser } from './nodeclient/TokenUser';
 import { CustomEventEmitter } from './events';
 import { ApiConfig } from './ApiConfig';
+import * as fileCache from 'file-system-cache';
+import * as path from "path";
+const defaultFileCache = fileCache.default;
+const messageStore = defaultFileCache({ basePath: path.join(__dirname, '.openflowapicache') });
 interface IHashTable<T> {
   [key: string]: T;
 }
@@ -71,6 +75,8 @@ declare var WebSocket: {
 };
 
 export class WebSocketClient {
+  public enableCache: boolean = true;
+  private messageCounter: number = 0;
   public _logger: any;
   private _url: string;
   private _socketObject: WebSocket = null;
@@ -134,11 +140,11 @@ export class WebSocketClient {
       clearTimeout(this.processqueuehandle);
       this.processqueuehandle = null;
     }
-    this.events.removeAllListeners();
-    this.events = null;
+    // this.events.removeAllListeners();
+    // this.events = null;
     WebSocketClient.instance = this;
   }
-  public connect(): void {
+  public async connect(): Promise<void> {
     try {
       if (
         this._socketObject !== null &&
@@ -150,6 +156,14 @@ export class WebSocketClient {
         this._socketObject.onclose = null;
         this._socketObject.onerror = null;
         this._socketObject = null;
+      }
+      try {
+        if (this.enableCache) {
+          const items: any = await messageStore.load();
+          this.messageCounter = items.files.length;
+        }
+      } catch (error) {
+        this._logger.error(error.message ? error.message : error);
       }
       if (this._socketObject === null) {
         const options: any = {
@@ -177,7 +191,7 @@ export class WebSocketClient {
         this._socketObject.onerror = this.onerror.bind(this);
       }
     } catch (error) {
-      this._logger.debug(error.message);
+      this._logger.error(error.message ? error.message : error);
     }
     // _ CLOSED:3
     // _ CLOSING:2
@@ -204,22 +218,20 @@ export class WebSocketClient {
         this.connect();
       }
     } catch (error) {
-      if (error.message) {
-        this._logger.error(error.message);
-      } else {
-        this._logger.error(error);
-      }
+      this._logger.error(error.message ? error.message : error);
       this.connect();
     }
   }
   private async onopen(evt: Event): Promise<void> {
     this._logger.debug("WebSocketclient::onopen");
+    this.user = null;
     this.events.emit('onopen');
     // used in old websocket client
     this.events.emit('connect');
   }
   private onclose(evt: CloseEvent): void {
     this._logger.debug("WebSocketclient::onclose");
+    this.user = null;
     this.events.emit('onclose');
   }
   private onerror(evt: ErrorEvent): void {
@@ -283,7 +295,7 @@ export class WebSocketClient {
     // tslint:disable-next-line: quotemark
     return str.match(new RegExp('.{1,' + length + '}', 'g'));
   }
-  private ProcessQueue(): void {
+  private async ProcessQueue(): Promise<void> {
     try {
       const ids: string[] = [];
       this._receiveQueue.forEach((msg) => {
@@ -317,23 +329,46 @@ export class WebSocketClient {
             });
           }
         } catch (error) {
-          if (error.message) {
-            this._logger.error(error.message);
-          } else {
-            this._logger.error(error);
-          }
+          this._logger.error(error.message ? error.message : error);
         }
       });
     } catch (error) {
-      if (error.message) {
-        this._logger.error(error.message);
-      } else {
-        this._logger.error(error);
-      }
+      this._logger.error(error.message ? error.message : error);
     }
     if (this._socketObject === null || this._socketObject.readyState !== this._socketObject.OPEN) {
-      this._logger.info('Cannot send, not connected');
+      if (this.enableCache) {
+        for (let i = this._sendQueue.length - 1; i >= 0; i--) {
+          try {
+            const msg = this._sendQueue[i];
+            if (msg.command !== "unwatch" && msg.command !== "watch") {
+              messageStore.set(this.messageCounter, JSON.stringify(msg));
+            }
+            this._sendQueue.splice(i, 1);
+            this.messageCounter++;
+          } catch (error) {
+            this._logger.error(error.message ? error.message : error);
+          }
+        }
+      }
+      // this._logger.info('Cannot send, not connected');
       return;
+    }
+    if (this.messageCounter > 0 && this.user != null && this.enableCache) {
+      const items: any = await messageStore.load();
+      let bail: boolean = false;
+      items.files.forEach(item => {
+        try {
+          const msg = JSON.parse(item.value);
+          this._sendQueue.push(msg);
+        } catch (error) {
+          this._logger.error(error.message ? error.message : error);
+          bail = true;
+        }
+      });
+      if (!bail) {
+        this.messageCounter = 0;
+        messageStore.clear();
+      }
     }
     this._sendQueue.forEach((msg) => {
       try {
@@ -343,11 +378,7 @@ export class WebSocketClient {
           return _msg.id !== id;
         });
       } catch (error) {
-        if (error.message) {
-          this._logger.error(error.message);
-        } else {
-          this._logger.error(error);
-        }
+        this._logger.error(error.message ? error.message : error);
         return;
       }
     });
