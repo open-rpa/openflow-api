@@ -7,8 +7,6 @@ import { CustomEventEmitter } from './events';
 import { ApiConfig } from './ApiConfig';
 import * as fileCache from 'file-system-cache';
 import * as path from "path";
-const defaultFileCache = fileCache.default;
-const messageStore = defaultFileCache({ basePath: path.join(process.cwd(), '.openflowapicache') });
 interface IHashTable<T> {
   [key: string]: T;
 }
@@ -75,6 +73,7 @@ declare var WebSocket: {
 };
 
 export class WebSocketClient {
+  public messageStore = fileCache.default({ basePath: path.join(process.cwd(), '.openflowapicache') });
   public enableCache: boolean = true;
   private messageCounter: number = 0;
   public _logger: any;
@@ -112,6 +111,9 @@ export class WebSocketClient {
     }
 
     this.pinghandle = setInterval(this.pingServer.bind(this), 10000);
+  }
+  public setCacheFolder(folder) {
+    this.messageStore = fileCache.default({ basePath: path.join(folder, '.openflowapicache') });
   }
   public close(code: number, message: string): void {
     this._logger.verbose('websocket.close');
@@ -159,7 +161,7 @@ export class WebSocketClient {
       }
       try {
         if (this.enableCache) {
-          const items: any = await messageStore.load();
+          const items: any = await this.messageStore.load();
           this.messageCounter = items.files.length;
         }
       } catch (error) {
@@ -341,7 +343,7 @@ export class WebSocketClient {
           try {
             const msg = this._sendQueue[i];
             if (msg.command !== "unwatch" && msg.command !== "watch") {
-              messageStore.set(this.messageCounter, JSON.stringify(msg));
+              this.messageStore.set(this.messageCounter, JSON.stringify(msg));
             }
             this._sendQueue.splice(i, 1);
             this.messageCounter++;
@@ -354,7 +356,7 @@ export class WebSocketClient {
       return;
     }
     if (this.messageCounter > 0 && this.user != null && this.enableCache) {
-      const items: any = await messageStore.load();
+      const items: any = await this.messageStore.load();
       let bail: boolean = false;
       items.files.forEach(item => {
         try {
@@ -367,7 +369,7 @@ export class WebSocketClient {
       });
       if (!bail) {
         this.messageCounter = 0;
-        messageStore.clear();
+        this.messageStore.clear();
       }
     }
     this._sendQueue.forEach((msg) => {
