@@ -8,7 +8,7 @@ import { ApiConfig } from './ApiConfig';
 import * as fileCache from 'file-system-cache';
 import * as path from "path";
 const defaultFileCache = fileCache.default;
-const messageStore = defaultFileCache({ basePath: path.join(__dirname, '.openflowapicache') });
+const messageStore = defaultFileCache({ basePath: path.join(process.cwd(), '.openflowapicache') });
 interface IHashTable<T> {
   [key: string]: T;
 }
