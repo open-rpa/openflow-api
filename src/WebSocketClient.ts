@@ -5,7 +5,7 @@ import { SocketMessage } from './Message/SocketMessage';
 import { TokenUser } from './nodeclient/TokenUser';
 import { CustomEventEmitter } from './events';
 import { ApiConfig } from './ApiConfig';
-import * as fileCache from 'file-system-cache';
+// import * as fileCache from 'file-system-cache';
 import * as path from "path";
 interface IHashTable<T> {
   [key: string]: T;
@@ -73,7 +73,7 @@ declare var WebSocket: {
 };
 
 export class WebSocketClient {
-  public messageStore = fileCache.default({ basePath: path.join(process.cwd(), '.openflowapicache') });
+  public messageStore = null;
   public enableCache: boolean = true;
   private messageCounter: number = 0;
   public _logger: any;
@@ -100,6 +100,16 @@ export class WebSocketClient {
   public lastheartbeat: Date = new Date();
   constructor(logger: any, url: string) {
     this._logger = logger;
+    if (this.enableCache) {
+      this.enableCache = false;
+      try {
+        const fileCache = require('file-system-cache').default;
+        this.messageStore = fileCache.default({ basePath: path.join(process.cwd(), '.openflowapicache') })
+        this.enableCache = true;
+      } catch (error) {
+        this._logger.error(error.message ? error.message : error);
+      }
+    }
     this._url = url;
     this._logger.info('connecting to ' + url);
     this.events = new CustomEventEmitter();
@@ -113,7 +123,17 @@ export class WebSocketClient {
     this.pinghandle = setInterval(this.pingServer.bind(this), 10000);
   }
   public setCacheFolder(folder) {
-    this.messageStore = fileCache.default({ basePath: path.join(folder, '.openflowapicache') });
+    if (this.enableCache) {
+      this.enableCache = false;
+      try {
+        const fileCache = require('file-system-cache').default;
+        this.messageStore = fileCache.default({ basePath: path.join(folder, '.openflowapicache') });
+        this.enableCache = true;
+      } catch (error) {
+        this._logger.error(error.message ? error.message : error);
+      }
+    }
+
   }
   public close(code: number, message: string): void {
     this._logger.verbose('websocket.close');
