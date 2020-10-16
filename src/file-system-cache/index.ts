@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 import * as R from 'ramda';
-// import * as fs from 'fs-extra';
+import * as p from "path";
 import * as fs from "fs";
 import * as f from './funcs';
 const formatPath = R.pipe(f.ensureString('./.cache'), f.toAbsolutePath);
@@ -73,7 +73,7 @@ export class FileSystemCache {
         if (this.extension) {
             name = `${name}.${this.extension.replace(/^\./, '')}`;
         }
-        return `${this.basePath}/${name}`;
+        return p.join(this.basePath, name);
     }
 
 
@@ -133,8 +133,14 @@ export class FileSystemCache {
             : defaultValue;
     }
     readJsonSync(path) {
-        const json = fs.readFileSync(path, "utf8");
-        return JSON.parse(json);
+        try {
+            // if (fs.existsSync(path)) {
+            const json = fs.readFileSync(path, "utf8");
+            return JSON.parse(json);
+            // }
+        } catch (error) {
+            return {};
+        }
     }
 
     /**

@@ -103,7 +103,7 @@ export class WebSocketClient {
       this.enableCache = false;
       try {
         const fileCache = require('./file-system-cache');
-        this.messageStore = new fileCache(path.join(process.cwd(), '.openflowapicache'))
+        this.messageStore = new fileCache.FileSystemCache(path.join(process.cwd(), '.openflowapicache'))
         this.enableCache = true;
       } catch (error) {
         this._logger.debug(error.message ? error.message : error);
@@ -126,7 +126,7 @@ export class WebSocketClient {
       this.enableCache = false;
       try {
         const fileCache = require('./file-system-cache');
-        this.messageStore = new fileCache(path.join(folder, '.openflowapicache'));
+        this.messageStore = new fileCache.FileSystemCache(path.join(folder, '.openflowapicache'));
         this.enableCache = true;
       } catch (error) {
         this._logger.debug(error.message ? error.message : error);
