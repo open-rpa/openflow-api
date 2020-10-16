@@ -5,7 +5,6 @@ import { SocketMessage } from './Message/SocketMessage';
 import { TokenUser } from './nodeclient/TokenUser';
 import { CustomEventEmitter } from './events';
 import { ApiConfig } from './ApiConfig';
-// import * as fileCache from 'file-system-cache';
 import * as path from "path";
 interface IHashTable<T> {
   [key: string]: T;
@@ -103,11 +102,11 @@ export class WebSocketClient {
     if (this.enableCache) {
       this.enableCache = false;
       try {
-        const fileCache = require('file-system-cache').default;
-        this.messageStore = fileCache.default({ basePath: path.join(process.cwd(), '.openflowapicache') })
+        const fileCache = require('./file-system-cache');
+        this.messageStore = new fileCache(path.join(process.cwd(), '.openflowapicache'))
         this.enableCache = true;
       } catch (error) {
-        this._logger.error(error.message ? error.message : error);
+        this._logger.debug(error.message ? error.message : error);
       }
     }
     this._url = url;
@@ -126,11 +125,11 @@ export class WebSocketClient {
     if (this.enableCache) {
       this.enableCache = false;
       try {
-        const fileCache = require('file-system-cache').default;
-        this.messageStore = fileCache.default({ basePath: path.join(folder, '.openflowapicache') });
+        const fileCache = require('./file-system-cache');
+        this.messageStore = new fileCache(path.join(folder, '.openflowapicache'));
         this.enableCache = true;
       } catch (error) {
-        this._logger.error(error.message ? error.message : error);
+        this._logger.debug(error.message ? error.message : error);
       }
     }
 

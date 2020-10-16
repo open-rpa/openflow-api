@@ -1,6 +1,6 @@
 {
   "name": "openflow-api",
-  "version": "1.0.28",
+  "version": "1.0.39",
   "description": "",
   "files": [
     "lib/**/*"
@@ -18,7 +18,8 @@
   },
   "dependencies": {
     "envfile": "^6.9.0",
-    "file-system-cache": "^1.0.5",
+    "fs-extra": "^9.0.1",
+    "ramda": "^0.27.1",
     "universal-websocket-client": "^1.0.2"
   },
   "devDependencies": {
