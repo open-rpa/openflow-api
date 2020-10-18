@@ -231,11 +231,13 @@ export class WebSocketClient {
         const msg: SocketMessage = SocketMessage.fromcommand('ping');
         this._socketObject.send(JSON.stringify(msg));
       }
-      if (
-        this._socketObject === null ||
-        this._socketObject.readyState !== this._socketObject.CONNECTING ||
-        this._socketObject.readyState !== this._socketObject.OPEN
-      ) {
+      let readyState: number = -1;
+      if (this._socketObject !== null) readyState = this._socketObject.readyState;
+      if (readyState !== 0 && readyState !== 1) {
+        // CLOSED = 3
+        // CLOSING = 2
+        // OPEN = 1
+        // CONNECTING = 0
         this.connect();
       }
     } catch (error) {
@@ -305,9 +307,12 @@ export class WebSocketClient {
     if (message.replyto === null || message.replyto === undefined) {
       this.messageQueue[message.id] = new QueuedMessage(message, cb);
     }
-    this.processqueuehandle = setTimeout(() => {
-      this.ProcessQueue();
-    }, 10);
+    if (this.processqueuehandle === null) {
+      this.processqueuehandle = setTimeout(() => {
+        this.processqueuehandle = null;
+        this.ProcessQueue();
+      }, 10);
+    }
   }
   public chunkString(str: string, length: number): string[] {
     if (str === null || str === undefined) {
