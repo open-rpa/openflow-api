@@ -1,8 +1,8 @@
-var fs = require('fs');
-var gulp = require('gulp');
-var shell = require('gulp-shell');
-var merge = require('merge-stream');
-var browserify = require('browserify');
+const fs = require('fs');
+const gulp = require('gulp');
+const shell = require('gulp-shell');
+const merge = require('merge-stream');
+const browserify = require('browserify');
 const tsify = require('tsify');
 
 
@@ -14,7 +14,7 @@ gulp.task('tsc', shell.task([
 // 'tsc -p tsconfig-cjs.json'
 
 gulp.task('browserify', function () {
-    var bfi = browserify({
+    const bfi = browserify({
         entries: ['./src/index.ts'],
         debug: true,
         basedir: '.'
@@ -27,7 +27,7 @@ gulp.task('browserify', function () {
 });
 
 gulp.task("watch", function () {
-    var web = gulp.watch([].concat("./src/**/*.ts"), gulp.series('tsc', 'browserify'));
+    const web = gulp.watch([].concat("./src/**/*.ts"), gulp.series('tsc', 'browserify'));
     return web;
 });
 

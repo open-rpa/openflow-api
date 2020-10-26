@@ -62,7 +62,7 @@ interface WebSocket extends EventTarget {
   removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
-declare var WebSocket: {
+declare const WebSocket: {
   prototype: WebSocket;
   new(url: string, protocols?: string | string[]): WebSocket;
   readonly CLOSED: number;

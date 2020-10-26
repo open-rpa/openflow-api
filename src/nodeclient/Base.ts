@@ -5,9 +5,9 @@ interface IBase {
     _id: string;
     _type: string;
     name: string;
-    getRight(_id: string, deny: boolean): Ace;
-    addRight(_id: string, name: string, Rights: number[], deny: boolean): void;
-    removeRight(_id: string, Rights: number[], deny: boolean): void;
+    // getRight(_id: string, deny: boolean): Ace;
+    // addRight(_id: string, name: string, Rights: number[], deny: boolean): void;
+    // removeRight(_id: string, Rights: number[], deny: boolean): void;
 }
 export class Base implements IBase {
     _id: string;
@@ -25,15 +25,15 @@ export class Base implements IBase {
     _modified: Date;
     _version: number = 0;
     constructor() {
-        this.addRight(WellknownIds.admins, 'admins', [Rights.full_control]);
+        Base.addRight(this, WellknownIds.admins, 'admins', [Rights.full_control]);
     }
     /**
      * Create new instance of object, using values from input object
      * @param  {T} o Base object
      * @returns T New object as Type
      */
-    static assign<T>(o: T): T {
-        return Object.assign(new Base(), o);
+    static assign<T>(source: T): T {
+        return Object.assign(new Base(), source);
     }
     /**
      * Enumerate ACL for specefic ID
@@ -41,20 +41,16 @@ export class Base implements IBase {
      * @param  {boolean=false} deny look for deny or allow permission
      * @returns Ace Ace if found, else null
      */
-    getRight(_id: string, deny: boolean = false): Ace {
+    static getRight(item: Base, _id: string, deny: boolean = false): Ace {
         let result: Ace = null;
-        if (!this._acl) {
-            this._acl = [];
+        if (!item._acl) {
+            item._acl = [];
         }
-        this._acl.forEach((a, index) => {
+        item._acl.forEach((a, index) => {
             if (a._id === _id && a.deny === deny) {
-                this._acl[index] = Ace.assign(a);
-                result = this._acl[index];
+                result = item._acl[index];
             }
         });
-        if (result) {
-            result = Ace.assign(result);
-        }
         return result;
     }
     /**
@@ -62,13 +58,13 @@ export class Base implements IBase {
      * @param  {Ace} x
      * @returns void
      */
-    setRight(x: Ace): void {
-        if (!this._acl) {
-            this._acl = [];
+    static setRight(item: Base, x: Ace): void {
+        if (!item._acl) {
+            item._acl = [];
         }
-        this._acl.forEach((a, index) => {
+        item._acl.forEach((a, index) => {
             if (a._id === x._id && a.deny === x.deny) {
-                this._acl[index] = x;
+                item._acl[index] = x;
             }
         });
     }
@@ -80,35 +76,30 @@ export class Base implements IBase {
      * @param  {boolean=false} deny Deny the right
      * @returns void
      */
-    addRight(_id: string, name: string, rights: number[], deny: boolean = false): void {
-        let right: Ace = this.getRight(_id, deny);
+    static addRight(item: Base, _id: string, name: string, rights: number[], deny: boolean = false): void {
+        let right: Ace = Base.getRight(item, _id, deny);
         if (!right) {
             right = new Ace();
-            right.resetnone();
-            this._acl.push(right);
-        }
-        if (right.setBit === undefined) {
-            throw new Error("setBit is undefined?????");
+            Ace.resetnone(right);
+            item._acl.push(right);
         }
         right.deny = deny;
         right._id = _id;
         right.name = name;
-        const me = this;
         if (rights[0] === -1) {
             for (let i: number = 0; i < 1000; i++) {
-                right.setBit(i);
+                Ace.setBit(right, i);
             }
         } else {
             rights.forEach((bit) => {
                 try {
-                    const t = me;
-                    right.setBit(bit);
+                    Ace.setBit(right, bit);
                 } catch (error) {
                     throw error;
                 }
             });
         }
-        this.setRight(right);
+        Base.setRight(item, right);
     }
     /**
      * Remove a right from user/role
@@ -117,27 +108,26 @@ export class Base implements IBase {
      * @param  {boolean=false} deny Deny right
      * @returns void
      */
-    removeRight(_id: string, rights: number[] = null, deny: boolean = false): void {
-        if (!this._acl) {
-            this._acl = [];
+    static removeRight(item: Base, _id: string, rights: number[] = null, deny: boolean = false): void {
+        if (!item._acl) {
+            item._acl = [];
         }
-        const right: Ace = this.getRight(_id, deny);
+        const right: Ace = Base.getRight(item, _id, deny);
         if (!right) {
             return;
         }
         if (rights[0] === -1) {
-            this._acl = this._acl.filter(x => x._id !== _id);
+            item._acl = item._acl.filter(x => x._id !== _id);
         } else {
             rights.forEach((bit) => {
-                right.unsetBit(bit);
+                Ace.unsetBit(right, bit);
             });
         }
-        this.setRight(right);
+        Base.setRight(item, right);
     }
-    hasRight(_id: string, bit: number, deny: boolean = false): boolean {
-        const ace = this.getRight(_id, deny);
+    static hasRight(item: Base, _id: string, bit: number, deny: boolean = false): boolean {
+        const ace = Base.getRight(item, _id, deny);
         if (ace == null) return false;
-        return ace.isBitSet(bit);
+        return Ace.isBitSet(ace, bit);
     }
-
 }

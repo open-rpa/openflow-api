@@ -29,6 +29,7 @@ export interface IHashTable<T> {
     [key: string]: T;
 }
 export class NoderedUtil {
+    public static Delay = ms => new Promise(res => setTimeout(res, ms));
     public static IsNullUndefinded(obj: any) {
         if (obj === null || obj === undefined) {
             return true;
@@ -60,10 +61,14 @@ export class NoderedUtil {
         }
         return obj[prop];
     }
+    private static _isNodeJS: boolean = null;
     public static isNodeJS(): boolean {
+        if (NoderedUtil._isNodeJS != null) return NoderedUtil._isNodeJS;
         if (typeof process === 'object' && process + '' === '[object process]') {
+            NoderedUtil._isNodeJS = true;
             return true;
         }
+        NoderedUtil._isNodeJS = false;
         return false;
     }
     public static saveToObject(obj: any, path: string, value: any): any {
