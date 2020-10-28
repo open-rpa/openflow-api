@@ -71,6 +71,29 @@ export class NoderedUtil {
         NoderedUtil._isNodeJS = false;
         return false;
     }
+    private static _isDocker: boolean = null;
+    public static isDocker(): boolean {
+        if (NoderedUtil._isDocker != null) return NoderedUtil._isDocker;
+        NoderedUtil._isDocker = NoderedUtil.hasDockerEnv() || NoderedUtil.hasDockerCGroup();
+        return false;
+    }
+    static hasDockerEnv(): boolean {
+        try {
+            const fs = require('fs');
+            fs.statSync('/.dockerenv');
+            return true;
+        } catch (_) {
+            return false;
+        }
+    }
+    static hasDockerCGroup() {
+        try {
+            const fs = require('fs');
+            return fs.readFileSync('/proc/self/cgroup', 'utf8').includes('docker');
+        } catch (_) {
+            return false;
+        }
+    }
     public static saveToObject(obj: any, path: string, value: any): any {
         const pList = path.split('.');
         const key = pList.pop();
