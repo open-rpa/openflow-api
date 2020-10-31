@@ -356,7 +356,7 @@ export class NoderedUtil {
         return result.result;
     }
 
-    public static async Aggregate(collection: string, aggregates: object[], jwt: string, hint: object | string): Promise<any> {
+    public static async Aggregate(collection: string, aggregates: object[], jwt: string, hint: object | string = null): Promise<any> {
         const q: AggregateMessage = new AggregateMessage();
         q.collectionname = collection;
         q.aggregates = aggregates;
