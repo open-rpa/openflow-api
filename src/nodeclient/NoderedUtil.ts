@@ -89,7 +89,8 @@ export class NoderedUtil {
     static hasDockerCGroup() {
         try {
             const fs = require('fs');
-            return fs.readFileSync('/proc/self/cgroup', 'utf8').includes('docker');
+            if (fs.readFileSync('/proc/self/cgroup', 'utf8').includes('docker')) return true;
+            return fs.readFileSync('/proc/self/cgroup', 'utf8').includes('/kubepods');
         } catch (_) {
             return false;
         }
@@ -214,12 +215,14 @@ export class NoderedUtil {
         skip: number,
         jwt: string,
         queryas: string = null,
+        hint: object | string = null
     ): Promise<any[]> {
         const q: QueryMessage = new QueryMessage();
         q.collectionname = collection;
         q.orderby = orderby;
         q.projection = projection;
         q.queryas = queryas;
+        q.hint = hint;
         q.query = JSON.stringify(query, (key, value) => {
             const t = typeof value;
             if (value instanceof RegExp) return '__REGEXP ' + value.toString();
@@ -353,11 +356,12 @@ export class NoderedUtil {
         return result.result;
     }
 
-    public static async Aggregate(collection: string, aggregates: object[], jwt: string): Promise<any> {
+    public static async Aggregate(collection: string, aggregates: object[], jwt: string, hint: object | string): Promise<any> {
         const q: AggregateMessage = new AggregateMessage();
         q.collectionname = collection;
         q.aggregates = aggregates;
         q.jwt = jwt;
+        q.hint = hint;
         const msg: Message = new Message();
         msg.command = 'aggregate';
         msg.data = JSONfn.stringify(q);
