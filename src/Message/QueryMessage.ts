@@ -10,6 +10,7 @@ export class QueryMessage {
     public collectionname: string;
     public result: any[];
     public queryas: string;
+    public hint: object | string;
     static assign(o: any): QueryMessage {
         if (typeof o === 'string' || o instanceof String) {
             return Object.assign(new QueryMessage(), JSON.parse(o.toString()));

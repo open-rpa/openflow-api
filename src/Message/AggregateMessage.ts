@@ -4,6 +4,7 @@ export class AggregateMessage {
 
     public aggregates: object[];
     public collectionname: string;
+    public hint: object | string;
     public result: any[];
     static assign(o: any): AggregateMessage {
         if (typeof o === 'string' || o instanceof String) {
