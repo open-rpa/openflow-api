@@ -8,6 +8,7 @@ import { UpdateOneMessage } from '../Message/UpdateOneMessage';
 import { UpdateManyMessage } from '../Message/UpdateManyMessage';
 import { InsertOrUpdateOneMessage } from '../Message/InsertOrUpdateOneMessage';
 import { DeleteOneMessage } from '../Message/DeleteOneMessage';
+import { DeleteManyMessage } from '../Message/DeleteManyMessage';
 import { mapFunc, reduceFunc, finalizeFunc, MapReduceMessage } from '../Message/MapReduceMessage';
 import { JSONfn } from './JSONfn';
 import { AggregateMessage } from '../Message/AggregateMessage';
@@ -332,6 +333,17 @@ export class NoderedUtil {
         _msg.data = JSON.stringify(q);
         const result: QueryMessage = await WebSocketClient.instance.Send<QueryMessage>(_msg);
         return result.result;
+    }
+    public static async DeleteMany(collection: string, query: any, ids: string[], jwt: string): Promise<any> {
+        const q: DeleteManyMessage = new DeleteManyMessage();
+        q.collectionname = collection;
+        q.ids = ids; q.query = query;
+        q.jwt = jwt;
+        const _msg: Message = new Message();
+        _msg.command = 'deletemany';
+        _msg.data = JSON.stringify(q);
+        const result: DeleteManyMessage = await WebSocketClient.instance.Send<DeleteManyMessage>(_msg);
+        return result.affectedrows;
     }
 
     public static async MapReduce(

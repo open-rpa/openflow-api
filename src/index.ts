@@ -22,6 +22,7 @@ export { CreateWorkflowInstanceMessage } from "./Message/CreateWorkflowInstanceM
 export { DeleteNoderedInstanceMessage } from "./Message/DeleteNoderedInstanceMessage";
 export { DeleteNoderedPodMessage } from "./Message/DeleteNoderedPodMessage";
 export { DeleteOneMessage } from "./Message/DeleteOneMessage";
+export { DeleteManyMessage } from "./Message/DeleteManyMessage";
 export { DropCollectionMessage } from "./Message/DropCollectionMessage";
 export { EnsureNoderedInstanceMessage } from "./Message/EnsureNoderedInstanceMessage";
 export { EnsureStripeCustomerMessage } from "./Message/EnsureStripeCustomerMessage";
