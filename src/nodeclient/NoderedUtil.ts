@@ -276,7 +276,7 @@ export class NoderedUtil {
         q.w = w;
         q.j = j;
         const _msg: Message = new Message();
-        _msg.command = 'insertone';
+        _msg.command = 'insertmany';
         _msg.data = JSON.stringify(q);
         const result: InsertManyMessage = await WebSocketClient.instance.Send<InsertManyMessage>(_msg);
         return result.results;
