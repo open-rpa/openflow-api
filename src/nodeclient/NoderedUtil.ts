@@ -268,7 +268,7 @@ export class NoderedUtil {
         const result: QueryMessage = await WebSocketClient.instance.Send<QueryMessage>(_msg);
         return result.result;
     }
-    public static async InsertMany(collection: string, items: any[], results: any[], w: number, j: boolean, skipresults: boolean, jwt: string): Promise<any> {
+    public static async InsertMany(collection: string, items: any[], w: number, j: boolean, skipresults: boolean, jwt: string): Promise<any[]> {
         const q: InsertManyMessage = new InsertManyMessage();
         q.collectionname = collection;
         q.items = items; q.skipresults = skipresults;
