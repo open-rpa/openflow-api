@@ -19,7 +19,7 @@ import { CreateWorkflowInstanceMessage } from '../Message/CreateWorkflowInstance
 import { SigninMessage } from '../Message/SigninMessage';
 import { RegisterQueueMessage } from '../Message/RegisterQueueMessage';
 import { ListCollectionsMessage } from '../Message/ListCollectionsMessage';
-import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage } from '..';
+import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage } from '..';
 import { WatchMessage } from '../Message/WatchMessage';
 import { Billing } from '../stripe/Billing';
 
@@ -268,6 +268,19 @@ export class NoderedUtil {
         const result: QueryMessage = await WebSocketClient.instance.Send<QueryMessage>(_msg);
         return result.result;
     }
+    public static async InsertMany(collection: string, items: any[], results: any[], w: number, j: boolean, skipresults: boolean, jwt: string): Promise<any> {
+        const q: InsertManyMessage = new InsertManyMessage();
+        q.collectionname = collection;
+        q.items = items; q.skipresults = skipresults;
+        q.jwt = jwt;
+        q.w = w;
+        q.j = j;
+        const _msg: Message = new Message();
+        _msg.command = 'insertone';
+        _msg.data = JSON.stringify(q);
+        const result: InsertManyMessage = await WebSocketClient.instance.Send<InsertManyMessage>(_msg);
+        return result.results;
+    }
     public static async UpdateOne(
         collection: string,
         query: any,
@@ -334,7 +347,7 @@ export class NoderedUtil {
         const result: QueryMessage = await WebSocketClient.instance.Send<QueryMessage>(_msg);
         return result.result;
     }
-    public static async DeleteMany(collection: string, query: any, ids: string[], jwt: string): Promise<any> {
+    public static async DeleteMany(collection: string, query: any, ids: string[], jwt: string): Promise<number> {
         const q: DeleteManyMessage = new DeleteManyMessage();
         q.collectionname = collection;
         q.ids = ids; q.query = query;

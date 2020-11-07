@@ -30,6 +30,7 @@ export { GetFileMessage } from "./Message/GetFileMessage";
 export { GetNoderedInstanceLogMessage } from "./Message/GetNoderedInstanceLogMessage";
 export { GetNoderedInstanceMessage } from "./Message/GetNoderedInstanceMessage";
 export { InsertOneMessage } from "./Message/InsertOneMessage";
+export { InsertManyMessage } from "./Message/InsertManyMessage";
 export { InsertOrUpdateOneMessage } from "./Message/InsertOrUpdateOneMessage";
 export { UnWatchMessage } from "./Message/UnWatchMessage";
 export { WatchEventMessage } from "./Message/WatchEventMessage";
