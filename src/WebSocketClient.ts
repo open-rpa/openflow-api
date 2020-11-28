@@ -184,7 +184,7 @@ export class WebSocketClient {
           this.messageCounter = items.files.length;
         }
       } catch (error) {
-        this._logger.error(error.message ? error.message : error);
+        this._logger.error(error);
       }
       if (this._socketObject === null) {
         const options: any = {
@@ -212,7 +212,7 @@ export class WebSocketClient {
         this._socketObject.onerror = this.onerror.bind(this);
       }
     } catch (error) {
-      this._logger.error(error.message ? error.message : error);
+      this._logger.error(error);
     }
     // _ CLOSED:3
     // _ CLOSING:2
@@ -241,7 +241,7 @@ export class WebSocketClient {
         this.connect();
       }
     } catch (error) {
-      this._logger.error(error.message ? error.message : error);
+      this._logger.error(error);
       this.connect();
     }
   }
@@ -355,11 +355,11 @@ export class WebSocketClient {
             });
           }
         } catch (error) {
-          this._logger.error(error.message ? error.message : error);
+          this._logger.error(error);
         }
       });
     } catch (error) {
-      this._logger.error(error.message ? error.message : error);
+      this._logger.error(error);
     }
     if (this._socketObject === null || this._socketObject.readyState !== this._socketObject.OPEN) {
       if (this.enableCache) {
@@ -372,7 +372,7 @@ export class WebSocketClient {
             this._sendQueue.splice(i, 1);
             this.messageCounter++;
           } catch (error) {
-            this._logger.error(error.message ? error.message : error);
+            this._logger.error(error);
           }
         }
       }
@@ -387,7 +387,7 @@ export class WebSocketClient {
           const msg = JSON.parse(item.value);
           this._sendQueue.push(msg);
         } catch (error) {
-          this._logger.error(error.message ? error.message : error);
+          this._logger.error(error);
           bail = true;
         }
       });
@@ -404,7 +404,7 @@ export class WebSocketClient {
           return _msg.id !== id;
         });
       } catch (error) {
-        this._logger.error(error.message ? error.message : error);
+        this._logger.error(error);
         return;
       }
     });

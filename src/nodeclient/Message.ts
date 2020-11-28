@@ -85,11 +85,7 @@ export class Message {
                     break;
             }
         } catch (error) {
-            if (error.message) {
-                cli._logger.error(error.message);
-            } else {
-                cli._logger.error(error);
-            }
+            cli._logger.error(error);
         }
     }
     public async Send(cli: WebSocketClient): Promise<void> {

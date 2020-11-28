@@ -537,8 +537,11 @@ export class NoderedUtil {
         msg.command = 'registerqueue';
         msg.data = JSON.stringify(q);
         const result: RegisterQueueMessage = await websocket.Send(msg);
-        this.messageQueuecb[result.queuename] = callback;
-        return result.queuename;
+        if (result) {
+            this.messageQueuecb[result.queuename] = callback;
+            return result.queuename;
+        }
+        return null;
     }
     public static async CloseQueue(websocket: WebSocketClient, queuename: string): Promise<void> {
         if (!websocket.isConnected()) return;
@@ -548,7 +551,11 @@ export class NoderedUtil {
         msg.command = 'closequeue';
         msg.data = JSON.stringify(q);
         const result: RegisterQueueMessage = await websocket.Send(msg);
-        delete this.messageQueuecb[result.queuename];
+        if (result) {
+            delete this.messageQueuecb[result.queuename];
+        } else {
+            return;
+        }
     }
     // ROLLBACK
     // Promise<QueueMessage>
