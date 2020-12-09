@@ -19,7 +19,7 @@ import { CreateWorkflowInstanceMessage } from '../Message/CreateWorkflowInstance
 import { SigninMessage } from '../Message/SigninMessage';
 import { RegisterQueueMessage } from '../Message/RegisterQueueMessage';
 import { ListCollectionsMessage } from '../Message/ListCollectionsMessage';
-import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage } from '..';
+import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage, GetKubeNodeLabels } from '..';
 import { WatchMessage } from '../Message/WatchMessage';
 import { Billing } from '../stripe/Billing';
 
@@ -449,7 +449,15 @@ export class NoderedUtil {
         const result: SaveFileMessage = await WebSocketClient.instance.Send<SaveFileMessage>(msg);
         return result;
     }
-
+    public static async GetKubeNodeLabels(jwt: string): Promise<any[]> {
+        const q: GetKubeNodeLabels = new GetKubeNodeLabels();
+        q.jwt = jwt;
+        const _msg: Message = new Message();
+        _msg.command = 'getkubenodelabels';
+        _msg.data = JSON.stringify(q);
+        const result: GetKubeNodeLabels = await WebSocketClient.instance.Send<GetKubeNodeLabels>(_msg);
+        return result.results;
+    }
     public static async GetNoderedInstance(_id: string, jwt: string): Promise<any[]> {
         const q: GetNoderedInstanceMessage = new GetNoderedInstanceMessage();
         q._id = _id;

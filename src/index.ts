@@ -27,6 +27,7 @@ export { DropCollectionMessage } from "./Message/DropCollectionMessage";
 export { EnsureNoderedInstanceMessage } from "./Message/EnsureNoderedInstanceMessage";
 export { EnsureStripeCustomerMessage } from "./Message/EnsureStripeCustomerMessage";
 export { GetFileMessage } from "./Message/GetFileMessage";
+export { GetKubeNodeLabels } from "./Message/GetKubeNodeLabels";
 export { GetNoderedInstanceLogMessage } from "./Message/GetNoderedInstanceLogMessage";
 export { GetNoderedInstanceMessage } from "./Message/GetNoderedInstanceMessage";
 export { InsertOneMessage } from "./Message/InsertOneMessage";
