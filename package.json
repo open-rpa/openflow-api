@@ -1,6 +1,6 @@
 {
-  "name": "openflow-api",
-  "version": "1.0.51",
+  "name": "@openiap/openflow-api",
+  "version": "1.0.52",
   "description": "",
   "files": [
     "lib/**/*"
@@ -13,6 +13,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/open-rpa/openflow-api.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "author": "OpenRPA / Allan Zimmermann",
   "license": "MPL-2.0",

@@ -456,7 +456,7 @@ export class NoderedUtil {
         _msg.command = 'getkubenodelabels';
         _msg.data = JSON.stringify(q);
         const result: GetKubeNodeLabels = await WebSocketClient.instance.Send<GetKubeNodeLabels>(_msg);
-        return result.results;
+        return result.result;
     }
     public static async GetNoderedInstance(_id: string, jwt: string): Promise<any[]> {
         const q: GetNoderedInstanceMessage = new GetNoderedInstanceMessage();
@@ -614,9 +614,9 @@ export class NoderedUtil {
         _msg.data = JSON.stringify(q);
         await WebSocketClient.instance.Send<DropCollectionMessage>(_msg);
     }
-    public static async EnsureNoderedInstance(_id: string, skipcreate: boolean, jwt: string): Promise<void> {
+    public static async EnsureNoderedInstance(_id: string, skipcreate: boolean, labels: any, jwt: string): Promise<void> {
         const q: EnsureNoderedInstanceMessage = new EnsureNoderedInstanceMessage();
-        q.jwt = jwt; q._id = _id; q.skipcreate = skipcreate;
+        q.jwt = jwt; q._id = _id; q.skipcreate = skipcreate; q.labels = labels;
         const _msg: Message = new Message();
         _msg.command = 'ensurenoderedinstance';
         _msg.data = JSON.stringify(q);
