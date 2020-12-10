@@ -614,9 +614,9 @@ export class NoderedUtil {
         _msg.data = JSON.stringify(q);
         await WebSocketClient.instance.Send<DropCollectionMessage>(_msg);
     }
-    public static async EnsureNoderedInstance(_id: string, skipcreate: boolean, labels: any, jwt: string): Promise<void> {
+    public static async EnsureNoderedInstance(_id: string, skipcreate: boolean, jwt: string): Promise<void> {
         const q: EnsureNoderedInstanceMessage = new EnsureNoderedInstanceMessage();
-        q.jwt = jwt; q._id = _id; q.skipcreate = skipcreate; q.labels = labels;
+        q.jwt = jwt; q._id = _id; q.skipcreate = skipcreate;
         const _msg: Message = new Message();
         _msg.command = 'ensurenoderedinstance';
         _msg.data = JSON.stringify(q);
