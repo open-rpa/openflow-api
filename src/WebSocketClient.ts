@@ -86,6 +86,7 @@ export class WebSocketClient {
   // tslint:disable-next-line: variable-name
   public supports_watch: boolean = false;
   public messageQueue: IHashTable<QueuedMessage> = {};
+  public update_message_queue_count: any;
   public events: CustomEventEmitter = null;
   private pinghandle: NodeJS.Timeout = null;
   private processqueuehandle: NodeJS.Timeout = null;
@@ -97,6 +98,7 @@ export class WebSocketClient {
   public device: any = null;
   public location: any = null;
   public lastheartbeat: Date = new Date();
+  public max_message_queue_time_seconds: number = 3600;
   constructor(logger: any, url: string) {
     this._logger = logger;
     if (this.enableCache) {
@@ -293,6 +295,7 @@ export class WebSocketClient {
       const singlemessage: SocketMessage = SocketMessage.frommessage(message, '', 1, 0);
       if (message.replyto === null || message.replyto === undefined) {
         this.messageQueue[singlemessage.id] = new QueuedMessage(singlemessage, cb);
+        if (this.update_message_queue_count) this.update_message_queue_count(this);
       }
       this._sendQueue.push(singlemessage);
       return;
@@ -306,7 +309,26 @@ export class WebSocketClient {
     }
     if (message.replyto === null || message.replyto === undefined) {
       this.messageQueue[message.id] = new QueuedMessage(message, cb);
+      if (this.update_message_queue_count) this.update_message_queue_count(this);
     }
+
+    const keys = Object.keys(this.messageQueue);
+    for (var i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      var msg = this.messageQueue[key];
+      var from = new Date(msg.timestamp);
+      const now = new Date();
+      const seconds = (now.getTime() - from.getTime()) / 1000;
+      if (seconds > this.max_message_queue_time_seconds) {
+        console.log("Deleting message " + key + " that is more " + seconds + " seconds old");
+        delete this.messageQueue[key];
+      }
+    }
+    if (this.update_message_queue_count) {
+      const keys2 = Object.keys(this.messageQueue);
+      if (keys.length != keys2.length) this.update_message_queue_count(this);
+    }
+
     if (this.processqueuehandle === null) {
       this.processqueuehandle = setTimeout(() => {
         this.processqueuehandle = null;

@@ -5,9 +5,11 @@ export class QueuedMessage {
         this.id = message.id;
         this.message = message;
         this.cb = cb;
+        this.timestamp = new Date();
     }
     public cb: QueuedMessageCallback;
     public id: string;
     public message: any;
     public error: string;
+    public timestamp: Date;
 }

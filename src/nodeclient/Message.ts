@@ -52,6 +52,7 @@ export class Message {
                             qmsg.cb(qmsg.message);
                         }
                         delete cli.messageQueue[this.id];
+                        if (cli.update_message_queue_count) cli.update_message_queue_count(cli);
                     } else {
                         if (ApiConfig.log_trafic_verbose) cli._logger.verbose('[RESC][' + this.command + '][' + this.id + '][' + this.replyto + '][NO CB!]');
                         if (ApiConfig.log_trafic_silly) cli._logger.silly('[RESC][' + this.command + '][' + this.id + '][' + this.replyto + '][NO CB!]');
@@ -127,6 +128,7 @@ export class Message {
                 qmsg.cb(msg);
             }
             delete cli.messageQueue[this.id];
+            if (cli.update_message_queue_count) cli.update_message_queue_count(cli);
         }
     }
     private RefreshToken(cli: WebSocketClient): void {
@@ -142,6 +144,7 @@ export class Message {
                 qmsg.cb(msg);
             }
             delete cli.messageQueue[this.id];
+            if (cli.update_message_queue_count) cli.update_message_queue_count(cli);
         }
     }
     private async Watch(cli: WebSocketClient): Promise<void> {
