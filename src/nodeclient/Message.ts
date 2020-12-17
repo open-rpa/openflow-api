@@ -45,13 +45,18 @@ export class Message {
                 if (this.replyto !== null && this.replyto !== undefined) {
                     const qmsg: QueuedMessage = cli.messageQueue[this.replyto];
                     if (qmsg !== undefined && qmsg !== null) {
-                        if (ApiConfig.log_trafic_verbose) cli._logger.verbose('[RESC][' + this.command + '][' + this.id + '][' + this.replyto + '][CB]');
-                        if (ApiConfig.log_trafic_silly) cli._logger.silly('[RESC][' + this.command + '][' + this.id + '][' + this.replyto + '][CB]');
-                        qmsg.message = Object.assign(qmsg.message, JSON.parse(this.data));
-                        if (qmsg.cb !== undefined && qmsg.cb !== null) {
-                            qmsg.cb(qmsg.message);
+                        try {
+                            if (ApiConfig.log_trafic_verbose) cli._logger.verbose('[RESC][' + this.command + '][' + this.id + '][' + this.replyto + '][CB]');
+                            if (ApiConfig.log_trafic_silly) cli._logger.silly('[RESC][' + this.command + '][' + this.id + '][' + this.replyto + '][CB]');
+                            qmsg.message = Object.assign(qmsg.message, JSON.parse(this.data));
+                            if (qmsg.cb !== undefined && qmsg.cb !== null) {
+                                qmsg.cb(qmsg.message);
+                            }
+                        } catch (error) {
+                            console.error(error);
+                            cli._logger.error(error);
                         }
-                        delete cli.messageQueue[this.id];
+                        delete cli.messageQueue[this.replyto];
                         if (cli.update_message_queue_count) cli.update_message_queue_count(cli);
                     } else {
                         if (ApiConfig.log_trafic_verbose) cli._logger.verbose('[RESC][' + this.command + '][' + this.id + '][' + this.replyto + '][NO CB!]');
@@ -124,10 +129,15 @@ export class Message {
         cli.user = msg.user;
         const qmsg: QueuedMessage = cli.messageQueue[this.replyto];
         if (qmsg !== undefined && qmsg !== null) {
-            if (qmsg.cb !== undefined && qmsg.cb !== null) {
-                qmsg.cb(msg);
+            try {
+                if (qmsg.cb !== undefined && qmsg.cb !== null) {
+                    qmsg.cb(msg);
+                }
+            } catch (error) {
+                console.error(error);
+                cli._logger.error(error);
             }
-            delete cli.messageQueue[this.id];
+            delete cli.messageQueue[this.replyto];
             if (cli.update_message_queue_count) cli.update_message_queue_count(cli);
         }
     }
@@ -140,10 +150,15 @@ export class Message {
         const msg: QueryMessage = QueryMessage.assign(this.data);
         const qmsg: QueuedMessage = cli.messageQueue[this.replyto];
         if (qmsg !== undefined && qmsg !== null) {
-            if (qmsg.cb !== undefined && qmsg.cb !== null) {
-                qmsg.cb(msg);
+            try {
+                if (qmsg.cb !== undefined && qmsg.cb !== null) {
+                    qmsg.cb(msg);
+                }
+            } catch (error) {
+                console.error(error);
+                cli._logger.error(error);
             }
-            delete cli.messageQueue[this.id];
+            delete cli.messageQueue[this.replyto];
             if (cli.update_message_queue_count) cli.update_message_queue_count(cli);
         }
     }

@@ -320,7 +320,7 @@ export class WebSocketClient {
       const now = new Date();
       const seconds = (now.getTime() - from.getTime()) / 1000;
       if (seconds > this.max_message_queue_time_seconds) {
-        console.log("Deleting message " + key + " that is more " + seconds + " seconds old");
+        console.log("Deleting message " + key + " that is more " + this.max_message_queue_time_seconds + " seconds old (" + seconds + ")");
         delete this.messageQueue[key];
       }
     }
