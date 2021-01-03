@@ -1,5 +1,6 @@
 import { Rolemember } from "./Rolemember";
 import { User } from "./User";
+import { NoderedUtil } from "./NoderedUtil";
 
 export class TokenUser {
     public _type: string;
@@ -9,6 +10,7 @@ export class TokenUser {
     public roles: Rolemember[] = [];
     public impostor: string;
     public disabled: boolean;
+    public validated: boolean;
 
     static From(user: User | TokenUser): TokenUser {
         if (user === null || user === undefined) { return; }
@@ -20,6 +22,10 @@ export class TokenUser {
         result.username = user.username;
         result.roles = user.roles;
         result.disabled = user.disabled;
+        result.validated = false;
+        if (user.validated == true) {
+            result.validated = user.validated;
+        }
         return result;
     }
 
