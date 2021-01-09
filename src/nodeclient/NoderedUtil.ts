@@ -22,6 +22,7 @@ import { ListCollectionsMessage } from '../Message/ListCollectionsMessage';
 import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage, GetKubeNodeLabels } from '..';
 import { WatchMessage } from '../Message/WatchMessage';
 import { Billing } from '../stripe/Billing';
+import { PushMetricsMessage } from '../Message/PushMetricsMessage';
 
 // export type messageQueueCallback = (msg: QueueMessage) => void;
 export type QueueOnMessage = (msg: QueueMessage, ack: any) => void;
@@ -706,5 +707,14 @@ export class NoderedUtil {
         msg.data = JSONfn.stringify(q);
         const result: RegisterUserMessage = await WebSocketClient.instance.Send<RegisterUserMessage>(msg);
         return result.user;
+    }
+    public static async PushMetrics(metrics: string, jwt: string): Promise<void> {
+        const q: PushMetricsMessage = new PushMetricsMessage();
+        q.metrics = metrics;
+        q.jwt = jwt;
+        const msg: Message = new Message();
+        msg.command = 'pushmetrics';
+        msg.data = JSONfn.stringify(q);
+        const result: PushMetricsMessage = await WebSocketClient.instance.Send<PushMetricsMessage>(msg);
     }
 }
