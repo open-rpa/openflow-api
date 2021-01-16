@@ -111,7 +111,7 @@ export class NoderedUtil {
         }
         return obj;
     }
-    public static HandleError(node: any, error: any): void {
+    public static HandleError(node: any, error: any, msg: any): void {
         // tslint:disable-next-line: no-console
         console.error(error);
         let message: string = error;
@@ -119,12 +119,13 @@ export class NoderedUtil {
             error = new Error(error as string);
         }
         try {
-            if (error.message) {
-                message = error.message;
-                node.error(message, error);
-            } else {
-                node.error(message, error);
-            }
+            node.error(error, msg);
+            // if (error.message) {
+            //     message = error.message;
+            //     node.error(message, error);
+            // } else {
+            //     node.error(message, error);
+            // }
             // tslint:disable-next-line: no-empty
         } catch (error) {
         }
