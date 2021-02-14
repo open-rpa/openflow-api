@@ -35,6 +35,8 @@ export class User extends Base {
     public impersonating: string;
     public federationids: FederationId[] = [];
     public roles: Rolemember[] = [];
+    public role: string;
+    public email: string;
     public disabled: boolean;
     public validated: boolean;
     public validatedform: string;

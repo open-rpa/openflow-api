@@ -8,6 +8,8 @@ export class TokenUser {
     public name: string;
     public username: string;
     public roles: Rolemember[] = [];
+    public role: string;
+    public email: string;
     public impostor: string;
     public disabled: boolean;
     public validated: boolean;
@@ -22,6 +24,8 @@ export class TokenUser {
         result.username = user.username;
         result.roles = user.roles;
         result.disabled = user.disabled;
+        result.email = user.email;
+        result.role = user.role;
         result.validated = false;
         if (user.validated == true) {
             result.validated = user.validated;
