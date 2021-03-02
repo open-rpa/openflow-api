@@ -24,6 +24,7 @@ export class SigninMessage {
     public firebasetoken: string;
     // tslint:disable-next-line: variable-name
     public websocket_package_size: number;
+    public openflow_uniqueid: string;
 
     static assign(o: any): SigninMessage {
         if (typeof o === 'string' || o instanceof String) {
