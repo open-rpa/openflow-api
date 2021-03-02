@@ -25,6 +25,11 @@ export class SigninMessage {
     // tslint:disable-next-line: variable-name
     public websocket_package_size: number;
     public openflow_uniqueid: string;
+    public enable_analytics: boolean;
+    public otel_trace_url: string;
+    public otel_metric_url: string;
+    public otel_trace_interval: number;
+    public otel_metric_interval: number;
 
     static assign(o: any): SigninMessage {
         if (typeof o === 'string' || o instanceof String) {
