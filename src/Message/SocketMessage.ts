@@ -1,4 +1,5 @@
 import { isNumber } from "util";
+import { NoderedUtil } from "..";
 import { Message } from "../nodeclient/Message";
 
 export class SocketMessage {
@@ -25,7 +26,7 @@ export class SocketMessage {
         }
         if (result.id === null || result.id === undefined || result.id === '') {
             // result.id = crypto.randomBytes(16).toString("hex");
-            result.id = Math.random().toString(36).substr(2, 9);
+            result.id = NoderedUtil.GetUniqueIdentifier();
         }
         return result;
     }
@@ -44,7 +45,7 @@ export class SocketMessage {
         result.command = command;
         result.count = 1;
         result.index = 0;
-        result.id = Math.random().toString(36).substr(2, 9);
+        result.id = NoderedUtil.GetUniqueIdentifier();
         return result;
     }
 }

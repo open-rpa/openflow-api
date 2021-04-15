@@ -270,7 +270,7 @@ export class WebSocketClient {
     this.ProcessQueue.bind(this)();
   }
   public async Send<T>(message: Message): Promise<T> {
-    if (NoderedUtil.IsNullEmpty(message.id)) message.id = Math.random().toString(36).substr(2, 9);
+    if (NoderedUtil.IsNullEmpty(message.id)) message.id = NoderedUtil.GetUniqueIdentifier();
     if (message.command !== 'pong') {
       let reply = message.replyto;
       if (NoderedUtil.IsNullEmpty(reply)) reply = '';
@@ -301,7 +301,7 @@ export class WebSocketClient {
       return;
     }
     if (message.id === null || message.id === undefined) {
-      message.id = Math.random().toString(36).substr(2, 9);
+      message.id = NoderedUtil.GetUniqueIdentifier();
     }
     for (let i: number = 0; i < messages.length; i++) {
       const _message: SocketMessage = SocketMessage.frommessage(message, messages[i], messages.length, i);

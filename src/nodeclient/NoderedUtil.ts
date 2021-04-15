@@ -139,6 +139,9 @@ export class NoderedUtil {
         }
     }
 
+    public static GetUniqueIdentifier(): string {
+        return Math.random().toString(36).substr(2, 9);
+    }
     public static async SigninWithToken(jwt: string, rawAssertion: string, impersonate: string, longtoken: boolean = false, validateonly: boolean = false): Promise<SigninMessage> {
         const q: SigninMessage = new SigninMessage();
         q.jwt = jwt;
@@ -581,7 +584,7 @@ export class NoderedUtil {
             try {
                 const q: QueueMessage = new QueueMessage();
                 q.correlationId = correlationId;
-                if (NoderedUtil.IsNullEmpty(q.correlationId)) q.correlationId = Math.random().toString(36).substr(2, 9);
+                if (NoderedUtil.IsNullEmpty(q.correlationId)) q.correlationId = NoderedUtil.GetUniqueIdentifier();
                 q.expiration = expiration;
                 q.queuename = queuename;
                 q.data = JSON.stringify(data);

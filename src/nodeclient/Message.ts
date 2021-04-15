@@ -121,7 +121,7 @@ export class Message {
     public Reply(command: string): void {
         this.command = command;
         this.replyto = this.id;
-        this.id = Math.random().toString(36).substr(2, 9);
+        this.id = NoderedUtil.GetUniqueIdentifier();
     }
     private Signin(cli: WebSocketClient): void {
         const msg: SigninMessage = SigninMessage.assign(this.data);
