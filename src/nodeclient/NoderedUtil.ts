@@ -31,7 +31,7 @@ export interface IHashTable<T> {
     [key: string]: T;
 }
 export class NoderedUtil {
-    public static Delay = ms => new Promise(res => setTimeout(res, ms));
+    public static Delay = ms => new Promise<void>(res => setTimeout(res, ms));
     public static IsNullUndefinded(obj: any) {
         if (obj === null || obj === undefined) {
             return true;
@@ -78,6 +78,14 @@ export class NoderedUtil {
         if (NoderedUtil._isDocker != null) return NoderedUtil._isDocker;
         NoderedUtil._isDocker = NoderedUtil.hasDockerEnv() || NoderedUtil.hasDockerCGroup();
         return false;
+    }
+    private static _isKubernetes: boolean = null;
+    public static isKubernetes(): boolean {
+        if (NoderedUtil._isKubernetes != null) return NoderedUtil._isKubernetes;
+        if (!NoderedUtil.isDocker()) { NoderedUtil._isKubernetes = false; return false; }
+        if (NoderedUtil.IsNullEmpty(process.env["KUBERNETES_SERVICE_HOST"])) { NoderedUtil._isKubernetes = false; return false; }
+        NoderedUtil._isKubernetes = true;
+        return true;
     }
     static hasDockerEnv(): boolean {
         try {

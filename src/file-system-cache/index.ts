@@ -90,7 +90,7 @@ export class FileSystemCache {
      * @return {Promise}
      */
     ensureBasePath() {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             if (this.basePathExists) {
                 resolve();
             } else {
@@ -188,7 +188,7 @@ export class FileSystemCache {
      * @return {Promise}
      */
     clear() {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             f.filePathsP(this.basePath, this.ns)
                 .then(paths => {
                     const remove = (index) => {

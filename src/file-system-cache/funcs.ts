@@ -51,12 +51,12 @@ export const readFileSync = (path) => {
 };
 
 
-export const existsP = (path) => new Promise((resolve) => {
+export const existsP = (path) => new Promise<boolean>((resolve) => {
     fs.exists(path, (exists) => resolve(exists));
 });
 
 
-export const removeFileP = (path) => new Promise((resolve, reject) => {
+export const removeFileP = (path) => new Promise<void>((resolve, reject) => {
     existsP(path)
         .then((exists) => {
             if (exists) {
@@ -70,7 +70,7 @@ export const removeFileP = (path) => new Promise((resolve, reject) => {
 });
 
 
-export const filePathsP = (basePath, ns) => new Promise((resolve, reject) => {
+export const filePathsP = (basePath, ns) => new Promise<string[]>((resolve, reject) => {
     existsP(basePath)
         .then(exists => {
             if (!exists) { resolve([]); return; }
