@@ -23,6 +23,7 @@ import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNode
 import { WatchMessage } from '../Message/WatchMessage';
 import { Billing } from '../stripe/Billing';
 import { PushMetricsMessage } from '../Message/PushMetricsMessage';
+import { RegisterExchangeMessage } from '../Message/RegisterExchangeMessage';
 
 // export type messageQueueCallback = (msg: QueueMessage) => void;
 export type QueueOnMessage = (msg: QueueMessage, ack: any) => void;
@@ -549,7 +550,6 @@ export class NoderedUtil {
         return result;
     }
 
-    // public static messageQueue: IHashTable<messagequeue> = {};
     public static messageQueuecb: IHashTable<QueueOnMessage> = {};
     public static async RegisterQueue(websocket: WebSocketClient, queuename: string, callback: any): Promise<string> {
         const q: RegisterQueueMessage = new RegisterQueueMessage();
@@ -578,6 +578,22 @@ export class NoderedUtil {
             return;
         }
     }
+    public static async RegisterExchange(websocket: WebSocketClient, exchangename: string, algorithm: "direct" | "fanout" | "topic" | "header", routingkey: string = "", callback: any): Promise<string> {
+        const q: RegisterExchangeMessage = new RegisterExchangeMessage();
+        q.exchangename = exchangename;
+        q.algorithm = algorithm;
+        q.routingkey = routingkey;
+        const msg: Message = new Message();
+        msg.command = 'registerexchange';
+        msg.data = JSON.stringify(q);
+        const result: RegisterExchangeMessage = await websocket.Send(msg);
+        if (result) {
+            this.messageQueuecb[result.queuename] = callback;
+            return result.queuename;
+        }
+        return null;
+    }
+
     // ROLLBACK
     // Promise<QueueMessage>
     public static async _QueueMessage(
