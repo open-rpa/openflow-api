@@ -199,7 +199,7 @@ export class Message {
                         if (result != null && !NoderedUtil.IsNullEmpty(msg.replyto) && this.command !== 'error') {
                             try {
                                 await NoderedUtil.QueueMessage(
-                                    cli,
+                                    cli, "", "",
                                     msg.replyto,
                                     '',
                                     result,

@@ -598,6 +598,8 @@ export class NoderedUtil {
     // Promise<QueueMessage>
     public static async _QueueMessage(
         websocket: WebSocketClient,
+        exchangename: string,
+        routingkey: string,
         queuename: string,
         replyto: string,
         data: any,
@@ -609,7 +611,7 @@ export class NoderedUtil {
                 const q: QueueMessage = new QueueMessage();
                 q.correlationId = correlationId;
                 if (NoderedUtil.IsNullEmpty(q.correlationId)) q.correlationId = NoderedUtil.GetUniqueIdentifier();
-                q.expiration = expiration;
+                q.expiration = expiration; q.exchange = exchangename; q.routingkey = routingkey;
                 q.queuename = queuename;
                 q.data = JSON.stringify(data);
                 q.replyto = replyto;
@@ -623,8 +625,8 @@ export class NoderedUtil {
             }
         });
     }
-    public static async QueueMessage(websocket: WebSocketClient, queuename: string, replyto: string, data: any, correlationId: string, expiration: number): Promise<void> {
-        await this._QueueMessage(websocket, queuename, replyto, data, correlationId, expiration);
+    public static async QueueMessage(websocket: WebSocketClient, exchangename: string, routingkey: string, queuename: string, replyto: string, data: any, correlationId: string, expiration: number): Promise<void> {
+        await this._QueueMessage(websocket, exchangename, routingkey, queuename, replyto, data, correlationId, expiration);
     }
     public static async ListCollections(jwt: string): Promise<any[]> {
         const q: ListCollectionsMessage = new ListCollectionsMessage();
