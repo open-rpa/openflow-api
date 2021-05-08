@@ -46,6 +46,7 @@ export { GetDocumentVersionMessage } from "./Message/GetDocumentVersionMessage";
 export { QueuedMessage, QueuedMessageCallback } from "./Message/QueuedMessage";
 export { QueueMessage } from "./Message/QueueMessage";
 export { RegisterQueueMessage } from "./Message/RegisterQueueMessage";
+export { RegisterExchangeMessage } from "./Message/RegisterExchangeMessage";
 export { RestartNoderedInstanceMessage } from "./Message/RestartNoderedInstanceMessage";
 export { RegisterUserMessage } from "./Message/RegisterUserMessage";
 export { SaveFileMessage } from "./Message/SaveFileMessage";
