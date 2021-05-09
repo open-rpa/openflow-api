@@ -33,6 +33,10 @@ export type WatchOnMessage = (msg: any) => void;
 export interface IHashTable<T> {
     [key: string]: T;
 }
+export declare class RegisterExchangeResponse {
+    exchangename: string;
+    queuename: string;
+}
 export class NoderedUtil {
     public static Delay = ms => new Promise<void>(res => setTimeout(res, ms));
     public static IsNullUndefinded(obj: any) {
@@ -584,7 +588,7 @@ export class NoderedUtil {
             return;
         }
     }
-    public static async RegisterExchange(websocket: WebSocketClient, exchangename: string, algorithm: "direct" | "fanout" | "topic" | "header", routingkey: string = "", callback: QueueOnMessage, closedcallback: ExchangeClosed): Promise<string> {
+    public static async RegisterExchange(websocket: WebSocketClient, exchangename: string, algorithm: "direct" | "fanout" | "topic" | "header", routingkey: string = "", callback: QueueOnMessage, closedcallback: ExchangeClosed): Promise<RegisterExchangeResponse> {
         const q: RegisterExchangeMessage = new RegisterExchangeMessage();
         q.exchangename = exchangename;
         q.algorithm = algorithm;
@@ -596,7 +600,7 @@ export class NoderedUtil {
         if (result && !NoderedUtil.IsNullEmpty(result.exchangename) && !NoderedUtil.IsNullEmpty(result.queuename)) {
             this.messageQueuecb[result.queuename] = callback;
             this.messageExchangeclosedcb[result.exchangename] = closedcallback;
-            return result.queuename;
+            return { exchangename: result.exchangename, queuename: result.queuename };
         }
         return null;
     }
