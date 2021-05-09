@@ -9,6 +9,7 @@ import { SigninMessage } from '../Message/SigninMessage';
 import { QueryMessage } from '../Message/QueryMessage';
 import { QueueMessage } from '../Message/QueueMessage';
 import { WatchEventMessage } from '../Message/WatchEventMessage';
+import { ExchangeClosedMessage, QueueClosedMessage } from '..';
 
 function isNumber(value: string | number): boolean {
     return value != null && !isNaN(Number(value.toString()));
@@ -83,6 +84,12 @@ export class Message {
                 case 'queuemessage':
                     this.QueueMessage(cli);
                     break;
+                case 'queueclosed':
+                    this.QueueClosed(cli);
+                    break;
+                case 'exchangeclosed':
+                    this.ExchangeClosed(cli);
+                    break;
                 case 'watchevent':
                     this.Watch(cli)
                     break;
@@ -146,22 +153,6 @@ export class Message {
         cli.jwt = msg.jwt;
         cli.user = msg.user;
     }
-    private Query(cli: WebSocketClient): void {
-        const msg: QueryMessage = QueryMessage.assign(this.data);
-        const qmsg: QueuedMessage = cli.messageQueue[this.replyto];
-        if (qmsg !== undefined && qmsg !== null) {
-            try {
-                if (qmsg.cb !== undefined && qmsg.cb !== null) {
-                    qmsg.cb(msg);
-                }
-            } catch (error) {
-                console.error(error);
-                cli._logger.error(error);
-            }
-            delete cli.messageQueue[this.replyto];
-            if (cli.update_message_queue_count) cli.update_message_queue_count(cli);
-        }
-    }
     private async Watch(cli: WebSocketClient): Promise<void> {
         this.Reply(this.command);
         const msg: WatchEventMessage = WatchEventMessage.assign(this.data);
@@ -180,7 +171,29 @@ export class Message {
             throw error;
         }
     }
-
+    private async ExchangeClosed(cli: WebSocketClient): Promise<void> {
+        this.Reply(this.command);
+        const msg: ExchangeClosedMessage = ExchangeClosedMessage.assign(this.data);
+        if (!NoderedUtil.IsNullEmpty(msg.queuename)) {
+            if (NoderedUtil.messageExchangeclosedcb[msg.exchangename] != null) {
+                NoderedUtil.messageExchangeclosedcb[msg.exchangename](msg);
+            }
+        }
+        delete NoderedUtil.messageQueuecb[msg.queuename];
+        delete NoderedUtil.messageQueueclosedcb[msg.queuename];
+        delete NoderedUtil.messageExchangeclosedcb[msg.exchangename];
+    }
+    private async QueueClosed(cli: WebSocketClient): Promise<void> {
+        this.Reply(this.command);
+        const msg: QueueClosedMessage = QueueClosedMessage.assign(this.data);
+        if (!NoderedUtil.IsNullEmpty(msg.queuename)) {
+            if (NoderedUtil.messageQueueclosedcb[msg.queuename] != null) {
+                NoderedUtil.messageQueueclosedcb[msg.queuename](msg);
+            }
+        }
+        delete NoderedUtil.messageQueuecb[msg.queuename];
+        delete NoderedUtil.messageQueueclosedcb[msg.queuename];
+    }
     private async QueueMessage(cli: WebSocketClient): Promise<void> {
         this.Reply(this.command);
         let handled: boolean = false;

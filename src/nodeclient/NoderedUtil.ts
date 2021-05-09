@@ -19,7 +19,7 @@ import { CreateWorkflowInstanceMessage } from '../Message/CreateWorkflowInstance
 import { SigninMessage } from '../Message/SigninMessage';
 import { RegisterQueueMessage } from '../Message/RegisterQueueMessage';
 import { ListCollectionsMessage } from '../Message/ListCollectionsMessage';
-import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage, GetKubeNodeLabels } from '..';
+import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage, GetKubeNodeLabels, QueueClosedMessage, ExchangeClosedMessage } from '..';
 import { WatchMessage } from '../Message/WatchMessage';
 import { Billing } from '../stripe/Billing';
 import { PushMetricsMessage } from '../Message/PushMetricsMessage';
@@ -27,6 +27,8 @@ import { RegisterExchangeMessage } from '../Message/RegisterExchangeMessage';
 
 // export type messageQueueCallback = (msg: QueueMessage) => void;
 export type QueueOnMessage = (msg: QueueMessage, ack: any) => void;
+export type QueueClosed = (msg: QueueClosedMessage) => void;
+export type ExchangeClosed = (msg: ExchangeClosedMessage) => void;
 export type WatchOnMessage = (msg: any) => void;
 export interface IHashTable<T> {
     [key: string]: T;
@@ -551,7 +553,9 @@ export class NoderedUtil {
     }
 
     public static messageQueuecb: IHashTable<QueueOnMessage> = {};
-    public static async RegisterQueue(websocket: WebSocketClient, queuename: string, callback: any): Promise<string> {
+    public static messageQueueclosedcb: IHashTable<QueueClosed> = {};
+    public static messageExchangeclosedcb: IHashTable<ExchangeClosed> = {};
+    public static async RegisterQueue(websocket: WebSocketClient, queuename: string, callback: QueueOnMessage, closedcallback: QueueClosed): Promise<string> {
         const q: RegisterQueueMessage = new RegisterQueueMessage();
         q.queuename = queuename;
         const msg: Message = new Message();
@@ -560,6 +564,7 @@ export class NoderedUtil {
         const result: RegisterQueueMessage = await websocket.Send(msg);
         if (result) {
             this.messageQueuecb[result.queuename] = callback;
+            this.messageQueueclosedcb[result.queuename] = closedcallback;
             return result.queuename;
         }
         return null;
@@ -574,11 +579,12 @@ export class NoderedUtil {
         const result: RegisterQueueMessage = await websocket.Send(msg);
         if (result) {
             delete this.messageQueuecb[result.queuename];
+            delete this.messageQueueclosedcb[result.queuename];
         } else {
             return;
         }
     }
-    public static async RegisterExchange(websocket: WebSocketClient, exchangename: string, algorithm: "direct" | "fanout" | "topic" | "header", routingkey: string = "", callback: any): Promise<string> {
+    public static async RegisterExchange(websocket: WebSocketClient, exchangename: string, algorithm: "direct" | "fanout" | "topic" | "header", routingkey: string = "", callback: QueueOnMessage, closedcallback: ExchangeClosed): Promise<string> {
         const q: RegisterExchangeMessage = new RegisterExchangeMessage();
         q.exchangename = exchangename;
         q.algorithm = algorithm;
@@ -589,6 +595,7 @@ export class NoderedUtil {
         const result: RegisterExchangeMessage = await websocket.Send(msg);
         if (result) {
             this.messageQueuecb[result.queuename] = callback;
+            this.messageExchangeclosedcb[result.queuename] = closedcallback;
             return result.queuename;
         }
         return null;
