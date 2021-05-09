@@ -562,7 +562,7 @@ export class NoderedUtil {
         msg.command = 'registerqueue';
         msg.data = JSON.stringify(q);
         const result: RegisterQueueMessage = await websocket.Send(msg);
-        if (result) {
+        if (result && !NoderedUtil.IsNullEmpty(result.queuename)) {
             this.messageQueuecb[result.queuename] = callback;
             this.messageQueueclosedcb[result.queuename] = closedcallback;
             return result.queuename;
@@ -577,7 +577,7 @@ export class NoderedUtil {
         msg.command = 'closequeue';
         msg.data = JSON.stringify(q);
         const result: RegisterQueueMessage = await websocket.Send(msg);
-        if (result) {
+        if (result && !NoderedUtil.IsNullEmpty(result.queuename)) {
             delete this.messageQueuecb[result.queuename];
             delete this.messageQueueclosedcb[result.queuename];
         } else {
@@ -593,9 +593,9 @@ export class NoderedUtil {
         msg.command = 'registerexchange';
         msg.data = JSON.stringify(q);
         const result: RegisterExchangeMessage = await websocket.Send(msg);
-        if (result) {
+        if (result && !NoderedUtil.IsNullEmpty(result.exchangename) && !NoderedUtil.IsNullEmpty(result.queuename)) {
             this.messageQueuecb[result.queuename] = callback;
-            this.messageExchangeclosedcb[result.queuename] = closedcallback;
+            this.messageExchangeclosedcb[result.exchangename] = closedcallback;
             return result.queuename;
         }
         return null;

@@ -174,14 +174,16 @@ export class Message {
     private async ExchangeClosed(cli: WebSocketClient): Promise<void> {
         this.Reply(this.command);
         const msg: ExchangeClosedMessage = ExchangeClosedMessage.assign(this.data);
-        if (!NoderedUtil.IsNullEmpty(msg.queuename)) {
+        if (!NoderedUtil.IsNullEmpty(msg.exchangename)) {
             if (NoderedUtil.messageExchangeclosedcb[msg.exchangename] != null) {
                 NoderedUtil.messageExchangeclosedcb[msg.exchangename](msg);
             }
+            delete NoderedUtil.messageExchangeclosedcb[msg.exchangename];
         }
-        delete NoderedUtil.messageQueuecb[msg.queuename];
-        delete NoderedUtil.messageQueueclosedcb[msg.queuename];
-        delete NoderedUtil.messageExchangeclosedcb[msg.exchangename];
+        if (!NoderedUtil.IsNullEmpty(msg.queuename)) {
+            delete NoderedUtil.messageQueuecb[msg.queuename];
+            delete NoderedUtil.messageQueueclosedcb[msg.queuename];
+        }
     }
     private async QueueClosed(cli: WebSocketClient): Promise<void> {
         this.Reply(this.command);
