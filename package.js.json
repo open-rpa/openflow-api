@@ -1,14 +1,15 @@
 {
-  "name": "@openiap/openflow-api",
-  "version": "1.0.75",
+  "name": "@openiap/openflow-api-js",
+  "version": "1.0.74",
   "description": "",
   "files": [
     "lib/**/*"
   ],
-  "main": "./lib/node/index.js",
-  "module": "./lib/node/index.js",
   "types": "./lib/node/index.d.ts",
-  "typings": "./lib/node/index.d.ts",
+  "main": "./lib/node/index.js",
+  "browser": {
+    "./lib/node/index.js": "./lib/openflow-api.js"
+  },
   "keywords": [],
   "repository": {
     "type": "git",
