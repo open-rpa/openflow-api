@@ -155,6 +155,7 @@ export class NoderedUtil {
     }
 
     public static GetUniqueIdentifier(): string {
+        // crypto.randomBytes(16).toString("hex")
         return Math.random().toString(36).substr(2, 9);
     }
     public static async SigninWithToken(jwt: string, rawAssertion: string, impersonate: string, longtoken: boolean = false, validateonly: boolean = false): Promise<SigninMessage> {

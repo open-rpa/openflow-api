@@ -25,7 +25,6 @@ export class SocketMessage {
             result.index = obj.index;
         }
         if (result.id === null || result.id === undefined || result.id === '') {
-            // result.id = crypto.randomBytes(16).toString("hex");
             result.id = NoderedUtil.GetUniqueIdentifier();
         }
         return result;
