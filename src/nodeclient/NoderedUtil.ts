@@ -162,7 +162,7 @@ export class NoderedUtil {
         q.jwt = jwt;
         q.rawAssertion = rawAssertion;
         q.realm = "browser";
-        if (this.isNodeJS()) q.realm = "nodejs";
+        if (NoderedUtil.isNodeJS()) q.realm = "nodejs";
         q.clientagent = WebSocketClient.instance.agent;
         q.clientversion = WebSocketClient.instance.version;
         if (WebSocketClient.instance.usingCordova) {
@@ -180,7 +180,6 @@ export class NoderedUtil {
         WebSocketClient.instance.user = result.user;
         WebSocketClient.instance.jwt = result.jwt;
         WebSocketClient.instance.supports_watch = result.supports_watch;
-        // this.$rootScope.$broadcast("signin", result);
         return result;
     }
     public static async SigninWithUsername(username: string, password: string, impersonate: string, longtoken: boolean = false, validateonly: boolean = false): Promise<SigninMessage> {
@@ -188,7 +187,7 @@ export class NoderedUtil {
         q.username = username;
         q.password = password;
         q.realm = "browser";
-        if (this.isNodeJS()) q.realm = "nodejs";
+        if (NoderedUtil.isNodeJS()) q.realm = "nodejs";
         q.clientagent = WebSocketClient.instance.agent;
         q.clientversion = WebSocketClient.instance.version;
         if (WebSocketClient.instance.usingCordova) {
@@ -206,7 +205,6 @@ export class NoderedUtil {
         WebSocketClient.instance.user = result.user;
         WebSocketClient.instance.jwt = result.jwt;
         WebSocketClient.instance.supports_watch = result.supports_watch;
-        // this.$rootScope.$broadcast("signin", result);
         return result;
     }
 
@@ -316,7 +314,7 @@ export class NoderedUtil {
         q.w = w;
         q.j = j;
         q.query = query;
-        const result = await this._UpdateOne(q);
+        const result = await NoderedUtil._UpdateOne(q);
         return result.result;
     }
     public static async _UpdateOne(q: UpdateOneMessage): Promise<UpdateOneMessage> {
@@ -423,7 +421,7 @@ export class NoderedUtil {
         msg.command = 'watch';
         msg.data = JSONfn.stringify(q);
         const result: WatchMessage = await WebSocketClient.instance.Send<WatchMessage>(msg);
-        if (!NoderedUtil.IsNullEmpty(result.id)) this.watchcb[result.id] = callback;
+        if (!NoderedUtil.IsNullEmpty(result.id)) NoderedUtil.watchcb[result.id] = callback;
         return result.id;
     }
     public static async UnWatch(id: string, jwt: string): Promise<void> {
@@ -433,8 +431,8 @@ export class NoderedUtil {
         msg.command = 'unwatch';
         msg.data = JSONfn.stringify(q);
         const result: WatchMessage = await WebSocketClient.instance.Send<WatchMessage>(msg);
-        if (this.watchcb != null && this.watchcb[id] != null) {
-            delete this.watchcb[id];
+        if (NoderedUtil.watchcb != null && NoderedUtil.watchcb[id] != null) {
+            delete NoderedUtil.watchcb[id];
         }
     }
 
@@ -567,8 +565,8 @@ export class NoderedUtil {
         msg.data = JSON.stringify(q);
         const result: RegisterQueueMessage = await websocket.Send(msg);
         if (result && !NoderedUtil.IsNullEmpty(result.queuename)) {
-            this.messageQueuecb[result.queuename] = callback;
-            this.messageQueueclosedcb[result.queuename] = closedcallback;
+            NoderedUtil.messageQueuecb[result.queuename] = callback;
+            NoderedUtil.messageQueueclosedcb[result.queuename] = closedcallback;
             return result.queuename;
         }
         return null;
@@ -582,8 +580,8 @@ export class NoderedUtil {
         msg.data = JSON.stringify(q);
         const result: RegisterQueueMessage = await websocket.Send(msg);
         if (result && !NoderedUtil.IsNullEmpty(result.queuename)) {
-            delete this.messageQueuecb[result.queuename];
-            delete this.messageQueueclosedcb[result.queuename];
+            delete NoderedUtil.messageQueuecb[result.queuename];
+            delete NoderedUtil.messageQueueclosedcb[result.queuename];
         } else {
             return;
         }
@@ -598,8 +596,8 @@ export class NoderedUtil {
         msg.data = JSON.stringify(q);
         const result: RegisterExchangeMessage = await websocket.Send(msg);
         if (result && !NoderedUtil.IsNullEmpty(result.exchangename) && !NoderedUtil.IsNullEmpty(result.queuename)) {
-            this.messageQueuecb[result.queuename] = callback;
-            this.messageExchangeclosedcb[result.exchangename] = closedcallback;
+            NoderedUtil.messageQueuecb[result.queuename] = callback;
+            NoderedUtil.messageExchangeclosedcb[result.exchangename] = closedcallback;
             return { exchangename: result.exchangename, queuename: result.queuename };
         }
         return null;
@@ -637,7 +635,7 @@ export class NoderedUtil {
         });
     }
     public static async QueueMessage(websocket: WebSocketClient, exchangename: string, routingkey: string, queuename: string, replyto: string, data: any, correlationId: string, expiration: number): Promise<void> {
-        await this._QueueMessage(websocket, exchangename, routingkey, queuename, replyto, data, correlationId, expiration);
+        await NoderedUtil._QueueMessage(websocket, exchangename, routingkey, queuename, replyto, data, correlationId, expiration);
     }
     public static async ListCollections(jwt: string): Promise<any[]> {
         const q: ListCollectionsMessage = new ListCollectionsMessage();

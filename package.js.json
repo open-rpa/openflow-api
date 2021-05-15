@@ -1,12 +1,12 @@
 {
   "name": "@openiap/openflow-api-js",
-  "version": "1.0.74",
+  "version": "1.0.76",
   "description": "",
   "files": [
     "lib/**/*"
   ],
   "types": "./lib/node/index.d.ts",
-  "main": "./lib/node/index.js",
+  "main": "./lib/openflow-api.js",
   "browser": {
     "./lib/node/index.js": "./lib/openflow-api.js"
   },
