@@ -21,8 +21,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-// import * as R from "ramda";
-// import * as fs from "fs";
+// import * as R from 'ramda';
+// import * as fs from 'fs';
 // import * as fsPath from 'path';
 // import * as crypto from 'crypto';
 

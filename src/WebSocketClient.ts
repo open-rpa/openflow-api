@@ -5,7 +5,6 @@ import { SocketMessage } from './Message/SocketMessage';
 import { TokenUser } from './nodeclient/TokenUser';
 import { CustomEventEmitter } from './events';
 import { ApiConfig } from './ApiConfig';
-import * as path from "path";
 interface IHashTable<T> {
   [key: string]: T;
 }
@@ -105,6 +104,7 @@ export class WebSocketClient {
       this.enableCache = false;
       try {
         const fileCache = require('./file-system-cache');
+        const path = require('path');
         this.messageStore = new fileCache.FileSystemCache(path.join(process.cwd(), '.openflowapicache'))
         this.enableCache = true;
       } catch (error) {
@@ -128,6 +128,7 @@ export class WebSocketClient {
       this.enableCache = false;
       try {
         const fileCache = require('./file-system-cache');
+        const path = require('path');
         this.messageStore = new fileCache.FileSystemCache(path.join(folder, '.openflowapicache'));
         this.enableCache = true;
       } catch (error) {
