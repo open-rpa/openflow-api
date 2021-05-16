@@ -21,10 +21,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-import * as R from 'ramda';
-import * as p from "path";
-import * as fs from "fs";
+// import * as R from 'ramda';
+// import * as p from "path";
+// import * as fs from "fs";
 import * as f from './funcs';
+
+let R: any = null;
+try {
+    R = require("ramda");
+} catch (error) {
+}
+let p: any = null;
+try {
+    p = require("path");
+} catch (error) {
+}
+let fs: any = null;
+try {
+    fs = require("fs");
+} catch (error) {
+}
+
+
 const formatPath = R.pipe(f.ensureString('./.cache'), f.toAbsolutePath);
 
 const toGetValue = (data) => {

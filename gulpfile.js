@@ -9,8 +9,8 @@ const tsify = require('tsify');
 gulp.task('tsc', shell.task([
     'echo "tsc for nodejs"',
     'tsc -p tsconfig.json',
-    'echo "tsc for browser"'
 ]));
+// 'echo "tsc for browser"'
 // 'tsc -p tsconfig-cjs.json'
 
 gulp.task('browserify', function () {
