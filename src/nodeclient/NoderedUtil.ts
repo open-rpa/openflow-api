@@ -615,11 +615,12 @@ export class NoderedUtil {
         data: any,
         correlationId: string,
         expiration: number,
+        striptoken: boolean
     ): Promise<void> {
         return new Promise<void>(async (resolve, reject) => {
             try {
                 const q: QueueMessage = new QueueMessage();
-                q.correlationId = correlationId;
+                q.correlationId = correlationId; q.striptoken = striptoken;
                 if (NoderedUtil.IsNullEmpty(q.correlationId)) q.correlationId = NoderedUtil.GetUniqueIdentifier();
                 q.expiration = expiration; q.exchange = exchangename; q.routingkey = routingkey;
                 q.queuename = queuename;
@@ -635,8 +636,9 @@ export class NoderedUtil {
             }
         });
     }
-    public static async QueueMessage(websocket: WebSocketClient, exchangename: string, routingkey: string, queuename: string, replyto: string, data: any, correlationId: string, expiration: number): Promise<void> {
-        await NoderedUtil._QueueMessage(websocket, exchangename, routingkey, queuename, replyto, data, correlationId, expiration);
+    public static async QueueMessage(websocket: WebSocketClient, exchangename: string, routingkey: string, queuename: string, replyto: string,
+        data: any, correlationId: string, expiration: number, striptoken: boolean): Promise<void> {
+        await NoderedUtil._QueueMessage(websocket, exchangename, routingkey, queuename, replyto, data, correlationId, expiration, striptoken);
     }
     public static async ListCollections(jwt: string): Promise<any[]> {
         const q: ListCollectionsMessage = new ListCollectionsMessage();
