@@ -219,7 +219,7 @@ export class Message {
                                     '',
                                     result,
                                     msg.correlationId,
-                                    ApiConfig.amqpReplyExpiration,
+                                    ApiConfig.amqpReplyExpiration, false
                                 );
                             } catch (error) {
                                 cli._logger.error('Error sending response to ' + msg.replyto + ' ' + JSON.stringify(error));
