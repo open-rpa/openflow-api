@@ -4,6 +4,7 @@ export class QueueMessage {
     public error: string;
     public jwt: any;
     public user: TokenUser;
+    public striptoken: boolean;
 
     public correlationId: string;
     public replyto: string;
