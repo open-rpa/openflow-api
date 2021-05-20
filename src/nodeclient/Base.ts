@@ -87,9 +87,10 @@ export class Base implements IBase {
         right._id = _id;
         right.name = name;
         if (rights[0] === -1) {
-            for (let i: number = 0; i < 1000; i++) {
-                Ace.setBit(right, i);
-            }
+            Ace.resetfullcontrol(right)
+            // for (let i: number = 0; i < 1000; i++) {
+            //     Ace.setBit(right, i);
+            // }
         } else {
             rights.forEach((bit) => {
                 try {
