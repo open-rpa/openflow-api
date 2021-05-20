@@ -270,7 +270,7 @@ export class WebSocketClient {
     this._receiveQueue.push(msg);
     this.ProcessQueue.bind(this)();
   }
-  public async Send<T>(message: Message): Promise<T> {
+  public async Send<T>(message: Message, priority: number): Promise<T> {
     if (NoderedUtil.IsNullEmpty(message.id)) message.id = NoderedUtil.GetUniqueIdentifier();
     if (message.command !== 'pong') {
       let reply = message.replyto;
@@ -287,10 +287,11 @@ export class WebSocketClient {
           }
           resolve(msg);
         }).bind(this),
+        priority
       );
     });
   }
-  private _Send(message: Message, cb: QueuedMessageCallback): void {
+  private _Send(message: Message, cb: QueuedMessageCallback, priority: number): void {
     const messages: string[] = this.chunkString(message.data, 500);
     if (messages === null || messages === undefined || messages.length === 0) {
       const singlemessage: SocketMessage = SocketMessage.frommessage(message, '', 1, 0);
@@ -304,6 +305,7 @@ export class WebSocketClient {
     if (message.id === null || message.id === undefined) {
       message.id = NoderedUtil.GetUniqueIdentifier();
     }
+    message.priority = priority;
     for (let i: number = 0; i < messages.length; i++) {
       const _message: SocketMessage = SocketMessage.frommessage(message, messages[i], messages.length, i);
       this._sendQueue.push(_message);

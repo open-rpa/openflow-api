@@ -9,6 +9,7 @@ export class SocketMessage {
     public data: string;
     public count: number;
     public index: number;
+    public priority: number = 1;
     public static fromjson(json: string): SocketMessage {
         const result: SocketMessage = new SocketMessage();
         const obj: any = JSON.parse(json);
@@ -18,10 +19,10 @@ export class SocketMessage {
         result.count = 1;
         result.index = 0;
         result.data = obj.data;
-        if (isNumber(obj.count)) {
+        if (typeof obj.count === "number") {
             result.count = obj.count;
         }
-        if (isNumber(obj.index)) {
+        if (typeof obj.index === "number") {
             result.index = obj.index;
         }
         if (result.id === null || result.id === undefined || result.id === '') {

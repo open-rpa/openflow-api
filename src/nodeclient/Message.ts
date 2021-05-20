@@ -27,12 +27,14 @@ export class Message {
     public replyto: string;
     public command: string;
     public data: string;
+    public priority: number = 1;
     public static frommessage(msg: SocketMessage, data: string): Message {
         const result: Message = new Message();
         result.id = msg.id;
         result.replyto = msg.replyto;
         result.command = msg.command;
         result.data = data;
+        result.priority = msg.priority;
         return result;
     }
 
@@ -82,7 +84,7 @@ export class Message {
                     this.RefreshToken(cli);
                     break;
                 case 'queuemessage':
-                    this.QueueMessage(cli);
+                    this.QueueMessage(cli, this.priority);
                     break;
                 case 'queueclosed':
                     this.QueueClosed(cli);
@@ -101,9 +103,9 @@ export class Message {
             cli._logger.error(error);
         }
     }
-    public async Send(cli: WebSocketClient): Promise<void> {
+    public async Send(cli: WebSocketClient, priority: number): Promise<void> {
         try {
-            await cli.Send(this);
+            await cli.Send(this, priority);
         } catch (error) {
             throw error;
         }
@@ -112,7 +114,7 @@ export class Message {
         this.Reply('error');
         this.data = 'Unknown command';
         try {
-            await this.Send(cli);
+            await this.Send(cli, 1);
         } catch (error) {
             throw error;
         }
@@ -120,7 +122,7 @@ export class Message {
     private async Ping(cli: WebSocketClient): Promise<void> {
         this.Reply('pong');
         try {
-            await this.Send(cli);
+            await this.Send(cli, 1);
         } catch (error) {
             throw error;
         }
@@ -166,7 +168,7 @@ export class Message {
             }
         }
         try {
-            await this.Send(cli);
+            await this.Send(cli, 1);
         } catch (error) {
             throw error;
         }
@@ -196,7 +198,7 @@ export class Message {
         delete NoderedUtil.messageQueuecb[msg.queuename];
         delete NoderedUtil.messageQueueclosedcb[msg.queuename];
     }
-    private async QueueMessage(cli: WebSocketClient): Promise<void> {
+    private async QueueMessage(cli: WebSocketClient, priority: number): Promise<void> {
         this.Reply(this.command);
         let handled: boolean = false;
         const msg: QueueMessage = QueueMessage.assign(this.data);
@@ -219,7 +221,7 @@ export class Message {
                                     '',
                                     result,
                                     msg.correlationId,
-                                    ApiConfig.amqpReplyExpiration, false
+                                    ApiConfig.amqpReplyExpiration, false, priority
                                 );
                             } catch (error) {
                                 cli._logger.error('Error sending response to ' + msg.replyto + ' ' + JSON.stringify(error));
@@ -227,7 +229,7 @@ export class Message {
                         }
                     }
                     try {
-                        await this.Send(cli);
+                        await this.Send(cli, 1);
                     } catch (error) {
                         throw error;
                     }
