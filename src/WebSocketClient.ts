@@ -299,6 +299,7 @@ export class WebSocketClient {
         this.messageQueue[singlemessage.id] = new QueuedMessage(singlemessage, cb);
         if (this.update_message_queue_count) this.update_message_queue_count(this);
       }
+      singlemessage.priority = message.priority;
       this._sendQueue.push(singlemessage);
       return;
     }
@@ -308,6 +309,7 @@ export class WebSocketClient {
     message.priority = priority;
     for (let i: number = 0; i < messages.length; i++) {
       const _message: SocketMessage = SocketMessage.frommessage(message, messages[i], messages.length, i);
+      _message.priority = message.priority;
       this._sendQueue.push(_message);
     }
     if (message.replyto === null || message.replyto === undefined) {
