@@ -4,6 +4,7 @@ export class WellknownIds {
   static admins: string = '5a1702fa245d9013697656fb';
   static users: string = '5a17f157c4815318c8536c21';
   static robots: string = '5ac0850ca538fee1ebdb996c';
+  static customer_admins: string = '5a1702fa245d9013697656fc';
   // tslint:disable-next-line: variable-name
   static nodered_users: string = '5a23f18a2e8987292ddbe061';
   // tslint:disable-next-line: variable-name

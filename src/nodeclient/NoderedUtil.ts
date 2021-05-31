@@ -19,7 +19,7 @@ import { CreateWorkflowInstanceMessage } from '../Message/CreateWorkflowInstance
 import { SigninMessage } from '../Message/SigninMessage';
 import { RegisterQueueMessage } from '../Message/RegisterQueueMessage';
 import { ListCollectionsMessage } from '../Message/ListCollectionsMessage';
-import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage, GetKubeNodeLabels, QueueClosedMessage, ExchangeClosedMessage } from '..';
+import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage, GetKubeNodeLabels, QueueClosedMessage, ExchangeClosedMessage, WellknownIds, Rights, Ace } from '..';
 import { WatchMessage } from '../Message/WatchMessage';
 import { Billing } from '../stripe/Billing';
 import { PushMetricsMessage } from '../Message/PushMetricsMessage';
@@ -764,5 +764,61 @@ export class NoderedUtil {
         msg.command = 'pushmetrics';
         msg.data = JSONfn.stringify(q);
         const result: PushMetricsMessage = await WebSocketClient.instance.Send<PushMetricsMessage>(msg, 0);
+    }
+    /**
+    * Validated user has rights to perform the requested action ( create is missing! )
+    * @param  {TokenUser} user User requesting permission
+    * @param  {any} item Item permission is needed on
+    * @param  {Rights} action Permission wanted (create, update, delete)
+    * @returns boolean Is allowed
+    */
+    public static hasAuthorization(user: TokenUser, item: Base, action: number): boolean {
+        if (user._id === WellknownIds.root) { return true; }
+        if (action === Rights.create || action === Rights.delete) {
+            if (item._type === "role") {
+                if (item.name.toLowerCase() === "users" || item.name.toLowerCase() === "admins" || item.name.toLowerCase() === "workflow") {
+                    return false;
+                }
+            }
+            if (item._type === "user") {
+                if (item.name === "workflow") {
+                    return false;
+                }
+            }
+        }
+        if (action === Rights.update && item._id === WellknownIds.admins && item.name.toLowerCase() !== "admins") {
+            return false;
+        }
+        if (action === Rights.update && item._id === WellknownIds.users && item.name.toLowerCase() !== "users") {
+            return false;
+        }
+        if (action === Rights.update && item._id === WellknownIds.root && item.name.toLowerCase() !== "root") {
+            return false;
+        }
+        if ((item as any).userid === user.username || (item as any).userid === user._id || (item as any).user === user.username) {
+            return true;
+        } else if (item._id === user._id) {
+            if (action === Rights.delete) { return false; }
+            return true;
+        }
+
+        if (item._acl != null && item._acl != undefined) {
+            if (typeof item._acl === 'string' || item._acl instanceof String) {
+                item._acl = JSON.parse((item._acl as any));
+            }
+
+            const a = item._acl.filter(x => x._id === user._id);
+            if (a.length > 0) {
+                if (Ace.isBitSet(a[0], action)) return true;
+            }
+            for (let i = 0; i < user.roles.length; i++) {
+                const b = item._acl.filter(x => x._id === user.roles[i]._id);
+                if (b.length > 0) {
+                    if (Ace.isBitSet(b[0], action)) return true;
+                }
+            }
+            return false;
+        }
+        return true;
     }
 }
