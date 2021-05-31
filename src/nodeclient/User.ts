@@ -28,6 +28,8 @@ export class User extends Base {
     public username: string;
     public passwordhash: string;
     public sid: string;
+    public customerid: string;
+    public selectedcustomerid: string;
     public firebasetoken: string;
     public onesignalid: string;
     public gpslocation: any;

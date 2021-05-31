@@ -13,6 +13,8 @@ export class TokenUser {
     public impostor: string;
     public disabled: boolean;
     public validated: boolean;
+    public customerid: string;
+    public selectedcustomerid: string;
 
     static From(user: User | TokenUser): TokenUser {
         if (user === null || user === undefined) { return; }
@@ -30,6 +32,8 @@ export class TokenUser {
         if (user.validated == true) {
             result.validated = user.validated;
         }
+        result.customerid = user.customerid;
+        result.selectedcustomerid = user.selectedcustomerid;
         return result;
     }
 
