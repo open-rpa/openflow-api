@@ -6,6 +6,7 @@ export class EnsureStripeCustomerMessage {
     public jwt: string;
 
     public userid: string;
+    public customerid: string;
     public billing: Billing;
     public customer: stripe_customer;
     static assign(o: any): EnsureStripeCustomerMessage {

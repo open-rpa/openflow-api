@@ -19,9 +19,10 @@ import { CreateWorkflowInstanceMessage } from '../Message/CreateWorkflowInstance
 import { SigninMessage } from '../Message/SigninMessage';
 import { RegisterQueueMessage } from '../Message/RegisterQueueMessage';
 import { ListCollectionsMessage } from '../Message/ListCollectionsMessage';
-import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage, GetKubeNodeLabels, QueueClosedMessage, ExchangeClosedMessage, WellknownIds, Rights, Ace } from '..';
+import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage, GetKubeNodeLabels, QueueClosedMessage, ExchangeClosedMessage, WellknownIds, Rights, Ace, EnsureCustomerMessage } from '..';
 import { WatchMessage } from '../Message/WatchMessage';
 import { Billing } from '../stripe/Billing';
+import { Customer } from '../stripe/Customer';
 import { PushMetricsMessage } from '../Message/PushMetricsMessage';
 import { RegisterExchangeMessage } from '../Message/RegisterExchangeMessage';
 
@@ -764,6 +765,15 @@ export class NoderedUtil {
         msg.command = 'pushmetrics';
         msg.data = JSONfn.stringify(q);
         const result: PushMetricsMessage = await WebSocketClient.instance.Send<PushMetricsMessage>(msg, 0);
+    }
+    public static async EnsureCustomer(customer: Customer, userid: string, jwt: string, priority: number): Promise<EnsureCustomerMessage> {
+        const q: EnsureCustomerMessage = new EnsureCustomerMessage();
+        q.jwt = jwt; q.customer = customer; q.userid = userid;
+        const _msg: Message = new Message();
+        _msg.command = 'ensurecustomer';
+        _msg.data = JSON.stringify(q);
+        const result = await WebSocketClient.instance.Send<EnsureCustomerMessage>(_msg, priority);
+        return result;
     }
     /**
     * Validated user has rights to perform the requested action ( create is missing! )

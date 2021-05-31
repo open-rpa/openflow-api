@@ -24,6 +24,7 @@ export { DeleteNoderedPodMessage } from "./Message/DeleteNoderedPodMessage";
 export { DeleteOneMessage } from "./Message/DeleteOneMessage";
 export { DeleteManyMessage } from "./Message/DeleteManyMessage";
 export { DropCollectionMessage } from "./Message/DropCollectionMessage";
+export { EnsureCustomerMessage } from "./Message/EnsureCustomerMessage"
 export { EnsureNoderedInstanceMessage } from "./Message/EnsureNoderedInstanceMessage";
 export { EnsureStripeCustomerMessage } from "./Message/EnsureStripeCustomerMessage";
 export { GetFileMessage } from "./Message/GetFileMessage";
@@ -64,6 +65,7 @@ export { UpdateOneMessage } from "./Message/UpdateOneMessage";
 
 
 export { Billing } from "./stripe/Billing";
+export { Customer } from "./stripe/Customer";
 export { stripe_base } from "./stripe/stripe_base";
 export { stripe_coupon } from "./stripe/stripe_coupon";
 export { stripe_customer } from "./stripe/stripe_customer";
