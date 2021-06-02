@@ -775,6 +775,12 @@ export class NoderedUtil {
         const result = await WebSocketClient.instance.Send<EnsureCustomerMessage>(_msg, priority);
         return result;
     }
+    public static async HouseKeeping(jwt: string, priority: number): Promise<void> {
+        const _msg: Message = new Message();
+        _msg.command = 'housekeeping';
+        _msg.data = JSON.stringify({ jwt: jwt });
+        await WebSocketClient.instance.Send<EnsureCustomerMessage>(_msg, priority);
+    }
     /**
     * Validated user has rights to perform the requested action ( create is missing! )
     * @param  {TokenUser} user User requesting permission
