@@ -245,6 +245,7 @@ export class NoderedUtil {
         q.queryas = queryas;
         q.hint = hint;
         q.query = JSON.stringify(query, (key, value) => {
+            if (value == null) return value;
             const t = typeof value;
             if (value instanceof RegExp) return '__REGEXP ' + value.toString();
             else if (t === 'object') {
