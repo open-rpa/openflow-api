@@ -65,7 +65,7 @@ export { UpdateOneMessage } from "./Message/UpdateOneMessage";
 
 
 export { Billing } from "./stripe/Billing";
-export { Customer } from "./stripe/Customer";
+export { Customer } from "./nodeclient/Customer";
 export { stripe_base } from "./stripe/stripe_base";
 export { stripe_coupon } from "./stripe/stripe_coupon";
 export { stripe_customer } from "./stripe/stripe_customer";

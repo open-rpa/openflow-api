@@ -1,5 +1,5 @@
 import { Billing } from "../stripe/Billing";
-import { Customer } from "../stripe/Customer";
+import { Customer } from "../nodeclient/Customer";
 import { stripe_customer } from "../stripe/stripe_customer";
 
 export class EnsureCustomerMessage {

@@ -22,7 +22,7 @@ import { ListCollectionsMessage } from '../Message/ListCollectionsMessage';
 import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage, GetKubeNodeLabels, QueueClosedMessage, ExchangeClosedMessage, WellknownIds, Rights, Ace, EnsureCustomerMessage } from '..';
 import { WatchMessage } from '../Message/WatchMessage';
 import { Billing } from '../stripe/Billing';
-import { Customer } from '../stripe/Customer';
+import { Customer } from './Customer';
 import { PushMetricsMessage } from '../Message/PushMetricsMessage';
 import { RegisterExchangeMessage } from '../Message/RegisterExchangeMessage';
 

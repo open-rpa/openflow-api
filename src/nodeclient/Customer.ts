@@ -1,4 +1,4 @@
-import { Base } from "../nodeclient/Base";
+import { Base } from "./Base";
 export class Customer extends Base {
     public _id: string;
     public _type: string;
@@ -18,6 +18,9 @@ export class Customer extends Base {
     public openflowuserplan: string;
     public supportplan: string;
     public supporthourplan: string;
+
+    public admins: string;
+    public users: string;
 
     constructor(userid) {
         super();

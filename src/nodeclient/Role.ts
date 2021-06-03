@@ -7,6 +7,7 @@ export class Role extends Base {
     }
     name: string;
     _id: string;
+    public customerid: string;
     members: Rolemember[] = [];
     static assign<T>(o: any): T {
         const res = Object.assign(new Role(), o);
