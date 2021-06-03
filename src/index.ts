@@ -53,6 +53,7 @@ export { RegisterExchangeMessage } from "./Message/RegisterExchangeMessage";
 export { RestartNoderedInstanceMessage } from "./Message/RestartNoderedInstanceMessage";
 export { RegisterUserMessage } from "./Message/RegisterUserMessage";
 export { SaveFileMessage } from "./Message/SaveFileMessage";
+export { SelectCustomerMessage } from "./Message/SelectCustomerMessage";
 export { SigninMessage } from "./Message/SigninMessage";
 export { SocketMessage } from "./Message/SocketMessage";
 export { StartNoderedInstanceMessage } from "./Message/StartNoderedInstanceMessage";

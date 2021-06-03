@@ -19,7 +19,7 @@ import { CreateWorkflowInstanceMessage } from '../Message/CreateWorkflowInstance
 import { SigninMessage } from '../Message/SigninMessage';
 import { RegisterQueueMessage } from '../Message/RegisterQueueMessage';
 import { ListCollectionsMessage } from '../Message/ListCollectionsMessage';
-import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage, GetKubeNodeLabels, QueueClosedMessage, ExchangeClosedMessage, WellknownIds, Rights, Ace, EnsureCustomerMessage } from '..';
+import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage, GetKubeNodeLabels, QueueClosedMessage, ExchangeClosedMessage, WellknownIds, Rights, Ace, EnsureCustomerMessage, SelectCustomerMessage } from '..';
 import { WatchMessage } from '../Message/WatchMessage';
 import { Billing } from '../stripe/Billing';
 import { Customer } from './Customer';
@@ -775,6 +775,14 @@ export class NoderedUtil {
         _msg.data = JSON.stringify(q);
         const result = await WebSocketClient.instance.Send<EnsureCustomerMessage>(_msg, priority);
         return result;
+    }
+    public static async SelectCustomer(customerid: string, jwt: string, priority: number): Promise<void> {
+        const q: SelectCustomerMessage = new SelectCustomerMessage();
+        q.jwt = jwt; q.customerid = customerid;
+        const _msg: Message = new Message();
+        _msg.command = 'selectcustomer';
+        _msg.data = JSON.stringify(q);
+        const result = await WebSocketClient.instance.Send<SelectCustomerMessage>(_msg, priority);
     }
     public static async HouseKeeping(jwt: string, priority: number): Promise<void> {
         const _msg: Message = new Message();
