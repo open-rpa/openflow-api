@@ -21,6 +21,11 @@ export class Customer extends Base {
 
     public admins: string;
     public users: string;
+    public customattr1: string;
+    public customattr2: string;
+    public customattr3: string;
+    public customattr4: string;
+    public customattr5: string;
 
     constructor(userid) {
         super();
