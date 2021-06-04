@@ -4,10 +4,10 @@ export { FederationId } from "./nodeclient/FederationId";
 export { JSONfn } from "./nodeclient/JSONfn";
 export { Message } from "./nodeclient/Message";
 export { NoderedConfig } from "./nodeclient/NoderedConfig";
+export { KubeResources } from "./nodeclient/NoderedConfig";
+export { KubeResourceValues } from "./nodeclient/NoderedConfig";
 export { NoderedUser } from "./nodeclient/NoderedUser";
 export { NoderedUtil } from "./nodeclient/NoderedUtil";
-export { Resources } from "./nodeclient/Resources";
-export { ResourceValues } from "./nodeclient/ResourceValues";
 export { Rights } from "./nodeclient/Rights";
 export { Role } from "./nodeclient/Role";
 export { Rolemember } from "./nodeclient/Rolemember";
@@ -15,6 +15,8 @@ export { TokenUser } from "./nodeclient/TokenUser";
 export { User } from "./nodeclient/User";
 export { WellknownIds } from "./nodeclient/WellknownIds";
 export { Messagequeue } from "./nodeclient/Messagequeue";
+
+export { Resource, ResourceVariant, ResourceUsage } from "./nodeclient/Resources";
 
 export { AggregateMessage } from "./Message/AggregateMessage";
 export { CloseQueueMessage } from "./Message/CloseQueueMessage";
