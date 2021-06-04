@@ -5,6 +5,7 @@ export class Customer extends Base {
     public stripeid: string;
     public userid: string;
     public name: string;
+    public country: string;
     public email: string;
     public address: string;
     public vattype: string;
