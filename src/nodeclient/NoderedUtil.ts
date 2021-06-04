@@ -767,9 +767,9 @@ export class NoderedUtil {
         msg.data = JSONfn.stringify(q);
         const result: PushMetricsMessage = await WebSocketClient.instance.Send<PushMetricsMessage>(msg, 0);
     }
-    public static async EnsureCustomer(customer: Customer, userid: string, jwt: string, priority: number): Promise<EnsureCustomerMessage> {
+    public static async EnsureCustomer(customer: Customer, jwt: string, priority: number): Promise<EnsureCustomerMessage> {
         const q: EnsureCustomerMessage = new EnsureCustomerMessage();
-        q.jwt = jwt; q.customer = customer; q.userid = userid;
+        q.jwt = jwt; q.customer = customer;
         const _msg: Message = new Message();
         _msg.command = 'ensurecustomer';
         _msg.data = JSON.stringify(q);

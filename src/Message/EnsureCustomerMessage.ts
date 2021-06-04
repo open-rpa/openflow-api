@@ -6,7 +6,6 @@ export class EnsureCustomerMessage {
     public error: string;
     public jwt: string;
 
-    public userid: string;
     public billing: Billing;
     public customer: Customer;
     public stripecustomer: stripe_customer;
