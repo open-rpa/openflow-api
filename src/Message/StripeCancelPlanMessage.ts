@@ -1,12 +1,8 @@
-import { stripe_customer } from "../stripe/stripe_customer";
-
 export class StripeCancelPlanMessage {
     public error: string;
     public jwt: string;
 
-    public userid: string;
-    public planid: string;
-    public customer: stripe_customer;
+    public resourceusageid: string;
     static assign(o: any): StripeCancelPlanMessage {
         if (typeof o === "string" || o instanceof String) {
             return Object.assign(new StripeCancelPlanMessage(), JSON.parse(o.toString()));

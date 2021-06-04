@@ -20,6 +20,7 @@ export class Customer extends Base {
     public supportplan: string;
     public supporthourplan: string;
 
+    public subscriptionid: string;
     public admins: string;
     public users: string;
     public customattr1: string;

@@ -722,18 +722,18 @@ export class NoderedUtil {
         const result = await WebSocketClient.instance.Send<EnsureStripeCustomerMessage>(_msg, priority);
         return result.customer;
     }
-    public static async StripeAddPlan(userid: string, planid: string, subplanid: string, jwt: string, priority: number): Promise<StripeAddPlanMessage> {
+    public static async StripeAddPlan(userid: string, customerid: string, resourceid: string, stripeprice: string, jwt: string, priority: number): Promise<StripeAddPlanMessage> {
         const q: StripeAddPlanMessage = new StripeAddPlanMessage();
-        q.jwt = jwt; q.userid = userid; q.planid = planid; q.subplanid = subplanid;
+        q.jwt = jwt; q.userid = userid; q.customerid = customerid; q.resourceid = resourceid; q.stripeprice = stripeprice;
         const _msg: Message = new Message();
         _msg.command = 'stripeaddplan';
         _msg.data = JSON.stringify(q);
         const result = await WebSocketClient.instance.Send<StripeAddPlanMessage>(_msg, priority);
         return result;
     }
-    public static async StripeCancelPlan(userid: string, planid: string, jwt: string, priority: number): Promise<void> {
+    public static async StripeCancelPlan(resourceusageid: string, jwt: string, priority: number): Promise<void> {
         const q: StripeCancelPlanMessage = new StripeCancelPlanMessage();
-        q.jwt = jwt; q.planid = planid; q.userid = userid;
+        q.jwt = jwt; q.resourceusageid = resourceusageid;
         const _msg: Message = new Message();
         _msg.command = 'stripecancelplan';
         _msg.data = JSON.stringify(q);

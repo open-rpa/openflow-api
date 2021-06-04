@@ -5,9 +5,11 @@ export class StripeAddPlanMessage {
     public jwt: string;
 
     public userid: string;
-    public planid: string;
-    public subplanid: string;
-    public customer: stripe_customer;
+    public customerid: string;
+    public resourceid: string;
+    public stripeprice: string
+
+    public stripecustomer: stripe_customer;
     public checkout: any;
     static assign(o: any): StripeAddPlanMessage {
         if (typeof o === "string" || o instanceof String) {

@@ -79,6 +79,7 @@ export { stripe_invoice_line } from "./stripe/stripe_invoice_line";
 export { stripe_list } from "./stripe/stripe_list";
 export { stripe_period } from "./stripe/stripe_period";
 export { stripe_plan } from "./stripe/stripe_plan";
+export { stripe_price, stripe_recurring } from "./stripe/stripe_price";
 export { stripe_subscription } from "./stripe/stripe_subscription";
 export { stripe_subscription_item } from "./stripe/stripe_subscription_item";
 export { stripe_tax_id } from "./stripe/stripe_tax_id";
