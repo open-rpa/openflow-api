@@ -5,6 +5,7 @@ import { stripe_subscription } from "./stripe_subscription";
 import { stripe_customer_discount } from "./stripe_customer_discount";
 // tslint:disable-next-line: class-name
 export class stripe_customer extends stripe_base {
+    public address: stripe_customer_address;
     public description: string;
     public name: string;
     public email: string;
@@ -15,4 +16,12 @@ export class stripe_customer extends stripe_base {
     // deprecated tax_info and tax_info_verification 
     // public tax_info: tax_info;
     // public tax_info_verification: tax_info_verification;
+}
+export class stripe_customer_address extends stripe_base {
+    public line1: string;
+    public line2: string;
+    public postal_code: string;
+    public city: string;
+    public state: string;
+    public country: string;
 }

@@ -70,6 +70,7 @@ export { Customer } from "./nodeclient/Customer";
 export { stripe_base } from "./stripe/stripe_base";
 export { stripe_coupon } from "./stripe/stripe_coupon";
 export { stripe_customer } from "./stripe/stripe_customer";
+export { stripe_customer_address } from "./stripe/stripe_customer";
 export { stripe_customer_discount } from "./stripe/stripe_customer_discount";
 export { stripe_invoice } from "./stripe/stripe_invoice";
 export { stripe_invoice_line } from "./stripe/stripe_invoice_line";
