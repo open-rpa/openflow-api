@@ -19,6 +19,7 @@ export class ResourceVariant {
     public customerassign: "single" | "multiple" | "metered";
     public userassign: "single" | "multiple" | "metered";
     public added_stripeprice: string;
+    public resourceid_stripeprice: string;
     public metadata: any;
     public allowdirectassign: boolean;
 }
