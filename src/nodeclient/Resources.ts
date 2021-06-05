@@ -5,7 +5,7 @@ export class Resource extends Base {
         super();
         this._type = 'resource';
     }
-    public target: "customer" | "user" | "both";
+    public target: "customer" | "user"; //  | "both"
     public customerassign: "singlevariant" | "multiplevariants";
     public userassign: "singlevariant" | "multiplevariants";
     public defaultmetadata: any;
@@ -15,8 +15,8 @@ export class ResourceVariant {
     public name: string;
     public stripeproduct: string;
     public stripeprice: string;
-    public customerassign: "single" | "multiple" | "usage";
-    public userassign: "single" | "multiple" | "usage";
+    public customerassign: "single" | "multiple" | "metered";
+    public userassign: "single" | "multiple" | "metered";
     public added_stripeprice: string;
     public metadata: any;
 }
