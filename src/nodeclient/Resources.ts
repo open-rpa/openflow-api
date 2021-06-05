@@ -20,6 +20,7 @@ export class ResourceVariant {
     public userassign: "single" | "multiple" | "metered";
     public added_stripeprice: string;
     public added_resourceid: string;
+    public added_quantity_multiplier: number;
     public metadata: any;
     public allowdirectassign: boolean;
 }
@@ -30,6 +31,7 @@ export class ResourceUsage extends Base {
     }
     public product: ResourceVariant;
     public resourceid: string;
+    public resource: string;
     public userid: string;
     public customerid: string;
     public quantity: number;
