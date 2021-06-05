@@ -1,4 +1,4 @@
-import { stripe_customer } from "./stripe_customer";
+import { stripe_customer } from "../stripe/stripe_customer";
 
 export class StripeAddPlanMessage {
     public error: string;
@@ -8,6 +8,7 @@ export class StripeAddPlanMessage {
     public customerid: string;
     public resourceid: string;
     public stripeprice: string
+    public quantity: number = 1;
 
     public stripecustomer: stripe_customer;
     public checkout: any;
