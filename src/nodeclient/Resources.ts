@@ -10,6 +10,7 @@ export class Resource extends Base {
     public userassign: "singlevariant" | "multiplevariants";
     public defaultmetadata: any;
     public products: ResourceVariant[];
+    public allowdirectassign: boolean;
 }
 export class ResourceVariant {
     public name: string;
@@ -19,6 +20,7 @@ export class ResourceVariant {
     public userassign: "single" | "multiple" | "metered";
     public added_stripeprice: string;
     public metadata: any;
+    public allowdirectassign: boolean;
 }
 export class ResourceUsage extends Base {
     constructor() {
