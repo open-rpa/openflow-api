@@ -25,7 +25,8 @@ export class ResourceUsage extends Base {
         super();
         this._type = 'resourceusage';
     }
-    public resource: ResourceVariant;
+    public product: ResourceVariant;
+    public resourceid: string;
     public userid: string;
     public customerid: string;
     public quantity: number;
