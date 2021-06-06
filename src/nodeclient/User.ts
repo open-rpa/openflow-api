@@ -42,6 +42,8 @@ export class User extends Base {
     public disabled: boolean;
     public validated: boolean;
     public validatedform: string;
+    public dbusage: number = 0;
+    public dblocked: boolean = false;
     HasRoleName(name: string): boolean {
         const hits: Rolemember[] = this.roles.filter(member => member.name === name);
         return (hits.length === 1);

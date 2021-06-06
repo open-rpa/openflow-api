@@ -15,6 +15,7 @@ export class TokenUser {
     public validated: boolean;
     public customerid: string;
     public selectedcustomerid: string;
+    public dblocked: boolean = false;
 
     static From(user: User | TokenUser): TokenUser {
         if (user === null || user === undefined) { return; }
@@ -29,6 +30,7 @@ export class TokenUser {
         result.email = user.email;
         result.role = user.role;
         result.validated = false;
+        result.dblocked = user.dblocked;
         if (user.validated == true) {
             result.validated = user.validated;
         }

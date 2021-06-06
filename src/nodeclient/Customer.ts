@@ -29,6 +29,9 @@ export class Customer extends Base {
     public customattr4: string;
     public customattr5: string;
 
+    public dbusage: number = 0;
+    public dblocked: boolean = false;
+
     constructor(userid) {
         super();
         this.hascard = false;
