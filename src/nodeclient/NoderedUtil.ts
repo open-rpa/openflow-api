@@ -739,6 +739,11 @@ export class NoderedUtil {
         _msg.data = JSON.stringify(q);
         await WebSocketClient.instance.Send<StripeCancelPlanMessage>(_msg, priority);
     }
+    public static async StripeAddPlanUsage(date: Date, amount: number, siid: string, jwt: string, priority: number): Promise<void> {
+        const dt = parseInt((new Date(date).getTime() / 1000).toFixed(0))
+        const payload: any = { "quantity": amount, "timestamp": dt };
+        this.Stripe("POST", "usage_records", null, siid, payload, jwt, priority);
+    }
     public static async Stripe<T extends stripe_base>(method: string, object: string, customerid: string, id: string, payload: stripe_base, jwt: string, priority: number): Promise<T> {
         const q: StripeMessage = new StripeMessage();
         q.jwt = jwt; q.method = method; q.object = object; q.customerid = customerid; q.id = id; q.payload = payload;
