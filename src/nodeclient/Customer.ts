@@ -32,12 +32,12 @@ export class Customer extends Base {
     public dbusage: number = 0;
     public dblocked: boolean = false;
 
-    constructor(userid) {
+    constructor() {
         super();
         this.hascard = false;
         this._type = "customer";
         this.stripeid = "";
-        this.userid = userid;
+        this.userid = "";
         this.name = "";
         this.email = "";
         this.address = "";

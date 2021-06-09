@@ -85,6 +85,8 @@ export { stripe_subscription_item } from "./stripe/stripe_subscription_item";
 export { stripe_tax_id } from "./stripe/stripe_tax_id";
 export { stripe_tax_verification } from "./stripe/stripe_tax_verification";
 export { StripeAddPlanMessage } from "./Message/StripeAddPlanMessage";
+export { GetNextInvoiceMessage, subscription_item } from "./Message/GetNextInvoiceMessage";
+
 
 export { WebSocketClient } from "./WebSocketClient";
 

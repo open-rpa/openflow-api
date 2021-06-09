@@ -19,7 +19,7 @@ import { CreateWorkflowInstanceMessage } from '../Message/CreateWorkflowInstance
 import { SigninMessage } from '../Message/SigninMessage';
 import { RegisterQueueMessage } from '../Message/RegisterQueueMessage';
 import { ListCollectionsMessage } from '../Message/ListCollectionsMessage';
-import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage, GetKubeNodeLabels, QueueClosedMessage, ExchangeClosedMessage, WellknownIds, Rights, Ace, EnsureCustomerMessage, SelectCustomerMessage } from '..';
+import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, EnsureStripeCustomerMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, RegisterUserMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage, GetKubeNodeLabels, QueueClosedMessage, ExchangeClosedMessage, WellknownIds, Rights, Ace, EnsureCustomerMessage, SelectCustomerMessage, GetNextInvoiceMessage, subscription_item, stripe_invoice } from '..';
 import { WatchMessage } from '../Message/WatchMessage';
 import { Billing } from '../stripe/Billing';
 import { Customer } from './Customer';
@@ -744,6 +744,16 @@ export class NoderedUtil {
         const payload: any = { "quantity": amount, "timestamp": dt };
         this.Stripe("POST", "usage_records", null, siid, payload, jwt, priority);
     }
+    public static async GetNextInvoice(customerid: string, subscriptionid: string, subscription_items: subscription_item[], proration_date: number, jwt: string, priority: number): Promise<stripe_invoice> {
+        const q: GetNextInvoiceMessage = new GetNextInvoiceMessage();
+        q.jwt = jwt; q.customerid = customerid; q.subscriptionid = subscriptionid; q.subscription_items = subscription_items; q.proration_date = proration_date;
+        const _msg: Message = new Message();
+        _msg.command = 'getnextinvoice';
+        _msg.data = JSON.stringify(q);
+        const result = await WebSocketClient.instance.Send<GetNextInvoiceMessage>(_msg, priority);
+        return result.invoice;
+    }
+
     public static async Stripe<T extends stripe_base>(method: string, object: string, customerid: string, id: string, payload: stripe_base, jwt: string, priority: number): Promise<T> {
         const q: StripeMessage = new StripeMessage();
         q.jwt = jwt; q.method = method; q.object = object; q.customerid = customerid; q.id = id; q.payload = payload;
