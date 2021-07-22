@@ -1,3 +1,5 @@
+import { Base } from "..";
+
 export class SaveFileMessage {
     public error: string;
     public jwt: string;
@@ -7,6 +9,7 @@ export class SaveFileMessage {
     public id: string;
     public metadata: any;
     public file: string;
+    public result: Base;
     static assign(o: any): SaveFileMessage {
         if (typeof o === 'string' || o instanceof String) {
             return Object.assign(new SaveFileMessage(), JSON.parse(o.toString()));
