@@ -11,6 +11,7 @@ export class Resource extends Base {
     public defaultmetadata: any;
     public products: ResourceVariant[];
     public allowdirectassign: boolean;
+    public order: number = 0;
 }
 export class ResourceVariant {
     public name: string;
@@ -23,6 +24,7 @@ export class ResourceVariant {
     public added_quantity_multiplier: number;
     public metadata: any;
     public allowdirectassign: boolean;
+    public order: number = 0;
 }
 export class ResourceUsage extends Base {
     constructor() {

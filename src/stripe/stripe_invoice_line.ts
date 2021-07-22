@@ -19,4 +19,5 @@ export class stripe_invoice_line extends stripe_base {
     // tslint:disable-next-line: variable-name
     public unique_id: string;
     public subscription_item: string;
+    public subscription: string;
 }
