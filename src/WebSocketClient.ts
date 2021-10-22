@@ -166,7 +166,7 @@ export class WebSocketClient {
     }
     // this.events.removeAllListeners();
     // this.events = null;
-    WebSocketClient.instance = this;
+    // WebSocketClient.instance = this;
   }
   public async connect(): Promise<void> {
     try {
