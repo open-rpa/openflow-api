@@ -9,6 +9,11 @@ export class NoderedConfig {
     public queue_prefix: string = "";
     public function_external_modules: boolean;
     public nodered_image_name: string;
+    public autocreate: boolean;
+    public codeeditor_lib: string;
+    public monaco: boolean;
+    public tours: boolean;
+    public catalogues: string[];
 }
 export class KubeResources {
     public limits: KubeResourceValues;
