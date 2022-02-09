@@ -84,6 +84,7 @@ export class WebSocketClient {
   public jwt: string;
   // tslint:disable-next-line: variable-name
   public supports_watch: boolean = false;
+  public websocket_package_size: number = 500;
   public messageQueue: IHashTable<QueuedMessage> = {};
   public update_message_queue_count: any;
   public events: CustomEventEmitter = null;
@@ -292,7 +293,7 @@ export class WebSocketClient {
     });
   }
   private _Send(message: Message, cb: QueuedMessageCallback, priority: number): void {
-    const messages: string[] = this.chunkString(message.data, 500);
+    const messages: string[] = this.chunkString(message.data, this.websocket_package_size);
     if (messages === null || messages === undefined || messages.length === 0) {
       const singlemessage: SocketMessage = SocketMessage.frommessage(message, '', 1, 0);
       if (message.replyto === null || message.replyto === undefined) {

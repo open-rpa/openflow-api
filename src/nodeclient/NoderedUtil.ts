@@ -182,6 +182,7 @@ export class NoderedUtil {
         WebSocketClient.instance.user = result.user;
         WebSocketClient.instance.jwt = result.jwt;
         WebSocketClient.instance.supports_watch = result.supports_watch;
+        WebSocketClient.instance.websocket_package_size = result.websocket_package_size;
         return result;
     }
     public static async SigninWithUsername(username: string, password: string, impersonate: string, longtoken: boolean = false, validateonly: boolean = false): Promise<SigninMessage> {
