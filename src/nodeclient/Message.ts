@@ -154,7 +154,6 @@ export class Message {
         const msg: SigninMessage = SigninMessage.assign(this.data);
         cli.jwt = msg.jwt;
         cli.user = msg.user;
-        console.debug("RefreshToken", msg.user);
         if (WebSocketClient.instance != null && WebSocketClient.instance.events != null) {
             WebSocketClient.instance.events.emit('refreshtoken', cli.user)
         }
