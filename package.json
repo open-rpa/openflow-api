@@ -1,6 +1,6 @@
 {
   "name": "@openiap/openflow-api",
-  "version": "1.0.117",
+  "version": "1.0.118",
   "description": "",
   "files": [
     "lib/**/*"
@@ -26,7 +26,6 @@
   "homepage": "https://github.com/open-rpa/openflow-api",
   "funding": "https://github.com/sponsors/skadefro",
   "dependencies": {
-    "@openiap/openflow-api": "^1.0.113",
     "envfile": "^6.9.0",
     "fs-extra": "^9.0.1",
     "ramda": "^0.27.1",

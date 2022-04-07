@@ -1,4 +1,4 @@
-import { Ace, Base } from "@openiap/openflow-api";
+import { Ace, Base } from "..";
 
 export type AddWorkitemOptions = {
     jwt?: string,
