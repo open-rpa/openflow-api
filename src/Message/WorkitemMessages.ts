@@ -1,4 +1,5 @@
-import { Ace, Base } from "..";
+import { Ace } from "../nodeclient/Ace";
+import { Base } from "../nodeclient/Base";
 
 export type AddWorkitemOptions = {
     jwt?: string,
