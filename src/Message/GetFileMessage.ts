@@ -2,6 +2,7 @@ export class GetFileMessage {
     public error: string;
     public jwt: string;
 
+    public compress: boolean;
     public filename: string;
     public mimeType: string;
     public id: string;

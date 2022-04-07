@@ -87,6 +87,14 @@ export { stripe_tax_verification } from "./stripe/stripe_tax_verification";
 export { StripeAddPlanMessage } from "./Message/StripeAddPlanMessage";
 export { GetNextInvoiceMessage, subscription_item } from "./Message/GetNextInvoiceMessage";
 
+export {
+    AddWorkitemMessage, AddWorkitem, AddWorkitemsMessage, UpdateWorkitemMessage, PopWorkitemMessage, DeleteWorkitemMessage, AddWorkitemQueueMessage,
+    GetWorkitemQueueMessage, UpdateWorkitemQueueMessage, DeleteWorkitemQueueMessage, WorkitemQueue, Workitem, MessageWorkitemFile, WorkitemFile
+} from "./Message/WorkitemMessages";
+export {
+    AddWorkitemOptions, AddWorkitemsOptions, UpdateWorkitemOptions, PopWorkitemOptions, DeleteWorkitemOptions, AddWorkitemQueueOptions,
+    UpdateWorkitemQueueOptions, DeleteWorkitemQueueOptions
+} from "./Message/WorkitemMessages";
 
 export { WebSocketClient } from "./WebSocketClient";
 

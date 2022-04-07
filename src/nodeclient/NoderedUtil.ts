@@ -25,6 +25,7 @@ import { Billing } from '../stripe/Billing';
 import { Customer } from './Customer';
 import { PushMetricsMessage } from '../Message/PushMetricsMessage';
 import { RegisterExchangeMessage } from '../Message/RegisterExchangeMessage';
+import { AddWorkitemMessage, AddWorkitemOptions, AddWorkitemQueueMessage, AddWorkitemQueueOptions, AddWorkitemsMessage, AddWorkitemsOptions, DeleteWorkitemMessage, DeleteWorkitemOptions, DeleteWorkitemQueueMessage, DeleteWorkitemQueueOptions, GetWorkitemQueueMessage, GetWorkitemQueueOptions, PopWorkitemMessage, PopWorkitemOptions, UpdateWorkitemMessage, UpdateWorkitemOptions, UpdateWorkitemQueueMessage, UpdateWorkitemQueueOptions, Workitem, WorkitemQueue } from '../Message/WorkitemMessages';
 
 // export type messageQueueCallback = (msg: QueueMessage) => void;
 export type QueueOnMessage = (msg: QueueMessage, ack: any) => void;
@@ -444,11 +445,12 @@ export class NoderedUtil {
         }
     }
 
-    public static async GetFile(filename: string, id: string, jwt: string, priority: number): Promise<GetFileMessage> {
+    public static async GetFile(filename: string, id: string, jwt: string, priority: number, compress: boolean = false): Promise<GetFileMessage> {
         const q: GetFileMessage = new GetFileMessage();
         q.filename = filename;
         q.id = id;
         q.jwt = jwt;
+        q.compress = compress;
         const msg: Message = new Message();
         msg.command = 'getfile';
         msg.data = JSONfn.stringify(q);
@@ -462,13 +464,15 @@ export class NoderedUtil {
         metadata: any,
         file: string,
         jwt: string,
-        priority: number
+        priority: number,
+        compressed: boolean = false
     ): Promise<SaveFileMessage> {
         const q: SaveFileMessage = new SaveFileMessage();
         q.filename = filename;
         q.mimeType = mimeType;
         q.file = file;
         q.jwt = jwt;
+        q.compressed = compressed;
         q.metadata = metadata;
         const msg: Message = new Message();
         msg.command = 'savefile';
@@ -863,4 +867,85 @@ export class NoderedUtil {
         }
         return true;
     }
+    public static async AddWorkitem(options: AddWorkitemOptions): Promise<Workitem> {
+        let q: AddWorkitemMessage = Object.assign({
+            priority: 2
+        }, options) as any;
+        const _msg: Message = new Message();
+        _msg.command = 'addworkitem';
+        _msg.data = JSON.stringify(q);
+        const result: AddWorkitemMessage = await WebSocketClient.instance.Send<AddWorkitemMessage>(_msg, 1);
+        return result.result;
+    }
+    public static async AddWorkitems(options: AddWorkitemsOptions): Promise<void> {
+        let q: AddWorkitemsMessage = Object.assign({
+            priority: 2
+        }, options) as any;
+        const _msg: Message = new Message();
+        _msg.command = 'addworkitems';
+        _msg.data = JSON.stringify(q);
+        const result: AddWorkitemsMessage = await WebSocketClient.instance.Send<AddWorkitemsMessage>(_msg, 1);
+    }
+    public static async UpdateWorkitem(options: UpdateWorkitemOptions): Promise<Workitem> {
+        let q: UpdateWorkitemMessage = Object.assign({
+            priority: 2
+        }, options) as any;
+        const _msg: Message = new Message();
+        _msg.command = 'updateworkitem';
+        _msg.data = JSON.stringify(q);
+        const result: UpdateWorkitemMessage = await WebSocketClient.instance.Send<UpdateWorkitemMessage>(_msg, 1);
+        return result.result;
+    }
+    public static async PopWorkitem(options: PopWorkitemOptions): Promise<Workitem> {
+        let q: PopWorkitemMessage = Object.assign({}, options) as any;
+        const _msg: Message = new Message();
+        _msg.command = 'popworkitem';
+        _msg.data = JSON.stringify(q);
+        const result: PopWorkitemMessage = await WebSocketClient.instance.Send<PopWorkitemMessage>(_msg, 1);
+        return result.result;
+    }
+    public static async DeleteWorkitem(options: DeleteWorkitemOptions): Promise<void> {
+        let q: DeleteWorkitemMessage = Object.assign({}, options) as any;
+        const _msg: Message = new Message();
+        _msg.command = 'deleteworkitem';
+        _msg.data = JSON.stringify(q);
+        const result: DeleteWorkitemMessage = await WebSocketClient.instance.Send<DeleteWorkitemMessage>(_msg, 1);
+    }
+    public static async AddWorkitemQueue(options: AddWorkitemQueueOptions): Promise<WorkitemQueue> {
+        let q: AddWorkitemQueueMessage = Object.assign({
+            skiprole: false,
+            maxretries: 3,
+            retrydelay: 0,
+            initialdelay: 0
+        }, options) as any;
+        const _msg: Message = new Message();
+        _msg.command = 'addworkitem';
+        _msg.data = JSON.stringify(q);
+        const result: AddWorkitemQueueMessage = await WebSocketClient.instance.Send<AddWorkitemQueueMessage>(_msg, 1);
+        return result.result;
+    }
+    public static async GetWorkitemQueue(options: GetWorkitemQueueOptions): Promise<WorkitemQueue> {
+        let q: GetWorkitemQueueMessage = Object.assign({}, options) as any;
+        const _msg: Message = new Message();
+        _msg.command = 'getworkitemqueue';
+        _msg.data = JSON.stringify(q);
+        const result: GetWorkitemQueueMessage = await WebSocketClient.instance.Send<GetWorkitemQueueMessage>(_msg, 1);
+        return result.result;
+    }
+    public static async UpdateWorkitemQueue(options: UpdateWorkitemQueueOptions): Promise<WorkitemQueue> {
+        let q: UpdateWorkitemQueueMessage = Object.assign({}, options) as any;
+        const _msg: Message = new Message();
+        _msg.command = 'addworkitem';
+        _msg.data = JSON.stringify(q);
+        const result: UpdateWorkitemQueueMessage = await WebSocketClient.instance.Send<UpdateWorkitemQueueMessage>(_msg, 1);
+        return result.result;
+    }
+    public static async DeleteWorkitemQueue(options: DeleteWorkitemQueueOptions): Promise<void> {
+        let q: DeleteWorkitemQueueMessage = Object.assign({}, options) as any;
+        const _msg: Message = new Message();
+        _msg.command = 'addworkitem';
+        _msg.data = JSON.stringify(q);
+        const result: DeleteWorkitemQueueMessage = await WebSocketClient.instance.Send<DeleteWorkitemQueueMessage>(_msg, 1);
+    }
+
 }

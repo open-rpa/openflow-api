@@ -3,13 +3,13 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "module": "commonjs",
-        "target": "es2017",
+        "target": "es2018",
         "outDir": "./lib/node",
         "rootDir": "src",
         "sourceMap": true,
         "declaration": true,
         "lib": [
-            "es2017",
+            "es2018",
             "dom"
         ]
     }

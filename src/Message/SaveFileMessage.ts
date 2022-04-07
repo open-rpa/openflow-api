@@ -4,6 +4,7 @@ export class SaveFileMessage {
     public error: string;
     public jwt: string;
 
+    public compressed: boolean;
     public filename: string;
     public mimeType: string;
     public id: string;
