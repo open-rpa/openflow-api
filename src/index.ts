@@ -90,11 +90,11 @@ export { GetNextInvoiceMessage, subscription_item } from "./Message/GetNextInvoi
 export {
     AddWorkitemMessage, AddWorkitem, AddWorkitemsMessage, UpdateWorkitemMessage, PopWorkitemMessage, DeleteWorkitemMessage, AddWorkitemQueueMessage,
     GetWorkitemQueueMessage, UpdateWorkitemQueueMessage, DeleteWorkitemQueueMessage, WorkitemQueue, Workitem, MessageWorkitemFile, WorkitemFile
-} from "./Message/WorkitemMessages";
+} from "./nodeclient/Base";
 export {
     AddWorkitemOptions, AddWorkitemsOptions, UpdateWorkitemOptions, PopWorkitemOptions, DeleteWorkitemOptions, AddWorkitemQueueOptions,
     UpdateWorkitemQueueOptions, DeleteWorkitemQueueOptions
-} from "./Message/WorkitemMessages";
+} from "./nodeclient/Base";
 
 export { WebSocketClient } from "./WebSocketClient";
 
