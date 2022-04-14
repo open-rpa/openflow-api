@@ -165,6 +165,7 @@ export class Workitem extends Base {
     public nextrun: Date;
     public errormessage: string;
     public errorsource: string;
+    public errortype: string;
 }
 
 export class WorkitemFile {
