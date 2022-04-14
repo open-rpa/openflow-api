@@ -239,6 +239,7 @@ export type UpdateWorkitemOptions = {
     ignoremaxretries: boolean,
     errormessage: string,
     errorsource: string,
+    errortype: string,
     files: MessageWorkitemFile[]
 }
 export class UpdateWorkitemMessage {
@@ -252,6 +253,7 @@ export class UpdateWorkitemMessage {
     public ignoremaxretries: boolean;
     public errormessage: string;
     public errorsource: string;
+    public errortype: string;
     public files: MessageWorkitemFile[];
     public result: Workitem;
     static assign(o: any): UpdateWorkitemMessage {
