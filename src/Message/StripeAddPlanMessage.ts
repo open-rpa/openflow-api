@@ -1,6 +1,26 @@
 import { stripe_customer } from "../stripe/stripe_customer";
-
+import { WebSocketClient } from "..";
+export type StripeAddPlanOptions = {
+    jwt?: string,
+    priority?: number,
+    websocket?: WebSocketClient,
+    userid?: string,
+    customerid: string,
+    resourceid: string,
+    stripeprice: string
+}
+export class StripeAddPlanDefaults {
+    public priority: number = 2;
+}
 export class StripeAddPlanMessage {
+    public static parse(options: StripeAddPlanOptions): [StripeAddPlanMessage, number, WebSocketClient] {
+        const defaults = new StripeAddPlanDefaults();
+        const priority = (options.priority ? options.priority : defaults.priority);
+        const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const q: StripeAddPlanMessage = Object.assign(defaults, options) as any;
+        delete (q as any).websocket;
+        return [q, priority, websocket];
+    }
     public error: string;
     public jwt: string;
 

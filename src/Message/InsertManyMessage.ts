@@ -1,4 +1,26 @@
+export type InsertManyOptions = {
+    jwt?: string,
+    priority?: number,
+    collectionname: string,
+    items: any[],
+    w?: number,
+    j?: boolean,
+    skipresults: boolean
+}
+export class InsertManyDefaults {
+    public priority: number = 2;
+    public w: number = 1;
+    public j: boolean = true;
+    public decrypt: boolean = true;
+    public skipresults: boolean = false;
+}
 export class InsertManyMessage {
+    public static parse(options: InsertManyOptions): [InsertManyMessage, number] {
+        const defaults = new InsertManyDefaults();
+        const priority = (options.priority ? options.priority : defaults.priority);
+        const q: InsertManyMessage = Object.assign(defaults, options) as any;
+        return [q, priority];
+    }
     public error: string;
     public jwt: string;
 
@@ -12,6 +34,7 @@ export class InsertManyMessage {
     public items: any[];
     public collectionname: string;
     public results: any[];
+    public decrypt: boolean;
     public skipresults: boolean;
     static assign(o: any): InsertManyMessage {
         if (typeof o === 'string' || o instanceof String) {

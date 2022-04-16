@@ -1,4 +1,24 @@
+import { WebSocketClient } from "..";
+export type EnsureNoderedInstanceOptions = {
+    jwt?: string,
+    priority?: number,
+    websocket?: WebSocketClient,
+    _id?: string
+    skipcreate?: boolean;
+}
+export class EnsureNoderedInstanceDefaults {
+    public priority: number = 2;
+    public skipcreate: boolean = false;
+}
 export class EnsureNoderedInstanceMessage {
+    public static parse(options: EnsureNoderedInstanceOptions): [EnsureNoderedInstanceMessage, number, WebSocketClient] {
+        const defaults = new EnsureNoderedInstanceDefaults();
+        const priority = (options.priority ? options.priority : defaults.priority);
+        const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const q: EnsureNoderedInstanceMessage = Object.assign(defaults, options) as any;
+        delete (q as any).websocket;
+        return [q, priority, websocket];
+    }
     public error: string;
     public jwt: any;
     public _id: string;

@@ -1,4 +1,32 @@
+import { WebSocketClient } from "..";
+import { ExchangeClosed, QueueOnMessage } from "../nodeclient/NoderedUtil";
+export type RegisterExchangeOptions = {
+    jwt?: string,
+    priority?: number,
+    websocket?: WebSocketClient,
+    exchangename: string,
+    algorithm: "direct" | "fanout" | "topic" | "header",
+    routingkey?: string,
+    callback: QueueOnMessage,
+    closedcallback: ExchangeClosed
+}
+export class RegisterExchangeDefaults {
+    public priority: number = 2;
+    public routingkey: string = "";
+}
 export class RegisterExchangeMessage {
+    public static parse(options: RegisterExchangeOptions): [RegisterExchangeMessage, number, WebSocketClient, QueueOnMessage, ExchangeClosed] {
+        const defaults = new RegisterExchangeDefaults();
+        const priority = (options.priority ? options.priority : defaults.priority);
+        const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const q: RegisterExchangeMessage = Object.assign(defaults, options) as any;
+        const callback = (options.callback ? options.callback : undefined);
+        const closedcallback = (options.closedcallback ? options.closedcallback : undefined);
+        delete (q as any).callback;
+        delete (q as any).closedcallback;
+        delete (q as any).websocket;
+        return [q, priority, websocket, callback, closedcallback];
+    }
     public error: string;
     public jwt: any;
 

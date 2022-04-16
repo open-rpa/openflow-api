@@ -218,14 +218,10 @@ export class Message {
                     } else {
                         if (result != null && !NoderedUtil.IsNullEmpty(msg.replyto) && this.command !== 'error') {
                             try {
-                                await NoderedUtil.QueueMessage(
-                                    cli, "", "",
-                                    msg.replyto,
-                                    '',
-                                    result,
-                                    msg.correlationId,
-                                    ApiConfig.amqpReplyExpiration, false, priority
-                                );
+                                await NoderedUtil.Queue({
+                                    websocket: cli, replyto: msg.replyto, data: result, correlationId: msg.correlationId
+                                    , expiration: ApiConfig.amqpReplyExpiration, priority
+                                });
                             } catch (error) {
                                 cli._logger.error('Error sending response to ' + msg.replyto + ' ' + JSON.stringify(error));
                             }

@@ -1,10 +1,28 @@
-import { stripe_customer } from "../stripe/stripe_customer";
+import { WebSocketClient } from "..";
 import { stripe_invoice } from "../stripe/stripe_invoice";
-
+export type GetNextInvoiceOptions = {
+    jwt?: string,
+    priority?: number,
+    websocket?: WebSocketClient,
+    customerid: string,
+    subscriptionid?: string,
+    subscription_items?: subscription_item[],
+    proration_date?: number
+}
+export class GetNextInvoiceDefaults {
+    public priority: number = 2;
+}
 export class GetNextInvoiceMessage {
+    public static parse(options: GetNextInvoiceOptions): [GetNextInvoiceMessage, number, WebSocketClient] {
+        const defaults = new GetNextInvoiceDefaults();
+        const priority = (options.priority ? options.priority : defaults.priority);
+        const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const q: GetNextInvoiceMessage = Object.assign(defaults, options) as any;
+        delete (q as any).websocket;
+        return [q, priority, websocket];
+    }
     public error: string;
     public jwt: string;
-
 
     public customerid: string;
     public subscriptionid: string;

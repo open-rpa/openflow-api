@@ -1,6 +1,25 @@
 import { Base } from "../index";
-
+export type UpdateOneOptions = {
+    jwt?: string,
+    priority?: number,
+    collectionname: string,
+    item?: any,
+    query?: any,
+    w?: number,
+    j?: boolean
+}
+export class UpdateOneDefaults {
+    public priority: number = 2;
+    public w: number = 1;
+    public j: boolean = true;
+}
 export class UpdateOneMessage {
+    public static parse(options: UpdateOneOptions): [UpdateOneMessage, number] {
+        const defaults = new UpdateOneDefaults();
+        const priority = (options.priority ? options.priority : defaults.priority);
+        const q: UpdateOneMessage = Object.assign(defaults, options) as any;
+        return [q, priority];
+    }
     public error: string;
     public jwt: string;
 

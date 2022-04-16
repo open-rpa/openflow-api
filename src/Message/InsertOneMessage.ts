@@ -1,4 +1,24 @@
+export type InsertOneOptions = {
+    jwt?: string,
+    priority?: number,
+    collectionname: string,
+    item: any,
+    w?: number,
+    j?: boolean,
+}
+export class InsertOneDefaults {
+    public decrypt: boolean = true;
+    public priority: number = 2;
+    public w: number = 1;
+    public j: boolean = true;
+}
 export class InsertOneMessage {
+    public static parse(options: InsertOneOptions): [InsertOneMessage, number] {
+        const defaults = new InsertOneDefaults();
+        const priority = (options.priority ? options.priority : defaults.priority);
+        const q: InsertOneMessage = Object.assign(defaults, options) as any;
+        return [q, priority];
+    }
     public error: string;
     public jwt: string;
 
@@ -9,6 +29,7 @@ export class InsertOneMessage {
     public w: number;
     // true, requests acknowledgment that the mongod instances have written to the on-disk journal
     public j: boolean;
+    public decrypt: boolean;
     public item: any;
     public collectionname: string;
     public result: any;

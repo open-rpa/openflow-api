@@ -1,7 +1,25 @@
 import { Base } from "../nodeclient/Base";
-// import { UpdateWriteOpResult } from "mongodb";
-
+export type UpdateManyOptions = {
+    jwt?: string,
+    priority?: number,
+    collectionname: string,
+    item?: any,
+    query?: any,
+    w?: number,
+    j?: boolean
+}
+export class UpdateManyDefaults {
+    public priority: number = 2;
+    public w: number = 1;
+    public j: boolean = true;
+}
 export class UpdateManyMessage {
+    public static parse(options: UpdateManyOptions): [UpdateManyMessage, number] {
+        const defaults = new UpdateManyDefaults();
+        const priority = (options.priority ? options.priority : defaults.priority);
+        const q: UpdateManyMessage = Object.assign(defaults, options) as any;
+        return [q, priority];
+    }
     public error: string;
     public jwt: string;
 

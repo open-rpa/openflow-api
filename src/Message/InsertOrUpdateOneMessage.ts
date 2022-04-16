@@ -1,6 +1,25 @@
 import { Base } from "../nodeclient/Base";
-
+export type InsertOrUpdateOneOptions = {
+    jwt?: string,
+    priority?: number,
+    collectionname: string,
+    uniqeness: string,
+    item: any,
+    w?: number,
+    j?: boolean
+}
+export class InsertOrUpdateOneDefaults {
+    public priority: number = 2;
+    public w: number = 1;
+    public j: boolean = true;
+}
 export class InsertOrUpdateOneMessage {
+    public static parse(options: InsertOrUpdateOneOptions): [InsertOrUpdateOneMessage, number] {
+        const defaults = new InsertOrUpdateOneDefaults();
+        const priority = (options.priority ? options.priority : defaults.priority);
+        const q: InsertOrUpdateOneMessage = Object.assign(defaults, options) as any;
+        return [q, priority];
+    }
     public error: string;
     public jwt: string;
 

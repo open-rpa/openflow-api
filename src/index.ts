@@ -18,53 +18,51 @@ export { Messagequeue } from "./nodeclient/Messagequeue";
 
 export { Resource, ResourceVariant, ResourceUsage } from "./nodeclient/Resources";
 
-export { AggregateMessage } from "./Message/AggregateMessage";
-export { CloseQueueMessage } from "./Message/CloseQueueMessage";
-export { CreateWorkflowInstanceMessage } from "./Message/CreateWorkflowInstanceMessage";
-export { DeleteNoderedInstanceMessage } from "./Message/DeleteNoderedInstanceMessage";
-export { DeleteNoderedPodMessage } from "./Message/DeleteNoderedPodMessage";
-export { DeleteOneMessage } from "./Message/DeleteOneMessage";
-export { DeleteManyMessage } from "./Message/DeleteManyMessage";
-export { DropCollectionMessage } from "./Message/DropCollectionMessage";
-export { EnsureCustomerMessage } from "./Message/EnsureCustomerMessage"
-export { EnsureNoderedInstanceMessage } from "./Message/EnsureNoderedInstanceMessage";
-export { EnsureStripeCustomerMessage } from "./Message/EnsureStripeCustomerMessage";
-export { GetFileMessage } from "./Message/GetFileMessage";
-export { GetKubeNodeLabels } from "./Message/GetKubeNodeLabels";
-export { GetNoderedInstanceLogMessage } from "./Message/GetNoderedInstanceLogMessage";
-export { GetNoderedInstanceMessage } from "./Message/GetNoderedInstanceMessage";
-export { InsertOneMessage } from "./Message/InsertOneMessage";
-export { InsertManyMessage } from "./Message/InsertManyMessage";
-export { InsertOrUpdateOneMessage } from "./Message/InsertOrUpdateOneMessage";
-export { UnWatchMessage } from "./Message/UnWatchMessage";
+
+export { AggregateMessage, AggregateOptions } from "./Message/AggregateMessage";
+export { CloseQueueMessage, CloseQueueOptions } from "./Message/CloseQueueMessage";
+export { CreateWorkflowInstanceMessage, CreateWorkflowInstanceOptions } from "./Message/CreateWorkflowInstanceMessage";
+export { DeleteNoderedInstanceMessage, DeleteNoderedInstanceOptions } from "./Message/DeleteNoderedInstanceMessage";
+export { DeleteNoderedPodMessage, DeleteNoderedPodOptions } from "./Message/DeleteNoderedPodMessage";
+export { DeleteOneMessage, DeleteOneOptions } from "./Message/DeleteOneMessage";
+export { DeleteManyMessage, DeleteManyOptions } from "./Message/DeleteManyMessage";
+export { DropCollectionMessage, DropCollectionOptions } from "./Message/DropCollectionMessage";
+export { EnsureCustomerMessage, EnsureCustomerOptions } from "./Message/EnsureCustomerMessage"
+export { EnsureNoderedInstanceMessage, EnsureNoderedInstanceOptions } from "./Message/EnsureNoderedInstanceMessage";
+export { GetFileMessage, GetFileOptions } from "./Message/GetFileMessage";
+export { GetKubeNodeLabelsMessage, GetKubeNodeLabelsOptions } from "./Message/GetKubeNodeLabelsMessage";
+export { GetNoderedInstanceLogMessage, GetNoderedInstanceLogOptions } from "./Message/GetNoderedInstanceLogMessage";
+export { GetNoderedInstanceMessage, GetNoderedInstanceOptions } from "./Message/GetNoderedInstanceMessage";
+export { InsertOneMessage, InsertOneOptions } from "./Message/InsertOneMessage";
+export { InsertManyMessage, InsertManyOptions } from "./Message/InsertManyMessage";
+export { InsertOrUpdateOneMessage, InsertOrUpdateOneOptions } from "./Message/InsertOrUpdateOneMessage";
+export { UnWatchMessage, UnWatchOptions } from "./Message/UnWatchMessage";
 export { WatchEventMessage } from "./Message/WatchEventMessage";
-export { WatchMessage } from "./Message/WatchMessage";
+export { WatchMessage, WatchOptions } from "./Message/WatchMessage";
 
 
-export { ListCollectionsMessage } from "./Message/ListCollectionsMessage";
+export { ListCollectionsMessage, ListCollectionsOptions } from "./Message/ListCollectionsMessage";
 export { MapReduceMessage, emit, mapFunc, reduceFunc, finalizeFunc } from "./Message/MapReduceMessage";
-export { PushMetricsMessage } from "./Message/PushMetricsMessage";
-export { QueryMessage } from "./Message/QueryMessage";
-export { QueueClosedMessage } from "./Message/QueueClosedMessage";
+export { QueryMessage, QueryOptions } from "./Message/QueryMessage";
+export { QueueClosedMessage, } from "./Message/QueueClosedMessage";
 export { ExchangeClosedMessage } from "./Message/ExchangeClosedMessage";
-export { GetDocumentVersionMessage } from "./Message/GetDocumentVersionMessage";
+export { GetDocumentVersionMessage, GetDocumentVersionOptions } from "./Message/GetDocumentVersionMessage";
 export { QueuedMessage, QueuedMessageCallback } from "./Message/QueuedMessage";
-export { QueueMessage } from "./Message/QueueMessage";
-export { RegisterQueueMessage } from "./Message/RegisterQueueMessage";
-export { RegisterExchangeMessage } from "./Message/RegisterExchangeMessage";
-export { RestartNoderedInstanceMessage } from "./Message/RestartNoderedInstanceMessage";
-export { RegisterUserMessage } from "./Message/RegisterUserMessage";
-export { SaveFileMessage } from "./Message/SaveFileMessage";
-export { SelectCustomerMessage } from "./Message/SelectCustomerMessage";
-export { SigninMessage } from "./Message/SigninMessage";
+export { QueueMessage, QueueOptions } from "./Message/QueueMessage";
+export { RegisterQueueMessage, RegisterQueueOptions } from "./Message/RegisterQueueMessage";
+export { RegisterExchangeMessage, RegisterExchangeOptions } from "./Message/RegisterExchangeMessage";
+export { RestartNoderedInstanceMessage, RestartNoderedInstanceOptions } from "./Message/RestartNoderedInstanceMessage";
+export { SaveFileMessage, SaveFileOptions } from "./Message/SaveFileMessage";
+export { SelectCustomerMessage, SelectCustomerOptions } from "./Message/SelectCustomerMessage";
+export { SigninMessage, RenewTokenOptions, SigninWithTokenOptions, SigninWithUsernameOptions } from "./Message/SigninMessage";
 export { SocketMessage } from "./Message/SocketMessage";
-export { StartNoderedInstanceMessage } from "./Message/StartNoderedInstanceMessage";
-export { StopNoderedInstanceMessage } from "./Message/StopNoderedInstanceMessage";
-export { StripeCancelPlanMessage } from "./Message/StripeCancelPlanMessage";
-export { StripeMessage } from "./Message/StripeMessage";
+export { StartNoderedInstanceMessage, StartNoderedInstanceOptions } from "./Message/StartNoderedInstanceMessage";
+export { StopNoderedInstanceMessage, StopNoderedInstanceOptions } from "./Message/StopNoderedInstanceMessage";
+export { StripeCancelPlanMessage, StripeCancelPlanOptions } from "./Message/StripeCancelPlanMessage";
+export { StripeMessage, StripeOptions } from "./Message/StripeMessage";
 export { UpdateFileMessage } from "./Message/UpdateFileMessage";
-export { UpdateManyMessage } from "./Message/UpdateManyMessage";
-export { UpdateOneMessage } from "./Message/UpdateOneMessage";
+export { UpdateManyMessage, UpdateManyOptions } from "./Message/UpdateManyMessage";
+export { UpdateOneMessage, UpdateOneOptions } from "./Message/UpdateOneMessage";
 
 
 export { Billing } from "./stripe/Billing";
