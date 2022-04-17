@@ -23,6 +23,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p src/tsconfig.json",
     "test": "ts-mocha --paths -p test/tsconfig.json .\\test\\*.test.ts",
+    "coverage": "nyc ts-mocha --paths -p test/tsconfig.json .\\test\\*.test.ts",
     "build": "tsc -p src/tsconfig.json"
   },
   "homepage": "https://github.com/open-rpa/openflow-api",

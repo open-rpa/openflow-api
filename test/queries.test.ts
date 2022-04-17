@@ -7,7 +7,7 @@ import assert = require('assert');
 import { ApiConfig } from '../src/ApiConfig';
 import { WebSocketClient, SigninMessage, Message, NoderedUtil } from "../src/index";
 
-@suite class noderedutil {
+@suite class queries {
     private socket: WebSocketClient = null;
     @timeout(500000)
     async before() {
@@ -54,7 +54,4 @@ import { WebSocketClient, SigninMessage, Message, NoderedUtil } from "../src/ind
         assert.strictEqual(users.length, 1);
     }
 }
-// .\node_modules\.bin\ts-node .\test\NoderedUtil.test.ts
-// cls | ./node_modules/.bin/_mocha 'test/**/NoderedUtil.test.ts'
-// cls | .\node_modules\.bin\ts-node .\test\NoderedUtil.test.ts
-// cls | ts-mocha --paths -p test/tsconfig.json .\test\NoderedUtil.test.ts
+// cls | ts-mocha --paths -p test/tsconfig.json .\test\queries.test.ts

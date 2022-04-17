@@ -6,3 +6,4 @@ test
 gulpfile.js
 tslint.json
 .openflowapicache
+.nyc_output
