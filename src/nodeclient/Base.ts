@@ -155,7 +155,7 @@ export class Workitem extends Base {
     }
     public wiqid: string;
     public wiq: string;
-    public state: string;
+    public state: "failed" | "successful" | "processing" | "retry" | "new";
     public payload: any;
     public retries: number;
     public priority: number;
@@ -166,7 +166,7 @@ export class Workitem extends Base {
     public nextrun: Date;
     public errormessage: string;
     public errorsource: string;
-    public errortype: string;
+    public errortype: "application" | "business";
 }
 
 export class WorkitemFile {
@@ -260,17 +260,18 @@ export type UpdateWorkitemOptions = {
     priority?: number,
     websocket?: WebSocketClient,
     _id: string,
-    name: string,
-    state: string,
-    payload: any,
-    ignoremaxretries: boolean,
-    errormessage: string,
-    errorsource: string,
-    errortype: string,
-    files: MessageWorkitemFile[]
+    name?: string,
+    state?: "failed" | "successful" | "processing" | "retry",
+    payload?: any,
+    ignoremaxretries?: boolean,
+    errormessage?: string,
+    errorsource?: string,
+    errortype?: "application" | "business",
+    files?: MessageWorkitemFile[]
 }
 export class UpdateWorkitemDefaults {
     public priority: number = 2;
+    public ignoremaxretries: boolean = false;
 }
 export class UpdateWorkitemMessage {
     public static parse(options: UpdateWorkitemOptions): [UpdateWorkitemMessage, number, WebSocketClient] {
@@ -285,12 +286,12 @@ export class UpdateWorkitemMessage {
 
     public _id: string;
     public name: string;
-    public state: string;
+    public state: "failed" | "successful" | "processing" | "retry" | "new";
     public payload: any;
     public ignoremaxretries: boolean;
     public errormessage: string;
     public errorsource: string;
-    public errortype: string;
+    public errortype: "application" | "business";
     public files: MessageWorkitemFile[];
     public result: Workitem;
     static assign(o: any): UpdateWorkitemMessage {
