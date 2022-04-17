@@ -20,7 +20,7 @@ export class GetDocumentVersionMessage {
     public error: string;
     public jwt: string;
 
-    public _id: string;
+    public id: string;
     public version: number;
     public collectionname: string;
     public decrypt: boolean;
