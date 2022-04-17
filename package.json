@@ -1,6 +1,6 @@
 {
   "name": "@openiap/openflow-api",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "",
   "files": [
     "lib/**/*"
@@ -21,8 +21,9 @@
   "license": "MPL-2.0",
   "scripts": {
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-    "lint": "tslint -p tsconfig.json",
-    "test": "ts-mocha --paths -p test/tsconfig.json .\\test\\*.test.ts"
+    "lint": "tslint -p src/tsconfig.json",
+    "test": "ts-mocha --paths -p test/tsconfig.json .\\test\\*.test.ts",
+    "build": "tsc -p src/tsconfig.json"
   },
   "homepage": "https://github.com/open-rpa/openflow-api",
   "funding": "https://github.com/sponsors/skadefro",
