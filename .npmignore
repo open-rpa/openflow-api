@@ -1,0 +1,7 @@
+.github
+.vscode
+.npmrc
+.cache
+test
+gulpfile.js
+tslint.json
