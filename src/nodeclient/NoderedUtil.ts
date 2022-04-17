@@ -41,6 +41,7 @@ import { StripeOptions } from '../Message/StripeMessage';
 import { EnsureCustomerOptions } from '../Message/EnsureCustomerMessage';
 import { SelectCustomerOptions } from '../Message/SelectCustomerMessage';
 import { CreateWorkflowInstanceMessage, CreateWorkflowInstanceOptions } from '../Message/CreateWorkflowInstanceMessage';
+import { ApiConfig } from '../ApiConfig';
 
 // export type messageQueueCallback = (msg: QueueMessage) => void;
 export type QueueOnMessage = (msg: QueueMessage, ack: any) => void;
@@ -152,7 +153,7 @@ export class NoderedUtil {
     }
     public static HandleError(node: any, error: any, msg: any): void {
         // tslint:disable-next-line: no-console
-        console.error(error);
+        if (ApiConfig.log_information) console.error(error);
         let message: string = error;
         if (typeof error === 'string' || error instanceof String) {
             error = new Error(error as string);
@@ -195,7 +196,7 @@ export class NoderedUtil {
             return res[0];
         } else if (res.length === 2) {
             // tslint:disable-next-line: no-console
-            console.error('Found more than one !');
+            if (ApiConfig.log_information) console.error('Found more than one !');
         }
         return null;
     }
