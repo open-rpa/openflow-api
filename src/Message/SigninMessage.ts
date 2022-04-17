@@ -3,6 +3,7 @@ import { TokenUser } from "../nodeclient/TokenUser";
 export type RenewTokenOptions = {
     jwt?: string,
     priority?: number,
+    websocket?: WebSocketClient,
     longtoken?: boolean,
     clientagent?: string,
     clientversion?: string,
@@ -16,6 +17,7 @@ export class RenewTokenDefaults {
 export type GetTokenFromSAMLOptions = {
     jwt?: string,
     priority?: number,
+    websocket?: WebSocketClient,
     longtoken?: boolean,
     clientagent?: string,
     clientversion?: string,
@@ -30,6 +32,7 @@ export class GetTokenFromSAMLDefaults {
 export type SigninWithTokenOptions = {
     jwt?: string,
     priority?: number,
+    websocket?: WebSocketClient,
     longtoken?: boolean,
     clientagent?: string,
     clientversion?: string,
@@ -45,6 +48,7 @@ export class SigninWithTokenDefaults {
 export type SigninWithUsernameOptions = {
     jwt?: string,
     priority?: number,
+    websocket?: WebSocketClient,
     longtoken?: boolean,
     clientagent?: string,
     clientversion?: string,
@@ -60,57 +64,65 @@ export class SigninWithUsernameDefaults {
 }
 
 export class SigninMessage {
-    public static parserenew(options: RenewTokenOptions): [SigninMessage, number] {
+    public static parserenew(options: RenewTokenOptions): [SigninMessage, number, WebSocketClient] {
         const defaults = new RenewTokenDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
+        const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
         const q: SigninMessage = Object.assign(defaults, options) as any;
-        if (!q.clientagent || q.clientagent == "") q.clientagent = WebSocketClient.instance.agent;
-        if (!q.clientversion || q.clientversion == "") q.clientagent = WebSocketClient.instance.version;
-        q.clientversion = WebSocketClient.instance.version;
-        return [q, priority];
+        if (!q.clientagent || q.clientagent == "") q.clientagent = websocket.agent;
+        if (!q.clientversion || q.clientversion == "") q.clientagent = websocket.version;
+        q.clientversion = websocket.version;
+        delete (q as any).websocket;
+        return [q, priority, websocket];
     }
-    public static parsefromsaml(options: GetTokenFromSAMLOptions): [SigninMessage, number] {
+    public static parsefromsaml(options: GetTokenFromSAMLOptions): [SigninMessage, number, WebSocketClient] {
         const defaults = new GetTokenFromSAMLDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
+        const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
         const q: SigninMessage = Object.assign(defaults, options) as any;
-        if (!q.clientagent || q.clientagent == "") q.clientagent = WebSocketClient.instance.agent;
-        if (!q.clientversion || q.clientversion == "") q.clientagent = WebSocketClient.instance.version;
-        q.clientversion = WebSocketClient.instance.version;
-        return [q, priority];
+        if (!q.clientagent || q.clientagent == "") q.clientagent = websocket.agent;
+        if (!q.clientversion || q.clientversion == "") q.clientagent = websocket.version;
+        q.clientversion = websocket.version;
+        delete (q as any).websocket;
+        return [q, priority, websocket];
     }
-    public static parsesigninwithtoken(options: SigninWithTokenOptions): [SigninMessage, number] {
+    public static parsesigninwithtoken(options: SigninWithTokenOptions): [SigninMessage, number, WebSocketClient] {
         const defaults = new SigninWithTokenDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
+        const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
         const q: SigninMessage = Object.assign(defaults, options) as any;
         q.realm = "browser";
         if (this.isNodeJS()) q.realm = "nodejs";
-        if (!q.clientagent || q.clientagent == "") q.clientagent = WebSocketClient.instance.agent;
-        if (!q.clientversion || q.clientversion == "") q.clientagent = WebSocketClient.instance.version;
-        q.onesignalid = WebSocketClient.instance.oneSignalId;
-        q.device = WebSocketClient.instance.device;
-        q.gpslocation = WebSocketClient.instance.location;
-        if (WebSocketClient.instance.usingCordova) {
+        if (!q.clientagent || q.clientagent == "") q.clientagent = websocket.agent;
+        if (!q.clientversion || q.clientversion == "") q.clientagent = websocket.version;
+        q.onesignalid = websocket.oneSignalId;
+        q.device = websocket.device;
+        q.gpslocation = websocket.location;
+        if (websocket.usingCordova) {
             q.realm = "mobile";
             q.clientagent = "mobileapp";
         }
-        return [q, priority];
+        delete (q as any).websocket;
+        return [q, priority, websocket];
     }
-    public static parsesigninwithpassword(options: SigninWithUsernameOptions): [SigninMessage, number] {
+    public static parsesigninwithpassword(options: SigninWithUsernameOptions): [SigninMessage, number, WebSocketClient] {
         const defaults = new SigninWithUsernameDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
+        const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
         const q: SigninMessage = Object.assign(defaults, options) as any;
         q.realm = "browser";
         if (this.isNodeJS()) q.realm = "nodejs";
-        if (!q.clientagent || q.clientagent == "") q.clientagent = WebSocketClient.instance.agent;
-        if (!q.clientversion || q.clientversion == "") q.clientagent = WebSocketClient.instance.version;
-        q.onesignalid = WebSocketClient.instance.oneSignalId;
-        q.device = WebSocketClient.instance.device;
-        q.gpslocation = WebSocketClient.instance.location;
-        if (WebSocketClient.instance.usingCordova) {
+        if (!q.clientagent || q.clientagent == "") q.clientagent = websocket.agent;
+        if (!q.clientversion || q.clientversion == "") q.clientagent = websocket.version;
+        q.onesignalid = websocket.oneSignalId;
+        q.device = websocket.device;
+        q.gpslocation = websocket.location;
+        if (websocket.usingCordova) {
             q.realm = "mobile";
             q.clientagent = "mobileapp";
         }
-        return [q, priority];
+        delete (q as any).websocket;
+        return [q, priority, websocket];
     }
     public static isNodeJS(): boolean {
         if (typeof process === 'object' && process + '' === '[object process]') {

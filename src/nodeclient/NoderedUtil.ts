@@ -400,43 +400,43 @@ export class NoderedUtil {
     //     return result;
     // }
     public static async RenewToken(options: RenewTokenOptions): Promise<SigninMessage> {
-        const [q, priority] = SigninMessage.parserenew(options);
+        const [q, priority, websocket] = SigninMessage.parserenew(options);
         const _msg: Message = new Message();
         _msg.command = 'signin';
         _msg.data = JSON.stringify(q);
-        const result: SigninMessage = await WebSocketClient.instance.Send<SigninMessage>(_msg, priority);
+        const result: SigninMessage = await websocket.Send<SigninMessage>(_msg, priority);
         return result;
     }
     public static async GetTokenFromSAML(options: GetTokenFromSAMLOptions): Promise<SigninMessage> {
-        const [q, priority] = SigninMessage.parsefromsaml(options);
+        const [q, priority, websocket] = SigninMessage.parsefromsaml(options);
         const _msg: Message = new Message();
         _msg.command = 'signin';
         _msg.data = JSON.stringify(q);
-        const result: SigninMessage = await WebSocketClient.instance.Send<SigninMessage>(_msg, priority);
+        const result: SigninMessage = await websocket.Send<SigninMessage>(_msg, priority);
         return result;
     }
     public static async SigninWithToken(options: SigninWithTokenOptions): Promise<SigninMessage> {
-        const [q, priority] = SigninMessage.parsesigninwithtoken(options);
+        const [q, priority, websocket] = SigninMessage.parsesigninwithtoken(options);
         const _msg: Message = new Message();
         _msg.command = 'signin';
         _msg.data = JSON.stringify(q);
-        const result: SigninMessage = await WebSocketClient.instance.Send<SigninMessage>(_msg, priority);
-        WebSocketClient.instance.user = result.user;
-        WebSocketClient.instance.jwt = result.jwt;
-        WebSocketClient.instance.supports_watch = result.supports_watch;
-        WebSocketClient.instance.websocket_package_size = result.websocket_package_size;
+        const result: SigninMessage = await websocket.Send<SigninMessage>(_msg, priority);
+        websocket.user = result.user;
+        websocket.jwt = result.jwt;
+        websocket.supports_watch = result.supports_watch;
+        websocket.websocket_package_size = result.websocket_package_size;
         return result;
     }
     public static async SigninWithUsername(options: SigninWithUsernameOptions): Promise<SigninMessage> {
-        const [q, priority] = SigninMessage.parsesigninwithpassword(options);
+        const [q, priority, websocket] = SigninMessage.parsesigninwithpassword(options);
         const _msg: Message = new Message();
         _msg.command = 'signin';
         _msg.data = JSON.stringify(q);
-        const result: SigninMessage = await WebSocketClient.instance.Send<SigninMessage>(_msg, priority);
-        WebSocketClient.instance.user = result.user;
-        WebSocketClient.instance.jwt = result.jwt;
-        WebSocketClient.instance.supports_watch = result.supports_watch;
-        WebSocketClient.instance.websocket_package_size = result.websocket_package_size;
+        const result: SigninMessage = await websocket.Send<SigninMessage>(_msg, priority);
+        websocket.user = result.user;
+        websocket.jwt = result.jwt;
+        websocket.supports_watch = result.supports_watch;
+        websocket.websocket_package_size = result.websocket_package_size;
         return result;
     }
     public static messageQueuecb: IHashTable<QueueOnMessage> = {};
