@@ -1,3 +1,6 @@
+import fs = require('fs');
+import path = require('path');
+import pako = require('pako');
 import { WebSocketClient } from '../WebSocketClient';
 import { AddWorkitemOptions, Base, GetWorkitemQueueOptions } from './Base';
 import { QueueMessage, QueueOptions } from '../Message/QueueMessage';
@@ -18,7 +21,7 @@ import { GetNoderedInstanceMessage, GetNoderedInstanceOptions } from '../Message
 import { GetTokenFromSAMLOptions, RenewTokenOptions, SigninMessage, SigninWithTokenOptions, SigninWithUsernameOptions } from '../Message/SigninMessage';
 import { RegisterQueueMessage, RegisterQueueOptions } from '../Message/RegisterQueueMessage';
 import { ListCollectionsMessage, ListCollectionsOptions } from '../Message/ListCollectionsMessage';
-import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage, QueueClosedMessage, ExchangeClosedMessage, WellknownIds, Rights, Ace, EnsureCustomerMessage, SelectCustomerMessage, GetNextInvoiceMessage, subscription_item, stripe_invoice, AddWorkitemMessage, AddWorkitemQueueMessage, AddWorkitemQueueOptions, AddWorkitemsMessage, AddWorkitemsOptions, DeleteWorkitemMessage, DeleteWorkitemOptions, DeleteWorkitemQueueMessage, DeleteWorkitemQueueOptions, GetWorkitemQueueMessage, PopWorkitemMessage, PopWorkitemOptions, UpdateWorkitemMessage, UpdateWorkitemOptions, UpdateWorkitemQueueMessage, UpdateWorkitemQueueOptions, Workitem, WorkitemQueue, GetKubeNodeLabelsMessage, CloseQueueMessage } from '..';
+import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage, QueueClosedMessage, ExchangeClosedMessage, WellknownIds, Rights, Ace, EnsureCustomerMessage, SelectCustomerMessage, GetNextInvoiceMessage, subscription_item, stripe_invoice, AddWorkitemMessage, AddWorkitemQueueMessage, AddWorkitemQueueOptions, AddWorkitemsMessage, AddWorkitemsOptions, DeleteWorkitemMessage, DeleteWorkitemOptions, DeleteWorkitemQueueMessage, DeleteWorkitemQueueOptions, GetWorkitemQueueMessage, PopWorkitemMessage, PopWorkitemOptions, UpdateWorkitemMessage, UpdateWorkitemOptions, UpdateWorkitemQueueMessage, UpdateWorkitemQueueOptions, Workitem, WorkitemQueue, GetKubeNodeLabelsMessage, CloseQueueMessage, MessageWorkitemFile } from '..';
 import { WatchMessage, WatchOptions } from '../Message/WatchMessage';
 import { RegisterExchangeMessage, RegisterExchangeOptions } from '../Message/RegisterExchangeMessage';
 import { GetDocumentVersionOptions } from '../Message/GetDocumentVersionMessage';
@@ -42,6 +45,7 @@ import { EnsureCustomerOptions } from '../Message/EnsureCustomerMessage';
 import { SelectCustomerOptions } from '../Message/SelectCustomerMessage';
 import { CreateWorkflowInstanceMessage, CreateWorkflowInstanceOptions } from '../Message/CreateWorkflowInstanceMessage';
 import { ApiConfig } from '../ApiConfig';
+
 
 // export type messageQueueCallback = (msg: QueueMessage) => void;
 export type QueueOnMessage = (msg: QueueMessage, ack: any) => void;
@@ -660,6 +664,23 @@ export class NoderedUtil {
             return false;
         }
         return true;
+    }
+    public static async CreateWorkitemFilesArray(files: string[], compressed: boolean): Promise<MessageWorkitemFile[]> {
+        var result: MessageWorkitemFile[] = [];
+        for (var i = 0; i < files.length; i++) {
+            let file: MessageWorkitemFile = new MessageWorkitemFile();
+            file.filename = path.basename(files[i]);
+            if (fs.existsSync(files[i])) {
+                if (compressed) {
+                    file.compressed = true;
+                    file.file = Buffer.from(pako.deflate(fs.readFileSync(files[i], null))).toString('base64');
+                } else {
+                    file.file = fs.readFileSync(files[i], { encoding: 'base64' });
+                }
+                result.push(file);
+            } else { throw new Error("File not found " + files[i]) }
+        }
+        return result;
     }
     public static async AddWorkitem(options: AddWorkitemOptions): Promise<Workitem> {
         const [q, priority, websocket] = AddWorkitemMessage.parse(options);

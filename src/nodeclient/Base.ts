@@ -216,7 +216,17 @@ export class AddWorkitemMessage {
         return Object.assign(new AddWorkitemMessage(), o);
     }
 }
+export type AddWorkitemBaseOptions = {
+    name?: string;
+    payload?: any;
+    nextrun?: Date;
+    priority?: number;
+    files?: MessageWorkitemFile[];
+}
 export class AddWorkitem {
+    static parse(options: AddWorkitemBaseOptions) {
+        return Object.assign(new AddWorkitem(), options);
+    }
     public name: string;
     public payload: any;
     public nextrun: Date;
@@ -524,7 +534,6 @@ export class DeleteWorkitemQueueMessage {
         return Object.assign(new DeleteWorkitemQueueMessage(), o);
     }
 }
-
 
 export class MessageWorkitemFile {
     public file: string;
