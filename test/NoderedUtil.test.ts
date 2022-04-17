@@ -11,10 +11,10 @@ import { WebSocketClient, SigninMessage, Message, NoderedUtil } from "../src/ind
     private socket: WebSocketClient = null;
     @timeout(500000)
     async before() {
-        if (!this.socket) this.socket = new WebSocketClient(null, "wss://pc.openiap.io", true);
         ApiConfig.log_trafic_verbose = false;
         ApiConfig.log_trafic_silly = false;
         ApiConfig.log_information = false;
+        if (!this.socket) this.socket = new WebSocketClient(null, "wss://pc.openiap.io", true);
         // if (!this.socket) this.socket = new WebSocketClient(null, "wss://demo.openiap.io", true, true);
         this.socket.agent = "test-cli";
         await this.socket.Connect();
@@ -46,14 +46,15 @@ import { WebSocketClient, SigninMessage, Message, NoderedUtil } from "../src/ind
     }
     @timeout(5000)
     @test async 'aggregatetest'() {
-        let users = await NoderedUtil.Aggregate({ aggregates: [{ "$match": { "_type": "role" } }], collectionname: "users" })
+        let users = await NoderedUtil.Aggregate({ aggregates: [{ "$match": { "_type": "role" } }, { "$limit": 5 }], collectionname: "users" })
         assert.notStrictEqual(users, null);
         assert.strictEqual(users.length > 1, true);
         users = await NoderedUtil.Aggregate({ aggregates: [{ "$match": { "_type": "role" } }, { "$limit": 1 }], collectionname: "users" })
         assert.notStrictEqual(users, null);
         assert.strictEqual(users.length, 1);
     }
-
 }
 // .\node_modules\.bin\ts-node .\test\NoderedUtil.test.ts
 // cls | ./node_modules/.bin/_mocha 'test/**/NoderedUtil.test.ts'
+// cls | .\node_modules\.bin\ts-node .\test\NoderedUtil.test.ts
+// cls | ts-mocha --paths -p test/tsconfig.json .\test\NoderedUtil.test.ts
