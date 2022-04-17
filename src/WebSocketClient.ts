@@ -99,8 +99,17 @@ export class WebSocketClient {
   public location: any = null;
   public lastheartbeat: Date = new Date();
   public max_message_queue_time_seconds: number = 3600;
-  constructor(logger: any, url: string) {
+  constructor(logger: any, url: string, skipconnect: boolean = false) {
     this._logger = logger;
+    if (!this._logger) {
+      this._logger = {
+        info(msg) { console.log(msg); },
+        verbose(msg) { console.debug(msg); },
+        error(msg) { console.error(msg); },
+        debug(msg) { console.debug(msg); },
+        silly(msg) { console.debug(msg); }
+      }
+    }
     if (this.enableCache) {
       this.enableCache = false;
       try {
@@ -109,20 +118,44 @@ export class WebSocketClient {
         this.messageStore = new fileCache.FileSystemCache(path.join(process.cwd(), '.openflowapicache'))
         this.enableCache = true;
       } catch (error) {
-        this._logger.debug(error.message ? error.message : error);
+        if (ApiConfig.log_information) this._logger.debug(error.message ? error.message : error);
       }
     }
     this._url = url;
-    this._logger.info('connecting to ' + url);
+    if (ApiConfig.log_information) this._logger.info('connecting to ' + url);
     this.events = new CustomEventEmitter();
     this.events.setMaxListeners(200);
 
-    this.connect();
+    if (!skipconnect) this.connect();
     if (WebSocketClient.instance === null) {
       WebSocketClient.instance = this;
     }
 
     this.pinghandle = setInterval(this.pingServer.bind(this), 10000);
+  }
+  public async Connect() {
+    return new Promise<void>((resolve, reject) => {
+      var resolved = false;
+      var onerror = (err) => {
+        if (!resolved) { reject(err); resolved = true; }
+      };
+      var onopen = () => {
+        if (!resolved) { resolve(); resolved = true; }
+        this.events.removeListener("onerror", onerror);
+        this.events.removeListener("onclose", onclose);
+        this.events.removeListener("onopen", onopen);
+      }
+      var onclose = () => {
+        if (!resolved) { reject(); resolved = true; }
+        this.events.removeListener("onerror", onerror);
+        this.events.removeListener("onclose", onclose);
+        this.events.removeListener("onopen", onopen);
+      }
+      this.events.on("onerror", onerror);
+      this.events.on("onclose", onclose);
+      this.events.on("onopen", onopen);
+      this.connect();
+    });
   }
   public setCacheFolder(folder) {
     if (this.enableCache) {
@@ -133,13 +166,13 @@ export class WebSocketClient {
         this.messageStore = new fileCache.FileSystemCache(path.join(folder, '.openflowapicache'));
         this.enableCache = true;
       } catch (error) {
-        this._logger.debug(error.message ? error.message : error);
+        if (ApiConfig.log_information) this._logger.debug(error.message ? error.message : error);
       }
     }
 
   }
   public close(code: number, message: string): void {
-    this._logger.verbose('websocket.close');
+    if (ApiConfig.log_information) this._logger.verbose('websocket.close');
     if (this._socketObject !== null) {
       this._socketObject.onopen = null;
       this._socketObject.onmessage = null;
@@ -148,12 +181,12 @@ export class WebSocketClient {
       try {
         this._socketObject.close(code, message);
       } catch (error) {
-        this._logger.error(error);
+        if (ApiConfig.log_error) this._logger.error(error);
       }
       try {
         this._socketObject.terminate();
       } catch (error) {
-        this._logger.error(error);
+        if (ApiConfig.log_error) this._logger.error(error);
       }
       this._socketObject = null;
     }
@@ -164,6 +197,9 @@ export class WebSocketClient {
     if (this.processqueuehandle != null) {
       clearTimeout(this.processqueuehandle);
       this.processqueuehandle = null;
+    }
+    if (WebSocketClient.instance === this) {
+      WebSocketClient.instance = null
     }
     // this.events.removeAllListeners();
     // this.events = null;
@@ -188,7 +224,7 @@ export class WebSocketClient {
           this.messageCounter = items.files.length;
         }
       } catch (error) {
-        this._logger.error(error);
+        if (ApiConfig.log_error) this._logger.error(error);
       }
       if (this._socketObject === null) {
         const options: any = {
@@ -197,16 +233,16 @@ export class WebSocketClient {
         };
         if (!NoderedUtil.isNodeJS()) {
           try {
-            this._logger.debug('Create as javascript WebSocket, using options', options);
+            if (ApiConfig.log_trafic_verbose) this._logger.debug('Create as javascript WebSocket, using options', options);
             this._socketObject = new WebSocket(this._url, []);
             // tslint:disable-next-line: no-empty
           } catch (error) {
-            this._logger.error(error);
+            if (ApiConfig.log_error) this._logger.error(error);
           }
         }
         // tslint:disable-next-line: no-empty
         if (this._socketObject == null) {
-          this._logger.debug('Create as universal-websocket-client, using options', options);
+          if (ApiConfig.log_trafic_verbose) this._logger.debug('Create as universal-websocket-client, using options', options);
           const _ws: any = require('universal-websocket-client');
           this._socketObject = new _ws(this._url, options);
         }
@@ -216,7 +252,7 @@ export class WebSocketClient {
         this._socketObject.onerror = this.onerror.bind(this);
       }
     } catch (error) {
-      this._logger.error(error);
+      if (ApiConfig.log_error) this._logger.error(error);
     }
     // _ CLOSED:3
     // _ CLOSING:2
@@ -245,28 +281,27 @@ export class WebSocketClient {
         this.connect();
       }
     } catch (error) {
-      this._logger.error(error);
+      if (ApiConfig.log_error) this._logger.error(error);
       this.connect();
     }
   }
   private async onopen(evt: Event): Promise<void> {
-    this._logger.debug("WebSocketclient::onopen");
+    if (ApiConfig.log_information) this._logger.debug("WebSocketclient::onopen");
     this.user = null;
     this.events.emit('onopen');
     // used in old websocket client
     this.events.emit('connect');
   }
   private onclose(evt: CloseEvent): void {
-    this._logger.debug("WebSocketclient::onclose");
+    if (ApiConfig.log_information) this._logger.debug("WebSocketclient::onclose");
     this.user = null;
     this.events.emit('onclose');
   }
   private onerror(evt: ErrorEvent): void {
-    this._logger.debug("WebSocketclient::onerror");
+    if (ApiConfig.log_information) this._logger.debug("WebSocketclient::onerror");
     this.events.emit('onclose', evt.message);
   }
   private onmessage(evt: MessageEvent): void {
-    // this._logger.verbose("WebSocketclient::onmessage");
     const msg: SocketMessage = SocketMessage.fromjson(evt.data);
     this._receiveQueue.push(msg);
     this.ProcessQueue.bind(this)();
@@ -326,7 +361,7 @@ export class WebSocketClient {
       const now = new Date();
       const seconds = (now.getTime() - from.getTime()) / 1000;
       if (seconds > this.max_message_queue_time_seconds) {
-        console.log("Deleting message " + key + " that is more " + this.max_message_queue_time_seconds + " seconds old (" + seconds + ")");
+        if (ApiConfig.log_information) console.log("Deleting message " + key + " that is more " + this.max_message_queue_time_seconds + " seconds old (" + seconds + ")");
         delete this.messageQueue[key];
       }
     }
@@ -383,11 +418,11 @@ export class WebSocketClient {
             });
           }
         } catch (error) {
-          this._logger.error(error);
+          if (ApiConfig.log_error) this._logger.error(error);
         }
       });
     } catch (error) {
-      this._logger.error(error);
+      if (ApiConfig.log_error) this._logger.error(error);
     }
     if (this._socketObject === null || this._socketObject.readyState !== this._socketObject.OPEN) {
       if (this.enableCache) {
@@ -400,11 +435,10 @@ export class WebSocketClient {
             this._sendQueue.splice(i, 1);
             this.messageCounter++;
           } catch (error) {
-            this._logger.error(error);
+            if (ApiConfig.log_error) this._logger.error(error);
           }
         }
       }
-      // this._logger.info('Cannot send, not connected');
       return;
     }
     if (this.messageCounter > 0 && this.user != null && this.enableCache) {
@@ -415,7 +449,7 @@ export class WebSocketClient {
           const msg = JSON.parse(item.value);
           this._sendQueue.push(msg);
         } catch (error) {
-          this._logger.error(error);
+          if (ApiConfig.log_error) this._logger.error(error);
           bail = true;
         }
       });
@@ -432,7 +466,7 @@ export class WebSocketClient {
           return _msg.id !== id;
         });
       } catch (error) {
-        this._logger.error(error);
+        if (ApiConfig.log_error) this._logger.error(error);
         return;
       }
     });

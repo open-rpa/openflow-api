@@ -56,8 +56,7 @@ export class Message {
                                 qmsg.cb(qmsg.message);
                             }
                         } catch (error) {
-                            console.error(error);
-                            cli._logger.error(error);
+                            if (ApiConfig.log_error) cli._logger.error(error);
                         }
                         delete cli.messageQueue[this.replyto];
                         if (cli.update_message_queue_count) cli.update_message_queue_count(cli);
@@ -100,7 +99,7 @@ export class Message {
                     break;
             }
         } catch (error) {
-            cli._logger.error(error);
+            if (ApiConfig.log_error) cli._logger.error(error);
         }
     }
     public async Send(cli: WebSocketClient, priority: number): Promise<void> {
@@ -143,8 +142,7 @@ export class Message {
                     qmsg.cb(msg);
                 }
             } catch (error) {
-                console.error(error);
-                cli._logger.error(error);
+                if (ApiConfig.log_error) cli._logger.error(error);
             }
             delete cli.messageQueue[this.replyto];
             if (cli.update_message_queue_count) cli.update_message_queue_count(cli);
@@ -166,7 +164,7 @@ export class Message {
                 try {
                     NoderedUtil.watchcb[msg.id](msg.result);
                 } catch (error) {
-                    cli._logger.error('Error calling watch event callback to ' + msg.id + ' ' + JSON.stringify(error));
+                    if (ApiConfig.log_error) cli._logger.error('Error calling watch event callback to ' + msg.id + ' ' + JSON.stringify(error));
                 }
             }
         }
@@ -223,7 +221,7 @@ export class Message {
                                     , expiration: ApiConfig.amqpReplyExpiration, priority
                                 });
                             } catch (error) {
-                                cli._logger.error('Error sending response to ' + msg.replyto + ' ' + JSON.stringify(error));
+                                if (ApiConfig.log_error) cli._logger.error('Error sending response to ' + msg.replyto + ' ' + JSON.stringify(error));
                             }
                         }
                     }
