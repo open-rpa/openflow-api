@@ -215,7 +215,7 @@ export class WebSocketClient {
     }
     return true;
   }
-  private pingServer(): void {
+  public pingServer(): void {
     try {
       if (this._socketObject !== null && this._socketObject.readyState === this._socketObject.OPEN) {
         const msg: SocketMessage = SocketMessage.fromcommand('ping');
