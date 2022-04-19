@@ -70,7 +70,7 @@ export class SigninMessage {
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
         const q: SigninMessage = Object.assign(defaults, options) as any;
         if (!q.clientagent || q.clientagent == "") q.clientagent = websocket.agent;
-        if (!q.clientversion || q.clientversion == "") q.clientagent = websocket.version;
+        if (!q.clientversion || q.clientversion == "") q.clientversion = websocket.version;
         q.clientversion = websocket.version;
         delete (q as any).websocket;
         return [q, priority, websocket];
@@ -81,7 +81,7 @@ export class SigninMessage {
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
         const q: SigninMessage = Object.assign(defaults, options) as any;
         if (!q.clientagent || q.clientagent == "") q.clientagent = websocket.agent;
-        if (!q.clientversion || q.clientversion == "") q.clientagent = websocket.version;
+        if (!q.clientversion || q.clientversion == "") q.clientversion = websocket.version;
         q.clientversion = websocket.version;
         delete (q as any).websocket;
         return [q, priority, websocket];
@@ -94,7 +94,7 @@ export class SigninMessage {
         q.realm = "browser";
         if (this.isNodeJS()) q.realm = "nodejs";
         if (!q.clientagent || q.clientagent == "") q.clientagent = websocket.agent;
-        if (!q.clientversion || q.clientversion == "") q.clientagent = websocket.version;
+        if (!q.clientversion || q.clientversion == "") q.clientversion = websocket.version;
         q.onesignalid = websocket.oneSignalId;
         q.device = websocket.device;
         q.gpslocation = websocket.location;
@@ -113,7 +113,7 @@ export class SigninMessage {
         q.realm = "browser";
         if (this.isNodeJS()) q.realm = "nodejs";
         if (!q.clientagent || q.clientagent == "") q.clientagent = websocket.agent;
-        if (!q.clientversion || q.clientversion == "") q.clientagent = websocket.version;
+        if (!q.clientversion || q.clientversion == "") q.clientversion = websocket.version;
         q.onesignalid = websocket.oneSignalId;
         q.device = websocket.device;
         q.gpslocation = websocket.location;

@@ -8,7 +8,7 @@ const tsify = require('tsify');
 
 gulp.task('tsc', shell.task([
     'echo "tsc for nodejs"',
-    'tsc -p tsconfig.json',
+    'tsc -p src/tsconfig.json',
 ]));
 // 'echo "tsc for browser"'
 // 'tsc -p tsconfig-cjs.json'
@@ -30,6 +30,7 @@ gulp.task("watch", function () {
     const web = gulp.watch([].concat("./src/**/*.ts"), gulp.series('tsc', 'browserify'));
     return web;
 });
-
+gulp.task('compose', gulp.series('tsc', 'browserify'));
+gulp.task('build', gulp.series('tsc', 'browserify'));
 
 gulp.task('default', gulp.series('tsc', 'browserify', 'watch'));
