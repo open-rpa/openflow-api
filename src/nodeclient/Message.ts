@@ -217,7 +217,7 @@ export class Message {
                         if (result != null && !NoderedUtil.IsNullEmpty(msg.replyto) && this.command !== 'error') {
                             try {
                                 await NoderedUtil.Queue({
-                                    websocket: cli, replyto: msg.replyto, data: result, correlationId: msg.correlationId
+                                    websocket: cli, queuename: msg.replyto, data: result, correlationId: msg.correlationId
                                     , expiration: ApiConfig.amqpReplyExpiration, priority
                                 });
                             } catch (error) {
