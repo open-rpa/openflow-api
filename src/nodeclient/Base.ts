@@ -220,6 +220,10 @@ export class AddWorkitemMessage {
     public nextrun: Date;
     public priority: number;
     public files: MessageWorkitemFile[];
+    public success_wiqid: string;
+    public failed_wiqid: string;
+    public success_wiq: string;
+    public failed_wiq: string;
     public result: Workitem;
     static assign(o: any): AddWorkitemMessage {
         if (typeof o === "string" || o instanceof String) {
@@ -278,6 +282,10 @@ export class AddWorkitemsMessage {
     public wiqid: string;
     public wiq: string;
     public items: AddWorkitem[];
+    public success_wiqid: string;
+    public failed_wiqid: string;
+    public success_wiq: string;
+    public failed_wiq: string;
     static assign(o: any): AddWorkitemsMessage {
         if (typeof o === "string" || o instanceof String) {
             return Object.assign(new AddWorkitemsMessage(), JSON.parse(o.toString()));
@@ -327,6 +335,10 @@ export class UpdateWorkitemMessage {
     public errorsource: string;
     public errortype: "application" | "business";
     public files: MessageWorkitemFile[];
+    public success_wiqid: string;
+    public failed_wiqid: string;
+    public success_wiq: string;
+    public failed_wiq: string;
     public result: Workitem;
     static assign(o: any): UpdateWorkitemMessage {
         if (typeof o === "string" || o instanceof String) {
