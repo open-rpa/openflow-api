@@ -453,6 +453,10 @@ export class AddWorkitemQueueMessage {
     public maxretries: number;
     public retrydelay: number;
     public initialdelay: number;
+    public success_wiqid: string;
+    public failed_wiqid: string;
+    public success_wiq: string;
+    public failed_wiq: string;
     public _acl: any[];
     public result: WorkitemQueue;
     static assign(o: any): AddWorkitemQueueMessage {
@@ -538,6 +542,10 @@ export class UpdateWorkitemQueueMessage {
     public maxretries: number;
     public retrydelay: number;
     public initialdelay: number;
+    public success_wiqid: string;
+    public failed_wiqid: string;
+    public success_wiq: string;
+    public failed_wiq: string;
     public result: WorkitemQueue;
     static assign(o: any): UpdateWorkitemQueueMessage {
         if (typeof o === "string" || o instanceof String) {
