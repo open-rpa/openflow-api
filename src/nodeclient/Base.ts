@@ -147,6 +147,10 @@ export class WorkitemQueue extends Base {
     public maxretries: number;
     public retrydelay: number;
     public initialdelay: number;
+    public success_wiqid: string;
+    public failed_wiqid: string;
+    public success_wiq: string;
+    public failed_wiq: string;
 }
 
 export class Workitem extends Base {
@@ -167,6 +171,10 @@ export class Workitem extends Base {
     public errormessage: string;
     public errorsource: string;
     public errortype: "application" | "business";
+    public success_wiqid: string;
+    public failed_wiqid: string;
+    public success_wiq: string;
+    public failed_wiq: string;
 }
 
 export class WorkitemFile {
@@ -177,15 +185,19 @@ export class WorkitemFile {
 
 
 export type AddWorkitemOptions = {
-    jwt?: string,
-    priority?: number,
-    websocket?: WebSocketClient,
-    wiqid?: string,
-    wiq?: string,
-    name?: string,
-    payload?: any,
-    nextrun?: Date,    
-    files?: MessageWorkitemFile[]
+    jwt?: string;
+    priority?: number;
+    websocket?: WebSocketClient;
+    wiqid?: string;
+    wiq?: string;
+    name?: string;
+    payload?: any;
+    nextrun?: Date;
+    files?: MessageWorkitemFile[];
+    success_wiqid?: string;
+    failed_wiqid?: string;
+    success_wiq?: string;
+    failed_wiq?: string;
 }
 export class AddWorkitemDefaults {
     public priority: number = 2;
@@ -222,6 +234,10 @@ export type AddWorkitemBaseOptions = {
     nextrun?: Date;
     priority?: number;
     files?: MessageWorkitemFile[];
+    success_wiqid?: string;
+    failed_wiqid?: string;
+    success_wiq?: string;
+    failed_wiq?: string;
 }
 export class AddWorkitem {
     static parse(options: AddWorkitemBaseOptions) {
@@ -234,12 +250,16 @@ export class AddWorkitem {
     public files: MessageWorkitemFile[];
 }
 export type AddWorkitemsOptions = {
-    jwt?: string,
-    priority?: number,
-    websocket?: WebSocketClient,
-    wiqid?: string,
-    wiq?: string,
-    items: AddWorkitem[]
+    jwt?: string;
+    priority?: number;
+    websocket?: WebSocketClient;
+    wiqid?: string;
+    wiq?: string;
+    items: AddWorkitem[];
+    success_wiqid?: string;
+    failed_wiqid?: string;
+    success_wiq?: string;
+    failed_wiq?: string;
 }
 export class AddWorkitemsDefaults {
     public priority: number = 2;
@@ -266,18 +286,22 @@ export class AddWorkitemsMessage {
     }
 }
 export type UpdateWorkitemOptions = {
-    jwt?: string,
-    priority?: number,
-    websocket?: WebSocketClient,
-    _id: string,
-    name?: string,
-    state?: "failed" | "successful" | "processing" | "retry",
-    payload?: any,
-    ignoremaxretries?: boolean,
-    errormessage?: string,
-    errorsource?: string,
-    errortype?: "application" | "business",
-    files?: MessageWorkitemFile[]
+    jwt?: string;
+    priority?: number;
+    websocket?: WebSocketClient;
+    _id: string;
+    name?: string;
+    state?: "failed" | "successful" | "processing" | "retry";
+    payload?: any;
+    ignoremaxretries?: boolean;
+    errormessage?: string;
+    errorsource?: string;
+    errortype?: "application" | "business";
+    files?: MessageWorkitemFile[];
+    success_wiqid?: string;
+    failed_wiqid?: string;
+    success_wiq?: string;
+    failed_wiq?: string;
 }
 export class UpdateWorkitemDefaults {
     public priority: number = 2;
@@ -384,6 +408,10 @@ export type AddWorkitemQueueOptions = {
     retrydelay?: number;
     initialdelay?: number;
     _acl?: any[];
+    success_wiqid?: string;
+    failed_wiqid?: string;
+    success_wiq?: string;
+    failed_wiq?: string;
 }
 export class AddWorkitemQueueDefaults {
     public priority: number = 2;
@@ -468,6 +496,10 @@ export type UpdateWorkitemQueueOptions = {
     maxretries?: number;
     retrydelay?: number;
     initialdelay?: number;
+    success_wiqid?: string;
+    failed_wiqid?: string;
+    success_wiq?: string;
+    failed_wiq?: string;
 }
 export class UpdateWorkitemQueueDefaults {
     public priority: number = 2;
