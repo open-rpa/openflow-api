@@ -13,6 +13,8 @@ export class TokenUser {
     public impostor: string;
     public disabled: boolean;
     public validated: boolean;
+    public emailvalidated: boolean;
+    public formvalidated: boolean;
     public customerid: string;
     public selectedcustomerid: string;
     public dblocked: boolean = false;
@@ -31,9 +33,9 @@ export class TokenUser {
         result.role = user.role;
         result.validated = false;
         result.dblocked = user.dblocked;
-        if (user.validated == true) {
-            result.validated = user.validated;
-        }
+        if (user.validated == true) result.validated = user.validated;
+        if (user.emailvalidated == true) result.emailvalidated = user.emailvalidated;
+        if (user.formvalidated == true) result.formvalidated = user.formvalidated;
         result.customerid = user.customerid;
         result.selectedcustomerid = user.selectedcustomerid;
         return result;

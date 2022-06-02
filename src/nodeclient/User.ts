@@ -41,7 +41,8 @@ export class User extends Base {
     public email: string;
     public disabled: boolean;
     public validated: boolean;
-    public validatedform: string;
+    public emailvalidated: boolean;
+    public formvalidated: boolean;
     public dbusage: number = 0;
     public dblocked: boolean = false;
     HasRoleName(name: string): boolean {
