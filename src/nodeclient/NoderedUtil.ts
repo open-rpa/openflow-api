@@ -45,6 +45,7 @@ import { EnsureCustomerOptions } from '../Message/EnsureCustomerMessage';
 import { SelectCustomerOptions } from '../Message/SelectCustomerMessage';
 import { CreateWorkflowInstanceMessage, CreateWorkflowInstanceOptions } from '../Message/CreateWorkflowInstanceMessage';
 import { ApiConfig } from '../ApiConfig';
+import { InsertOrUpdateManyMessage, InsertOrUpdateManyOptions } from '../Message/InsertOrUpdateManyMessage';
 
 
 // export type messageQueueCallback = (msg: QueueMessage) => void;
@@ -275,6 +276,14 @@ export class NoderedUtil {
         _msg.data = JSON.stringify(q);
         const result: QueryMessage = await WebSocketClient.instance.Send<QueryMessage>(_msg, priority);
         return result.result;
+    }
+    public static async InsertOrUpdateMany(options: InsertOrUpdateManyOptions): Promise<any[]> {
+        const [q, priority] = InsertOrUpdateManyMessage.parse(options);
+        const _msg: Message = new Message();
+        _msg.command = 'Insertorupdatemany';
+        _msg.data = JSON.stringify(q);
+        const result: InsertOrUpdateManyMessage = await WebSocketClient.instance.Send<InsertOrUpdateManyMessage>(_msg, priority);
+        return result.results;
     }
     public static async DeleteOne(options: DeleteOneOptions): Promise<any> {
         const [q, priority] = DeleteOneMessage.parse(options);

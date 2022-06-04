@@ -35,6 +35,7 @@ export { GetNoderedInstanceLogMessage, GetNoderedInstanceLogOptions } from "./Me
 export { GetNoderedInstanceMessage, GetNoderedInstanceOptions } from "./Message/GetNoderedInstanceMessage";
 export { InsertOneMessage, InsertOneOptions } from "./Message/InsertOneMessage";
 export { InsertManyMessage, InsertManyOptions } from "./Message/InsertManyMessage";
+export { InsertOrUpdateManyMessage, InsertOrUpdateManyOptions } from "./Message/InsertOrUpdateManyMessage";
 export { InsertOrUpdateOneMessage, InsertOrUpdateOneOptions } from "./Message/InsertOrUpdateOneMessage";
 export { UnWatchMessage, UnWatchOptions } from "./Message/UnWatchMessage";
 export { WatchEventMessage } from "./Message/WatchEventMessage";
