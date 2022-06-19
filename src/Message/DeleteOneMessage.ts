@@ -3,7 +3,7 @@ export type DeleteOneOptions = {
     priority?: number,
     collectionname: string,
     id: string,
-    recursive: boolean
+    recursive?: boolean
 }
 export class DeleteOneDefaults {
     public priority: number = 2;
