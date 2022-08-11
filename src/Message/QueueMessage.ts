@@ -44,7 +44,7 @@ export class QueueMessage {
 
     public consumerTag: string;
     public routingkey: string;
-    public exchange: string;
+    public exchangename: string;
     static assign(o: any): QueueMessage {
         if (typeof o === 'string' || o instanceof String) {
             return Object.assign(new QueueMessage(), JSON.parse(o.toString()));
