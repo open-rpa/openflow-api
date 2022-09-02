@@ -28,6 +28,7 @@ export class Customer extends Base {
     public customattr3: string;
     public customattr4: string;
     public customattr5: string;
+    public domains: string[];
 
     public dbusage: number = 0;
     public dblocked: boolean = false;
@@ -43,5 +44,6 @@ export class Customer extends Base {
         this.address = "";
         this.vattype = "";
         this.vatnumber = "";
+        this.domains = [];
     }
 }
