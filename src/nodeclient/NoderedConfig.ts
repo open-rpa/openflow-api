@@ -14,6 +14,7 @@ export class NoderedConfig {
     public monaco: boolean;
     public tours: boolean;
     public catalogues: string[];
+    public tz: string;
 }
 export class KubeResources {
     public limits: KubeResourceValues;
