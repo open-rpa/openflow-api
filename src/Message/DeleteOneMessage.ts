@@ -1,6 +1,8 @@
+import { WebSocketClient } from "..";
 export type DeleteOneOptions = {
     jwt?: string,
     priority?: number,
+    websocket?: WebSocketClient,
     collectionname: string,
     id: string,
     recursive?: boolean
@@ -10,11 +12,12 @@ export class DeleteOneDefaults {
     public recursive: boolean = false;
 }
 export class DeleteOneMessage {
-    public static parse(options: DeleteOneOptions): [DeleteOneMessage, number] {
+    public static parse(options: DeleteOneOptions): [DeleteOneMessage, number, WebSocketClient] {
         const defaults = new DeleteOneDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
+        const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
         const q: DeleteOneMessage = Object.assign(defaults, options) as any;
-        return [q, priority];
+        return [q, priority, websocket];
     }
     public error: string;
     public jwt: string;

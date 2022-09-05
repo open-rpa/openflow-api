@@ -1,7 +1,9 @@
+import { WebSocketClient } from "..";
 import { Base } from "../index";
 export type UpdateOneOptions = {
     jwt?: string,
     priority?: number,
+    websocket?: WebSocketClient,
     collectionname: string,
     item?: any,
     query?: any,
@@ -14,11 +16,12 @@ export class UpdateOneDefaults {
     public j: boolean = true;
 }
 export class UpdateOneMessage {
-    public static parse(options: UpdateOneOptions): [UpdateOneMessage, number] {
+    public static parse(options: UpdateOneOptions): [UpdateOneMessage, number, WebSocketClient] {
         const defaults = new UpdateOneDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
+        const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
         const q: UpdateOneMessage = Object.assign(defaults, options) as any;
-        return [q, priority];
+        return [q, priority, websocket];
     }
     public error: string;
     public jwt: string;

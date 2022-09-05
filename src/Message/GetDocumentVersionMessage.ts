@@ -1,6 +1,8 @@
+import { WebSocketClient } from "..";
 export type GetDocumentVersionOptions = {
     jwt?: string,
     priority?: number,
+    websocket?: WebSocketClient,
     collectionname: string,
     id: string,
     version: number,
@@ -11,11 +13,12 @@ export class GetDocumentVersionDefaults {
     public priority: number = 2;
 }
 export class GetDocumentVersionMessage {
-    public static parse(options: GetDocumentVersionOptions): [GetDocumentVersionMessage, number] {
+    public static parse(options: GetDocumentVersionOptions): [GetDocumentVersionMessage, number, WebSocketClient] {
         const defaults = new GetDocumentVersionDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
+        const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
         const q: GetDocumentVersionMessage = Object.assign(defaults, options) as any;
-        return [q, priority];
+        return [q, priority, websocket];
     }
     public error: string;
     public jwt: string;

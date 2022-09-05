@@ -1,6 +1,8 @@
+import { WebSocketClient } from "..";
 export type GetFileOptions = {
     jwt?: string,
     priority?: number,
+    websocket?: WebSocketClient,
     filename?: string,
     id?: string,
     compress?: boolean;
@@ -10,11 +12,12 @@ export class GetFileDefaults {
     public compress: boolean = false;
 }
 export class GetFileMessage {
-    public static parse(options: GetFileOptions): [GetFileMessage, number] {
+    public static parse(options: GetFileOptions): [GetFileMessage, number, WebSocketClient] {
         const defaults = new GetFileDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
+        const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
         const q: GetFileMessage = Object.assign(defaults, options) as any;
-        return [q, priority];
+        return [q, priority, websocket];
     }
     public error: string;
     public jwt: string;

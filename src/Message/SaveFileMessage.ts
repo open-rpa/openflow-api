@@ -1,7 +1,9 @@
+import { WebSocketClient } from "..";
 import { Base } from "..";
 export type SaveFileOptions = {
     jwt?: string,
     priority?: number,
+    websocket?: WebSocketClient,
     compressed?: boolean,
     filename: string,
     mimeType?: string,
@@ -13,11 +15,12 @@ export class SaveFileDefaults {
     public compressed: boolean = false;
 }
 export class SaveFileMessage {
-    public static parse(options: SaveFileOptions): [SaveFileMessage, number] {
+    public static parse(options: SaveFileOptions): [SaveFileMessage, number, WebSocketClient] {
         const defaults = new SaveFileDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
+        const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
         const q: SaveFileMessage = Object.assign(defaults, options) as any;
-        return [q, priority];
+        return [q, priority, websocket];
     }
     public error: string;
     public jwt: string;

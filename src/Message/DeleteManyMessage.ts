@@ -1,6 +1,8 @@
+import { WebSocketClient } from "..";
 export type DeleteManyOptions = {
     jwt?: string,
     priority?: number,
+    websocket?: WebSocketClient,
     collectionname: string,
     ids?: string[];
     query?: any;
@@ -9,11 +11,12 @@ export class DeleteManyDefaults {
     public priority: number = 2;
 }
 export class DeleteManyMessage {
-    public static parse(options: DeleteManyOptions): [DeleteManyMessage, number] {
+    public static parse(options: DeleteManyOptions): [DeleteManyMessage, number, WebSocketClient] {
         const defaults = new DeleteManyDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
+        const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
         const q: DeleteManyMessage = Object.assign(defaults, options) as any;
-        return [q, priority];
+        return [q, priority, websocket];
     }
     public error: string;
     public jwt: string;

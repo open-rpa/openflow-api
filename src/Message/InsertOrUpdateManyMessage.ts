@@ -1,7 +1,9 @@
+import { WebSocketClient } from "..";
 import { Base } from "../nodeclient/Base";
 export type InsertOrUpdateManyOptions = {
     jwt?: string,
     priority?: number,
+    websocket?: WebSocketClient,
     collectionname: string,
     uniqeness: string,
     items: any[],
@@ -16,11 +18,12 @@ export class InsertOrUpdateManyDefaults {
     public skipresults: boolean = false;
 }
 export class InsertOrUpdateManyMessage {
-    public static parse(options: InsertOrUpdateManyOptions): [InsertOrUpdateManyMessage, number] {
+    public static parse(options: InsertOrUpdateManyOptions): [InsertOrUpdateManyMessage, number, WebSocketClient] {
         const defaults = new InsertOrUpdateManyDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
+        const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
         const q: InsertOrUpdateManyMessage = Object.assign(defaults, options) as any;
-        return [q, priority];
+        return [q, priority, websocket];
     }
     public error: string;
     public jwt: string;

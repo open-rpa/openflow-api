@@ -1,6 +1,8 @@
+import { WebSocketClient } from "..";
 export type QueryOptions = {
     priority?: number,
     jwt?: string,
+    websocket?: WebSocketClient,
     collectionname: string,
     query: any,
     projection?: Object,
@@ -18,11 +20,13 @@ export class QueryDefaults {
     public skip: number = 0;
 }
 export class QueryMessage {
-    public static parse(options: QueryOptions): [QueryMessage, number] {
+    public static parse(options: QueryOptions): [QueryMessage, number, WebSocketClient] {
         const defaults = new QueryDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
+        const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
         const q: QueryMessage = Object.assign(defaults, options) as any;
-        return [q, priority];
+        delete (q as any).websocket;
+        return [q, priority, websocket];
     }
     public error: string;
     public jwt: string;

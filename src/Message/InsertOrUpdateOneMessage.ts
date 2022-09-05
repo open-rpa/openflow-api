@@ -1,7 +1,9 @@
+import { WebSocketClient } from "..";
 import { Base } from "../nodeclient/Base";
 export type InsertOrUpdateOneOptions = {
     jwt?: string,
     priority?: number,
+    websocket?: WebSocketClient,
     collectionname: string,
     uniqeness: string,
     item: any,
@@ -14,11 +16,12 @@ export class InsertOrUpdateOneDefaults {
     public j: boolean = true;
 }
 export class InsertOrUpdateOneMessage {
-    public static parse(options: InsertOrUpdateOneOptions): [InsertOrUpdateOneMessage, number] {
+    public static parse(options: InsertOrUpdateOneOptions): [InsertOrUpdateOneMessage, number, WebSocketClient] {
         const defaults = new InsertOrUpdateOneDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
+        const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
         const q: InsertOrUpdateOneMessage = Object.assign(defaults, options) as any;
-        return [q, priority];
+        return [q, priority, websocket];
     }
     public error: string;
     public jwt: string;

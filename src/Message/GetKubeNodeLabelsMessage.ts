@@ -1,16 +1,19 @@
+import { WebSocketClient } from "..";
 export type GetKubeNodeLabelsOptions = {
     jwt?: string,
     priority?: number,
+    websocket?: WebSocketClient,
 }
 export class GetKubeNodeLabelsDefaults {
     public priority: number = 2;
 }
 export class GetKubeNodeLabelsMessage {
-    public static parse(options: GetKubeNodeLabelsOptions): [GetKubeNodeLabelsMessage, number] {
+    public static parse(options: GetKubeNodeLabelsOptions): [GetKubeNodeLabelsMessage, number, WebSocketClient] {
         const defaults = new GetKubeNodeLabelsDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
+        const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
         const q: GetKubeNodeLabelsMessage = Object.assign(defaults, options) as any;
-        return [q, priority];
+        return [q, priority, websocket];
     }
     public error: string;
     public jwt: any;
