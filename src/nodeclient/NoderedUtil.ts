@@ -46,6 +46,7 @@ import { SelectCustomerOptions } from '../Message/SelectCustomerMessage';
 import { CreateWorkflowInstanceMessage, CreateWorkflowInstanceOptions } from '../Message/CreateWorkflowInstanceMessage';
 import { ApiConfig } from '../ApiConfig';
 import { InsertOrUpdateManyMessage, InsertOrUpdateManyOptions } from '../Message/InsertOrUpdateManyMessage';
+import { CustomCommandMessage, CustomCommandOptions } from '../Message/CustomCommandMessage';
 
 
 // export type messageQueueCallback = (msg: QueueMessage) => void;
@@ -763,6 +764,16 @@ export class NoderedUtil {
             _msg, priority
         );
         return result.newinstanceid;
+    }
+    public static async CustomCommand<T>(options: CustomCommandOptions): Promise<T> {
+        const [q, priority, websocket] = CustomCommandMessage.parse(options);
+        const _msg: Message = new Message();
+        _msg.command = 'customcommand';
+        _msg.data = JSON.stringify(q);
+        const result: CustomCommandMessage = await websocket.Send<CustomCommandMessage>(
+            _msg, priority
+        );
+        return result.result;
     }
 
 }

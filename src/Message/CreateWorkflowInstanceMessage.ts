@@ -37,11 +37,6 @@ export class CreateWorkflowInstanceMessage {
     public data: any;
     public queue: string;
     public name: string;
-    // public state: string;
-    // public queue: string;
-    // public parentid: string;
-    // public form: string;
-    // public payload: any;
     static assign<T>(o: any): CreateWorkflowInstanceMessage {
         if (typeof o === 'string' || o instanceof String) {
             return Object.assign(new CreateWorkflowInstanceMessage(), JSON.parse(o.toString()));

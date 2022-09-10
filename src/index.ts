@@ -22,6 +22,7 @@ export { Resource, ResourceVariant, ResourceUsage } from "./nodeclient/Resources
 export { AggregateMessage, AggregateOptions } from "./Message/AggregateMessage";
 export { CloseQueueMessage, CloseQueueOptions } from "./Message/CloseQueueMessage";
 export { CreateWorkflowInstanceMessage, CreateWorkflowInstanceOptions } from "./Message/CreateWorkflowInstanceMessage";
+export { CustomCommandMessage, CustomCommandOptions } from "./Message/CustomCommandMessage";
 export { DeleteNoderedInstanceMessage, DeleteNoderedInstanceOptions } from "./Message/DeleteNoderedInstanceMessage";
 export { DeleteNoderedPodMessage, DeleteNoderedPodOptions } from "./Message/DeleteNoderedPodMessage";
 export { DeleteOneMessage, DeleteOneOptions } from "./Message/DeleteOneMessage";
@@ -64,6 +65,7 @@ export { StripeMessage, StripeOptions } from "./Message/StripeMessage";
 export { UpdateFileMessage } from "./Message/UpdateFileMessage";
 export { UpdateManyMessage, UpdateManyOptions } from "./Message/UpdateManyMessage";
 export { UpdateOneMessage, UpdateOneOptions } from "./Message/UpdateOneMessage";
+
 
 
 export { Billing } from "./stripe/Billing";
