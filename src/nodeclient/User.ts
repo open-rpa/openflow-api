@@ -39,6 +39,7 @@ export class User extends Base {
     public roles: Rolemember[] = [];
     public role: string;
     public email: string;
+    public company: string;
     public disabled: boolean;
     public validated: boolean;
     public emailvalidated: boolean;
