@@ -252,9 +252,13 @@ export class WebSocketClient {
     this.events.emit('onclose', evt.message);
   }
   private onmessage(evt: MessageEvent): void {
-    const msg: SocketMessage = SocketMessage.fromjson(evt.data);
-    this._receiveQueue.push(msg);
-    this.ProcessQueue.bind(this)();
+    try {
+      const msg: SocketMessage = SocketMessage.fromjson(evt.data);
+      this._receiveQueue.push(msg);
+      this.ProcessQueue.bind(this)();
+    } catch (error) {
+      this._logger.error(error);
+    }
   }
   public async Send<T>(message: Message, priority: number): Promise<T> {
     if (NoderedUtil.IsNullEmpty(message.id)) message.id = NoderedUtil.GetUniqueIdentifier();
