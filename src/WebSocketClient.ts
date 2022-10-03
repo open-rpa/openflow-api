@@ -354,18 +354,22 @@ export class WebSocketClient {
           msgs.sort((a, b) => a.index - b.index);
           const first: SocketMessage = msgs[0];
           if (first.count === msgs.length) {
-            if (msgs.length === 1) {
-              const singleresult: Message = Message.frommessage(first, first.data);
-              singleresult.Process(this);
-            } else {
-              let buffer: string = '';
-              msgs.forEach((msg) => {
-                if (msg.data !== null && msg.data !== undefined) {
-                  buffer += msg.data;
-                }
-              });
-              const result: Message = Message.frommessage(first, buffer);
-              result.Process(this);
+            try {
+              if (msgs.length === 1) {
+                const singleresult: Message = Message.frommessage(first, first.data);
+                singleresult.Process(this);
+              } else {
+                let buffer: string = '';
+                msgs.forEach((msg) => {
+                  if (msg.data !== null && msg.data !== undefined) {
+                    buffer += msg.data;
+                  }
+                });
+                const result: Message = Message.frommessage(first, buffer);
+                result.Process(this);
+              }
+            } catch (error) {
+              if (ApiConfig.log_error) this._logger.error(error);    
             }
             this._receiveQueue = this._receiveQueue.filter((msg: SocketMessage): boolean => {
               return msg.id !== id;
