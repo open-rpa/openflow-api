@@ -12,6 +12,7 @@ export class ListCollectionsDefaults {
 export class ListCollectionsMessage {
     public static parse(options: ListCollectionsOptions): [ListCollectionsMessage, number, WebSocketClient] {
         const defaults = new ListCollectionsDefaults();
+        if (options == null) options = {};
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
         const q: ListCollectionsMessage = Object.assign(defaults, options) as any;
