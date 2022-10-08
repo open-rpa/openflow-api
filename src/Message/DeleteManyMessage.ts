@@ -6,9 +6,11 @@ export type DeleteManyOptions = {
     collectionname: string,
     ids?: string[];
     query?: any;
+    recursive?: boolean
 }
 export class DeleteManyDefaults {
     public priority: number = 2;
+    public recursive: boolean = false;
 }
 export class DeleteManyMessage {
     public static parse(options: DeleteManyOptions): [DeleteManyMessage, number, WebSocketClient] {
@@ -20,6 +22,7 @@ export class DeleteManyMessage {
     }
     public error: string;
     public jwt: string;
+    public recursive: boolean;
 
     public ids: string[];
     public query: any;
