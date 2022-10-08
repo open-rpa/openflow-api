@@ -1,6 +1,3 @@
-import fs = require('fs');
-import path = require('path');
-import pako = require('pako');
 import { WebSocketClient } from '../WebSocketClient';
 import { AddWorkitemOptions, Base, GetWorkitemQueueOptions } from './Base';
 import { QueueMessage, QueueOptions } from '../Message/QueueMessage';
@@ -47,6 +44,7 @@ import { CreateWorkflowInstanceMessage, CreateWorkflowInstanceOptions } from '..
 import { ApiConfig } from '../ApiConfig';
 import { InsertOrUpdateManyMessage, InsertOrUpdateManyOptions } from '../Message/InsertOrUpdateManyMessage';
 import { CustomCommandMessage, CustomCommandOptions } from '../Message/CustomCommandMessage';
+import { CountMessage, CountOptions } from '../Message/CountMessage';
 
 
 // export type messageQueueCallback = (msg: QueueMessage) => void;
@@ -111,38 +109,6 @@ export class NoderedUtil {
         }
         NoderedUtil._isNodeJS = false;
         return false;
-    }
-    private static _isDocker: boolean = null;
-    public static isDocker(): boolean {
-        if (NoderedUtil._isDocker != null) return NoderedUtil._isDocker;
-        NoderedUtil._isDocker = NoderedUtil.hasDockerEnv() || NoderedUtil.hasDockerCGroup();
-        return false;
-    }
-    private static _isKubernetes: boolean = null;
-    public static isKubernetes(): boolean {
-        if (NoderedUtil._isKubernetes != null) return NoderedUtil._isKubernetes;
-        if (!NoderedUtil.isDocker()) { NoderedUtil._isKubernetes = false; return false; }
-        if (NoderedUtil.IsNullEmpty(process.env["KUBERNETES_SERVICE_HOST"])) { NoderedUtil._isKubernetes = false; return false; }
-        NoderedUtil._isKubernetes = true;
-        return true;
-    }
-    static hasDockerEnv(): boolean {
-        try {
-            const fs = require('fs');
-            fs.statSync('/.dockerenv');
-            return true;
-        } catch (_) {
-            return false;
-        }
-    }
-    static hasDockerCGroup() {
-        try {
-            const fs = require('fs');
-            if (fs.readFileSync('/proc/self/cgroup', 'utf8').includes('docker')) return true;
-            return fs.readFileSync('/proc/self/cgroup', 'utf8').includes('/kubepods');
-        } catch (_) {
-            return false;
-        }
     }
     public static saveToObject(obj: any, path: string, value: any): any {
         const pList = path.split('.');
@@ -225,6 +191,26 @@ export class NoderedUtil {
         _msg.command = 'query';
         _msg.data = JSON.stringify(q);
         const result: QueryMessage = await websocket.Send<QueryMessage>(_msg, priority);
+        return result.result;
+    }
+
+    public static async Count(options: CountOptions): Promise<number> {
+        const [q, priority, websocket] = CountMessage.parse(options);
+        q.query = JSON.stringify(q.query, (key, value) => {
+            if (value == null) return value;
+            const t = typeof value;
+            if (value instanceof RegExp) return '__REGEXP ' + value.toString();
+            else if (t === 'object') {
+                if (value.constructor != null && value.constructor.name === 'RegExp') {
+                    return '__REGEXP ' + value.toString();
+                }
+                return value;
+            } else return value;
+        });
+        const _msg: Message = new Message();
+        _msg.command = 'count';
+        _msg.data = JSON.stringify(q);
+        const result: CountMessage = await websocket.Send<CountMessage>(_msg, priority);
         return result.result;
     }
     public static async GetDocumentVersion(options: GetDocumentVersionOptions): Promise<any> {
@@ -668,23 +654,6 @@ export class NoderedUtil {
             return false;
         }
         return true;
-    }
-    public static async CreateWorkitemFilesArray(files: string[], compressed: boolean): Promise<MessageWorkitemFile[]> {
-        var result: MessageWorkitemFile[] = [];
-        for (var i = 0; i < files.length; i++) {
-            let file: MessageWorkitemFile = new MessageWorkitemFile();
-            file.filename = path.basename(files[i]);
-            if (fs.existsSync(files[i])) {
-                if (compressed) {
-                    file.compressed = true;
-                    file.file = Buffer.from(pako.deflate(fs.readFileSync(files[i], null))).toString('base64');
-                } else {
-                    file.file = fs.readFileSync(files[i], { encoding: 'base64' });
-                }
-                result.push(file);
-            } else { throw new Error("File not found " + files[i]) }
-        }
-        return result;
     }
     public static async AddWorkitem(options: AddWorkitemOptions): Promise<Workitem> {
         const [q, priority, websocket] = AddWorkitemMessage.parse(options);

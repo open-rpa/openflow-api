@@ -27,20 +27,20 @@ import { WebSocketClient, SigninMessage, Message, NoderedUtil } from "../src/ind
         this.socket.events.removeAllListeners()
         // wtf.dump()
     }
-    @timeout(5000)
-    @test async 'message store test'() {
-        this.socket.setCacheFolder(os.tmpdir())
-        let testo = { "name": "Find me" };
-        await this.socket.messageStore.set("test", JSON.stringify(testo));
+    // @timeout(5000)
+    // @test async 'message store test'() {
+    //     this.socket.setCacheFolder(os.tmpdir())
+    //     let testo = { "name": "Find me" };
+    //     await this.socket.messageStore.set("test", JSON.stringify(testo));
 
-        const items: any = await this.socket.messageStore.load();
-        assert.strictEqual(items.files.length, 1);
-        items.files.forEach(item => {
-            const msg = JSON.parse(item.value);
-            assert.strictEqual(msg.name, "Find me");
-        });
-        await this.socket.messageStore.clear();
-    }
+    //     const items: any = await this.socket.messageStore.load();
+    //     assert.strictEqual(items.files.length, 1);
+    //     items.files.forEach(item => {
+    //         const msg = JSON.parse(item.value);
+    //         assert.strictEqual(msg.name, "Find me");
+    //     });
+    //     await this.socket.messageStore.clear();
+    // }
     @timeout(500000)
     @test async 'connect test'() {
         ApiConfig.log_trafic_verbose = false;

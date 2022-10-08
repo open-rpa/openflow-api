@@ -1,3 +1,7 @@
+import fs = require('fs');
+// import path = require('path');
+import pako = require('pako');
+
 var wtf = require('wtfnode');
 const path = require("path");
 const env = path.join(process.cwd(), 'config', '.env');
@@ -5,7 +9,7 @@ require("dotenv").config({ path: env }); // , debug: false
 import { suite, test, timeout } from '@testdeck/mocha';
 import assert = require('assert');
 import { ApiConfig } from '../src/ApiConfig';
-import { WebSocketClient, NoderedUtil, Workitem, AddWorkitem } from "../src/index";
+import { WebSocketClient, NoderedUtil, Workitem, AddWorkitem, MessageWorkitemFile } from "../src/index";
 
 @suite class workitemqueue {
     private socket: WebSocketClient = null;
@@ -26,6 +30,26 @@ import { WebSocketClient, NoderedUtil, Workitem, AddWorkitem } from "../src/inde
         this.socket.events.removeAllListeners()
         // wtf.dump()
     }
+
+    public static async CreateWorkitemFilesArray(files: string[], compressed: boolean): Promise<MessageWorkitemFile[]> {
+        var result: MessageWorkitemFile[] = [];
+        for (var i = 0; i < files.length; i++) {
+            let file: MessageWorkitemFile = new MessageWorkitemFile();
+            file.filename = path.basename(files[i]);
+            if (fs.existsSync(files[i])) {
+                if (compressed) {
+                    file.compressed = true;
+                    file.file = Buffer.from(pako.deflate(fs.readFileSync(files[i], null))).toString('base64');
+                } else {
+                    file.file = fs.readFileSync(files[i], { encoding: 'base64' });
+                }
+                result.push(file);
+            } else { throw new Error("File not found " + files[i]) }
+        }
+        return result;
+    }
+
+
     @timeout(10000)
     @test
     async 'basic workitem test'() {
@@ -85,7 +109,7 @@ import { WebSocketClient, NoderedUtil, Workitem, AddWorkitem } from "../src/inde
 
         item = await NoderedUtil.AddWorkitem({
             name: "Test Work Item with files", payload: { "find": "me" }, wiq: q.name,
-            files: await NoderedUtil.CreateWorkitemFilesArray([__filename], true)
+            files: await workitemqueue.CreateWorkitemFilesArray([__filename], true)
         });
         assert.notStrictEqual(item, null, "Failed adding Test Work Item with files");
         assert.notStrictEqual(item, undefined, "Failed adding Test Work Item with files");
@@ -102,7 +126,7 @@ import { WebSocketClient, NoderedUtil, Workitem, AddWorkitem } from "../src/inde
 
         item = await NoderedUtil.UpdateWorkitem({
             _id: item._id,
-            files: await NoderedUtil.CreateWorkitemFilesArray([path.join(__dirname, 'tsconfig.json')], false)
+            files: await workitemqueue.CreateWorkitemFilesArray([path.join(__dirname, 'tsconfig.json')], false)
         });
 
         let testitem = await NoderedUtil.PopWorkitem({ wiq: q.name });
@@ -136,9 +160,9 @@ import { WebSocketClient, NoderedUtil, Workitem, AddWorkitem } from "../src/inde
         } while (item != null)
 
         const items: AddWorkitem[] = [];
-        items.push(AddWorkitem.parse({ name: "multi item 1", files: await NoderedUtil.CreateWorkitemFilesArray([__filename], true) }));
-        items.push(AddWorkitem.parse({ name: "multi item 2", files: await NoderedUtil.CreateWorkitemFilesArray([__filename], true) }));
-        items.push(AddWorkitem.parse({ name: "multi item 3", files: await NoderedUtil.CreateWorkitemFilesArray([__filename], true) }));
+        items.push(AddWorkitem.parse({ name: "multi item 1", files: await workitemqueue.CreateWorkitemFilesArray([__filename], true) }));
+        items.push(AddWorkitem.parse({ name: "multi item 2", files: await workitemqueue.CreateWorkitemFilesArray([__filename], true) }));
+        items.push(AddWorkitem.parse({ name: "multi item 3", files: await workitemqueue.CreateWorkitemFilesArray([__filename], true) }));
 
 
         await NoderedUtil.AddWorkitems({ items, wiq: q.name })
@@ -152,7 +176,7 @@ import { WebSocketClient, NoderedUtil, Workitem, AddWorkitem } from "../src/inde
 
             item = await NoderedUtil.UpdateWorkitem({
                 _id: item._id,
-                files: await NoderedUtil.CreateWorkitemFilesArray([path.join(__dirname, 'tsconfig.json')], false)
+                files: await workitemqueue.CreateWorkitemFilesArray([path.join(__dirname, 'tsconfig.json')], false)
             });
             assert.strictEqual(item.files.length, 2);
             await NoderedUtil.UpdateWorkitem({ _id: item._id, state: "successful" });

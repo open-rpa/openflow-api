@@ -15,6 +15,7 @@ export { TokenUser } from "./nodeclient/TokenUser";
 export { User } from "./nodeclient/User";
 export { WellknownIds } from "./nodeclient/WellknownIds";
 export { Messagequeue } from "./nodeclient/Messagequeue";
+export { ApiConfig } from "./ApiConfig";
 
 export { Resource, ResourceVariant, ResourceUsage } from "./nodeclient/Resources";
 
@@ -46,6 +47,7 @@ export { WatchMessage, WatchOptions } from "./Message/WatchMessage";
 export { ListCollectionsMessage, ListCollectionsOptions } from "./Message/ListCollectionsMessage";
 export { MapReduceMessage, emit, mapFunc, reduceFunc, finalizeFunc } from "./Message/MapReduceMessage";
 export { QueryMessage, QueryOptions } from "./Message/QueryMessage";
+export { CountMessage, CountOptions } from "./Message/CountMessage";
 export { QueueClosedMessage, } from "./Message/QueueClosedMessage";
 export { ExchangeClosedMessage } from "./Message/ExchangeClosedMessage";
 export { GetDocumentVersionMessage, GetDocumentVersionOptions } from "./Message/GetDocumentVersionMessage";
@@ -99,4 +101,4 @@ export {
 
 export { WebSocketClient } from "./WebSocketClient";
 
-export { FileSystemCache } from "./file-system-cache";
+

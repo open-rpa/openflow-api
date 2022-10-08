@@ -20,7 +20,6 @@ declare const WebSocket: {
 
 export class WebSocketClient {
   public messageStore = null;
-  public enableCache: boolean = true;
   private messageCounter: number = 0;
   public _logger: any;
   private _url: string;
@@ -58,17 +57,6 @@ export class WebSocketClient {
         silly(msg) { console.debug(msg); }
       }
     }
-    if (this.enableCache) {
-      this.enableCache = false;
-      try {
-        const fileCache = require('./file-system-cache');
-        const path = require('path');
-        this.messageStore = new fileCache.FileSystemCache(path.join(process.cwd(), '.openflowapicache'))
-        this.enableCache = true;
-      } catch (error) {
-        if (ApiConfig.log_information) this._logger.debug(error.message ? error.message : error);
-      }
-    }
     this._url = url;
     if (ApiConfig.log_information) this._logger.info('connecting to ' + url);
     this.events = new CustomEventEmitter();
@@ -104,20 +92,6 @@ export class WebSocketClient {
       this.events.on("onopen", onopen);
       this.connect();
     });
-  }
-  public setCacheFolder(folder) {
-    if (this.enableCache) {
-      this.enableCache = false;
-      try {
-        const fileCache = require('./file-system-cache');
-        const path = require('path');
-        this.messageStore = new fileCache.FileSystemCache(path.join(folder, '.openflowapicache'));
-        this.enableCache = true;
-      } catch (error) {
-        if (ApiConfig.log_information) this._logger.debug(error.message ? error.message : error);
-      }
-    }
-
   }
   public close(code: number, message: string): void {
     if (ApiConfig.log_information) this._logger.verbose('websocket.close');
@@ -169,7 +143,7 @@ export class WebSocketClient {
         this._socketObject = null;
       }
       try {
-        if (this.enableCache) {
+        if (this.messageStore) {
           const items: any = await this.messageStore.load();
           this.messageCounter = items.files.length;
         }
@@ -253,6 +227,8 @@ export class WebSocketClient {
   }
   private onmessage(evt: MessageEvent): void {
     try {
+      if (ApiConfig.log_trafic_silly) this._logger.silly('[RESC] socket recevied');
+      if (ApiConfig.log_trafic_silly) this._logger.silly(evt);
       const msg: SocketMessage = SocketMessage.fromjson(evt.data);
       this._receiveQueue.push(msg);
       this.ProcessQueue.bind(this)();
@@ -339,6 +315,7 @@ export class WebSocketClient {
     return str.match(new RegExp('.{1,' + length + '}', 'g'));
   }
   private async ProcessQueue(): Promise<void> {
+    if (ApiConfig.log_trafic_silly) this._logger.silly('[ProcessQueue] start');
     try {
       const ids: string[] = [];
       this._receiveQueue.forEach((msg) => {
@@ -346,6 +323,7 @@ export class WebSocketClient {
           ids.push(msg.id);
         }
       });
+      if (ApiConfig.log_trafic_silly) this._logger.silly('[ProcessQueue] Process receive queue ' + this._receiveQueue.length);
       ids.forEach((id) => {
         try {
           const msgs: SocketMessage[] = this._receiveQueue.filter((msg: SocketMessage): boolean => {
@@ -383,7 +361,7 @@ export class WebSocketClient {
       if (ApiConfig.log_error) this._logger.error(error);
     }
     if (this._socketObject === null || this._socketObject.readyState !== this._socketObject.OPEN) {
-      if (this.enableCache) {
+      if (this.messageStore) {
         for (let i = this._sendQueue.length - 1; i >= 0; i--) {
           try {
             const msg = this._sendQueue[i];
@@ -397,9 +375,18 @@ export class WebSocketClient {
           }
         }
       }
+      if (ApiConfig.log_trafic_silly) {
+        if (this._socketObject === null) {
+          if (ApiConfig.log_trafic_silly) this._logger.silly('[ProcessQueue] socket not ready exit (_socketObject is null)');
+        } else if (this._socketObject.readyState !== this._socketObject.OPEN) {
+          if (ApiConfig.log_trafic_silly) this._logger.silly('[ProcessQueue] socket not ready exit (readyState is ' + this._socketObject.readyState + ' expected ' + this._socketObject.OPEN + ')');
+        } else {
+          if (ApiConfig.log_trafic_silly) this._logger.silly('[ProcessQueue] socket not ready exit');
+        }
+      }
       return;
     }
-    if (this.messageCounter > 0 && this.user != null && this.enableCache) {
+    if (this.messageCounter > 0 && this.user != null && this.messageStore) {
       const items: any = await this.messageStore.load();
       let bail: boolean = false;
       items.files.forEach(item => {
@@ -416,9 +403,11 @@ export class WebSocketClient {
         this.messageStore.clear();
       }
     }
+    if (ApiConfig.log_trafic_silly) this._logger.silly('[ProcessQueue] Process send queue ' + this._sendQueue.length);
     this._sendQueue.forEach((msg) => {
       try {
         const id: string = msg.id;
+        if (ApiConfig.log_trafic_silly) this._logger.silly('[SEND][' + msg.command + '][' + msg.id + '][' + msg.replyto + '] socket send');
         this._socketObject.send(JSON.stringify(msg));
         this._sendQueue = this._sendQueue.filter((_msg: SocketMessage): boolean => {
           return _msg.id !== id;
