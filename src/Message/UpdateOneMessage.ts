@@ -8,7 +8,9 @@ export type UpdateOneOptions = {
     item?: any,
     query?: any,
     w?: number,
-    j?: boolean
+    j?: boolean,
+    traceId?: string,
+    spanId?: string,
 }
 export class UpdateOneDefaults {
     public priority: number = 2;
@@ -16,12 +18,13 @@ export class UpdateOneDefaults {
     public j: boolean = true;
 }
 export class UpdateOneMessage {
-    public static parse(options: UpdateOneOptions): [UpdateOneMessage, number, WebSocketClient] {
+    public static parse(options: UpdateOneOptions): [UpdateOneMessage, number, WebSocketClient, string, string] {
         const defaults = new UpdateOneDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: UpdateOneMessage = Object.assign(defaults, options) as any;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: string;

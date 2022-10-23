@@ -3,19 +3,22 @@ export type SelectCustomerOptions = {
     jwt?: string,
     priority?: number,
     websocket?: WebSocketClient,
-    customerid: string
+    customerid: string,
+    traceId?: string,
+    spanId?: string,
 }
 export class SelectCustomerDefaults {
     public priority: number = 2;
 }
 export class SelectCustomerMessage {
-    public static parse(options: SelectCustomerOptions): [SelectCustomerMessage, number, WebSocketClient] {
+    public static parse(options: SelectCustomerOptions): [SelectCustomerMessage, number, WebSocketClient, string, string] {
         const defaults = new SelectCustomerDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: SelectCustomerMessage = Object.assign(defaults, options) as any;
         delete (q as any).websocket;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: string;

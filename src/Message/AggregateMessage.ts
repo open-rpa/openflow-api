@@ -5,18 +5,21 @@ export type AggregateOptions = {
     websocket?: WebSocketClient,
     collectionname: string,
     aggregates: object[],
-    hint?: object | string
+    hint?: object | string,
+    traceId?: string,
+    spanId?: string,
 }
 export class AggregateDefaults {
     public priority: number = 2;
 }
 export class AggregateMessage {
-    public static parse(options: AggregateOptions): [AggregateMessage, number, WebSocketClient] {
+    public static parse(options: AggregateOptions): [AggregateMessage, number, WebSocketClient, string, string] {
         const defaults = new AggregateDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: AggregateMessage = Object.assign(defaults, options) as any;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: string;

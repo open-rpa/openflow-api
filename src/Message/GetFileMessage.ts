@@ -5,19 +5,22 @@ export type GetFileOptions = {
     websocket?: WebSocketClient,
     filename?: string,
     id?: string,
-    compress?: boolean;
+    compress?: boolean,
+    traceId?: string,
+    spanId?: string,
 }
 export class GetFileDefaults {
     public priority: number = 2;
     public compress: boolean = false;
 }
 export class GetFileMessage {
-    public static parse(options: GetFileOptions): [GetFileMessage, number, WebSocketClient] {
+    public static parse(options: GetFileOptions): [GetFileMessage, number, WebSocketClient, string, string] {
         const defaults = new GetFileDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: GetFileMessage = Object.assign(defaults, options) as any;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: string;

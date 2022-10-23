@@ -8,19 +8,22 @@ export type StripeOptions = {
     method: string,
     customerid?: string,
     id?: string,
-    payload?: stripe_base
+    payload?: stripe_base,
+    traceId?: string,
+    spanId?: string,
 }
 export class StripeDefaults {
     public priority: number = 2;
 }
 export class StripeMessage {
-    public static parse(options: StripeOptions): [StripeMessage, number, WebSocketClient] {
+    public static parse(options: StripeOptions): [StripeMessage, number, WebSocketClient, string, string] {
         const defaults = new StripeDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: StripeMessage = Object.assign(defaults, options) as any;
         delete (q as any).websocket;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: any;

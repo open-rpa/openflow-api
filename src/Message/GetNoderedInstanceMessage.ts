@@ -3,16 +3,19 @@ export type GetNoderedInstanceOptions = {
     priority?: number,
     name?: string,
     _id?: string,
+    traceId?: string,
+    spanId?: string,
 }
 export class GetNoderedInstanceDefaults {
     public priority: number = 2;
 }
 export class GetNoderedInstanceMessage {
-    public static parse(options: GetNoderedInstanceOptions): [GetNoderedInstanceMessage, number] {
+    public static parse(options: GetNoderedInstanceOptions): [GetNoderedInstanceMessage, number, string, string] {
         const defaults = new GetNoderedInstanceDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
+        const { traceId, spanId } = options;
         const q: GetNoderedInstanceMessage = Object.assign(defaults, options) as any;
-        return [q, priority];
+        return [q, priority, traceId, spanId];
     }
     public error: string;
     public jwt: any;

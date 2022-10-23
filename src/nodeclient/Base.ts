@@ -198,17 +198,20 @@ export type AddWorkitemOptions = {
     failed_wiqid?: string;
     success_wiq?: string;
     failed_wiq?: string;
+    traceId?: string,
+    spanId?: string,
 }
 export class AddWorkitemDefaults {
     public priority: number = 2;
 }
 export class AddWorkitemMessage {
-    public static parse(options: AddWorkitemOptions): [AddWorkitemMessage, number, WebSocketClient] {
+    public static parse(options: AddWorkitemOptions): [AddWorkitemMessage, number, WebSocketClient, string, string] {
         const defaults = new AddWorkitemDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: AddWorkitemMessage = Object.assign(defaults, options) as any;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: string;
@@ -242,6 +245,8 @@ export type AddWorkitemBaseOptions = {
     failed_wiqid?: string;
     success_wiq?: string;
     failed_wiq?: string;
+    traceId?: string,
+    spanId?: string,
 }
 export class AddWorkitem {
     static parse(options: AddWorkitemBaseOptions) {
@@ -264,17 +269,20 @@ export type AddWorkitemsOptions = {
     failed_wiqid?: string;
     success_wiq?: string;
     failed_wiq?: string;
+    traceId?: string,
+    spanId?: string,
 }
 export class AddWorkitemsDefaults {
     public priority: number = 2;
 }
 export class AddWorkitemsMessage {
-    public static parse(options: AddWorkitemsOptions): [AddWorkitemsMessage, number, WebSocketClient] {
+    public static parse(options: AddWorkitemsOptions): [AddWorkitemsMessage, number, WebSocketClient, string, string] {
         const defaults = new AddWorkitemsDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: AddWorkitemsMessage = Object.assign(defaults, options) as any;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: string;
@@ -310,18 +318,21 @@ export type UpdateWorkitemOptions = {
     failed_wiqid?: string;
     success_wiq?: string;
     failed_wiq?: string;
+    traceId?: string,
+    spanId?: string,
 }
 export class UpdateWorkitemDefaults {
     public priority: number = 2;
     public ignoremaxretries: boolean = false;
 }
 export class UpdateWorkitemMessage {
-    public static parse(options: UpdateWorkitemOptions): [UpdateWorkitemMessage, number, WebSocketClient] {
+    public static parse(options: UpdateWorkitemOptions): [UpdateWorkitemMessage, number, WebSocketClient, string, string] {
         const defaults = new UpdateWorkitemDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: UpdateWorkitemMessage = Object.assign(defaults, options) as any;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: string;
@@ -353,17 +364,20 @@ export type PopWorkitemOptions = {
     websocket?: WebSocketClient,
     wiqid?: string,
     wiq?: string;
+    traceId?: string,
+    spanId?: string,
 }
 export class PopWorkitemDefaults {
     public priority: number = 2;
 }
 export class PopWorkitemMessage {
-    public static parse(options: PopWorkitemOptions): [PopWorkitemMessage, number, WebSocketClient] {
+    public static parse(options: PopWorkitemOptions): [PopWorkitemMessage, number, WebSocketClient, string, string] {
         const defaults = new PopWorkitemDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: PopWorkitemMessage = Object.assign(defaults, options) as any;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: string;
@@ -383,17 +397,20 @@ export type DeleteWorkitemOptions = {
     priority?: number,
     websocket?: WebSocketClient,
     _id: string;
+    traceId?: string,
+    spanId?: string,
 }
 export class DeleteWorkitemDefaults {
     public priority: number = 2;
 }
 export class DeleteWorkitemMessage {
-    public static parse(options: DeleteWorkitemOptions): [DeleteWorkitemMessage, number, WebSocketClient] {
+    public static parse(options: DeleteWorkitemOptions): [DeleteWorkitemMessage, number, WebSocketClient, string, string] {
         const defaults = new DeleteWorkitemDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: DeleteWorkitemMessage = Object.assign(defaults, options) as any;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: string;
@@ -424,6 +441,8 @@ export type AddWorkitemQueueOptions = {
     failed_wiqid?: string;
     success_wiq?: string;
     failed_wiq?: string;
+    traceId?: string,
+    spanId?: string,
 }
 export class AddWorkitemQueueDefaults {
     public priority: number = 2;
@@ -434,12 +453,13 @@ export class AddWorkitemQueueDefaults {
 
 }
 export class AddWorkitemQueueMessage {
-    public static parse(options: AddWorkitemQueueOptions): [AddWorkitemQueueMessage, number, WebSocketClient] {
+    public static parse(options: AddWorkitemQueueOptions): [AddWorkitemQueueMessage, number, WebSocketClient, string, string] {
         const defaults = new AddWorkitemQueueDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: AddWorkitemQueueMessage = Object.assign(defaults, options) as any;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: string;
@@ -472,17 +492,20 @@ export type GetWorkitemQueueOptions = {
     websocket?: WebSocketClient,
     _id?: string;
     name?: string;
+    traceId?: string,
+    spanId?: string,
 }
 export class GetWorkitemQueueDefaults {
     public priority: number = 2;
 }
 export class GetWorkitemQueueMessage {
-    public static parse(options: GetWorkitemQueueOptions): [GetWorkitemQueueMessage, number, WebSocketClient] {
+    public static parse(options: GetWorkitemQueueOptions): [GetWorkitemQueueMessage, number, WebSocketClient, string, string] {
         const defaults = new AddWorkitemQueueDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: GetWorkitemQueueMessage = Object.assign(defaults, options) as any;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: string;
@@ -516,17 +539,20 @@ export type UpdateWorkitemQueueOptions = {
     failed_wiqid?: string;
     success_wiq?: string;
     failed_wiq?: string;
+    traceId?: string,
+    spanId?: string,
 }
 export class UpdateWorkitemQueueDefaults {
     public priority: number = 2;
 }
 export class UpdateWorkitemQueueMessage {
-    public static parse(options: UpdateWorkitemQueueOptions): [UpdateWorkitemQueueMessage, number, WebSocketClient] {
+    public static parse(options: UpdateWorkitemQueueOptions): [UpdateWorkitemQueueMessage, number, WebSocketClient, string, string] {
         const defaults = new UpdateWorkitemQueueDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: UpdateWorkitemQueueMessage = Object.assign(defaults, options) as any;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: string;
@@ -561,17 +587,20 @@ export type DeleteWorkitemQueueOptions = {
     _id?: string;
     name?: string;
     purge: boolean;
+    traceId?: string,
+    spanId?: string,
 }
 export class DeleteWorkitemQueueDefaults {
     public priority: number = 2;
 }
 export class DeleteWorkitemQueueMessage {
-    public static parse(options: DeleteWorkitemQueueOptions): [DeleteWorkitemQueueMessage, number, WebSocketClient] {
+    public static parse(options: DeleteWorkitemQueueOptions): [DeleteWorkitemQueueMessage, number, WebSocketClient, string, string] {
         const defaults = new DeleteWorkitemQueueDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: DeleteWorkitemQueueMessage = Object.assign(defaults, options) as any;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: string;

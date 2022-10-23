@@ -6,6 +6,8 @@ export class SocketMessage {
     public id: string;
     public replyto: string;
     public command: string;
+    public traceId: string;
+    public spanId: string;
     public data: string;
     public count: number;
     public index: number;
@@ -19,6 +21,8 @@ export class SocketMessage {
         result.count = 1;
         result.index = 0;
         result.data = obj.data;
+        result.traceId = obj.traceId;
+        result.spanId = obj.spanId;
         if (typeof obj.count === "number") {
             result.count = obj.count;
         }
@@ -37,6 +41,8 @@ export class SocketMessage {
         result.command = msg.command;
         result.count = count;
         result.index = index;
+        result.traceId = msg.traceId;
+        result.spanId = msg.spanId;
         result.data = data;
         return result;
     }

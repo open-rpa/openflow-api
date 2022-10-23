@@ -6,7 +6,9 @@ export type UpdateManyOptions = {
     item?: any,
     query?: any,
     w?: number,
-    j?: boolean
+    j?: boolean,
+    traceId?: string,
+    spanId?: string,
 }
 export class UpdateManyDefaults {
     public priority: number = 2;
@@ -14,11 +16,12 @@ export class UpdateManyDefaults {
     public j: boolean = true;
 }
 export class UpdateManyMessage {
-    public static parse(options: UpdateManyOptions): [UpdateManyMessage, number] {
+    public static parse(options: UpdateManyOptions): [UpdateManyMessage, number, string, string] {
         const defaults = new UpdateManyDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const q: UpdateManyMessage = Object.assign(defaults, options) as any;
-        return [q, priority];
+        const { traceId, spanId } = options;
+        return [q, priority, traceId, spanId];
     }
     public error: string;
     public jwt: string;

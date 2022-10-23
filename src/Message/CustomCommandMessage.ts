@@ -6,19 +6,22 @@ export type CustomCommandOptions = {
     command: string;
     id?: string;
     data?: any,
-    name?: string;
+    name?: string,
+    traceId?: string,
+    spanId?: string,
 }
 export class CustomCommandDefaults {
     public priority: number = 2;
 }
 export class CustomCommandMessage {
-    public static parse(options: CustomCommandOptions): [CustomCommandMessage, number, WebSocketClient] {
+    public static parse(options: CustomCommandOptions): [CustomCommandMessage, number, WebSocketClient, string, string] {
         const defaults = new CustomCommandDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: CustomCommandMessage = Object.assign(defaults, options) as any;
         delete (q as any).websocket;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: any;

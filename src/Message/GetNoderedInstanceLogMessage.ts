@@ -6,17 +6,20 @@ export type GetNoderedInstanceLogOptions = {
     name?: string,
     instancename?: string,
     _id?: string,
+    traceId?: string,
+    spanId?: string,
 }
 export class GetNoderedInstanceLogDefaults {
     public priority: number = 2;
 }
 export class GetNoderedInstanceLogMessage {
-    public static parse(options: GetNoderedInstanceLogOptions): [GetNoderedInstanceLogMessage, number, WebSocketClient] {
+    public static parse(options: GetNoderedInstanceLogOptions): [GetNoderedInstanceLogMessage, number, WebSocketClient, string, string] {
         const defaults = new GetNoderedInstanceLogDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: GetNoderedInstanceLogMessage = Object.assign(defaults, options) as any;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: any;

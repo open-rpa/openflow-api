@@ -7,6 +7,8 @@ export type InsertOneOptions = {
     item: any,
     w?: number,
     j?: boolean,
+    traceId?: string,
+    spanId?: string,
 }
 export class InsertOneDefaults {
     public decrypt: boolean = true;
@@ -15,12 +17,13 @@ export class InsertOneDefaults {
     public j: boolean = true;
 }
 export class InsertOneMessage {
-    public static parse(options: InsertOneOptions): [InsertOneMessage, number, WebSocketClient] {
+    public static parse(options: InsertOneOptions): [InsertOneMessage, number, WebSocketClient, string, string] {
         const defaults = new InsertOneDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: InsertOneMessage = Object.assign(defaults, options) as any;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: string;

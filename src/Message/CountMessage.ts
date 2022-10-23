@@ -6,18 +6,21 @@ export type CountOptions = {
     collectionname: string,
     query: any,
     queryas?: string,
+    traceId?: string,
+    spanId?: string,
 }
 export class CountDefaults {
     public priority: number = 2;
 }
 export class CountMessage {
-    public static parse(options: CountOptions): [CountMessage, number, WebSocketClient] {
+    public static parse(options: CountOptions): [CountMessage, number, WebSocketClient, string, string] {
         const defaults = new CountDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: CountMessage = Object.assign(defaults, options) as any;
         delete (q as any).websocket;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: string;

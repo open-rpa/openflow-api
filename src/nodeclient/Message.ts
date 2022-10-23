@@ -28,6 +28,8 @@ export class Message {
     public command: string;
     public data: string;
     public priority: number = 1;
+    public traceId: string;
+    public spanId: string;
     public static frommessage(msg: SocketMessage, data: string): Message {
         const result: Message = new Message();
         result.id = msg.id;
@@ -35,6 +37,8 @@ export class Message {
         result.command = msg.command;
         result.data = data;
         result.priority = msg.priority;
+        result.traceId = msg.traceId;
+        result.spanId = msg.spanId;    
         return result;
     }
 
@@ -162,6 +166,8 @@ export class Message {
         if (!NoderedUtil.IsNullEmpty(msg.id)) {
             if (!NoderedUtil.IsNullUndefinded(NoderedUtil.watchcb[msg.id])) {
                 try {
+                    msg.result.traceId = msg.traceId;
+                    msg.result.spanId = msg.spanId;
                     NoderedUtil.watchcb[msg.id](msg.result);
                 } catch (error) {
                     if (ApiConfig.log_error) cli._logger.error('Error calling watch event callback to ' + msg.id + ' ' + JSON.stringify(error));
@@ -206,7 +212,7 @@ export class Message {
 
         if (!NoderedUtil.IsNullEmpty(msg.queuename)) {
             if (NoderedUtil.messageQueuecb[msg.queuename] != null) {
-                NoderedUtil.messageQueuecb[msg.queuename](msg, async (nack: boolean, result: any) => {
+                NoderedUtil.messageQueuecb[msg.queuename](msg, async (nack: boolean, result: any, traceId, spanId) => {
                     if (nack === false) {
                         this.Reply('error');
                         this.data = 'nack message';
@@ -218,7 +224,7 @@ export class Message {
                             try {
                                 await NoderedUtil.Queue({
                                     websocket: cli, queuename: msg.replyto, data: result, correlationId: msg.correlationId
-                                    , expiration: ApiConfig.amqpReplyExpiration, priority
+                                    , expiration: ApiConfig.amqpReplyExpiration, priority, traceId, spanId
                                 });
                             } catch (error) {
                                 if (ApiConfig.log_error) cli._logger.error('Error sending response to ' + msg.replyto + ' ' + JSON.stringify(error));

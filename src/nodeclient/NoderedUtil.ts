@@ -66,6 +66,8 @@ export type HouseKeepingOptions = {
     skipnodered?: boolean,
     skipcalculatesize?: boolean,
     skipupdateusersize?: boolean,
+    traceId?: string,
+    spanId?: string,
 }
 export class NoderedUtil {
     public static Delay = ms => new Promise<void>(res => setTimeout(res, ms));
@@ -175,7 +177,7 @@ export class NoderedUtil {
     }
 
     public static async Query(options: QueryOptions): Promise<any[]> {
-        const [q, priority, websocket] = QueryMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = QueryMessage.parse(options);
         q.query = JSON.stringify(q.query, (key, value) => {
             if (value == null) return value;
             const t = typeof value;
@@ -189,13 +191,15 @@ export class NoderedUtil {
         });
         const _msg: Message = new Message();
         _msg.command = 'query';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: QueryMessage = await websocket.Send<QueryMessage>(_msg, priority);
         return result.result;
     }
 
     public static async Count(options: CountOptions): Promise<number> {
-        const [q, priority, websocket] = CountMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = CountMessage.parse(options);
         q.query = JSON.stringify(q.query, (key, value) => {
             if (value == null) return value;
             const t = typeof value;
@@ -209,82 +213,102 @@ export class NoderedUtil {
         });
         const _msg: Message = new Message();
         _msg.command = 'count';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: CountMessage = await websocket.Send<CountMessage>(_msg, priority);
         return result.result;
     }
     public static async GetDocumentVersion(options: GetDocumentVersionOptions): Promise<any> {
-        const [q, priority, websocket] = GetDocumentVersionMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = GetDocumentVersionMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'getdocumentversion';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: GetDocumentVersionMessage = await websocket.Send<GetDocumentVersionMessage>(_msg, priority);
         return result.result;
     }
     public static async InsertOne(options: InsertOneOptions): Promise<any> {
-        const [q, priority, websocket] = InsertOneMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = InsertOneMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'insertone';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: QueryMessage = await websocket.Send<QueryMessage>(_msg, priority);
         return result.result;
     }
     public static async InsertMany(options: InsertManyOptions): Promise<any[]> {
-        const [q, priority, websocket] = InsertManyMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = InsertManyMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'insertmany';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: InsertManyMessage = await websocket.Send<InsertManyMessage>(_msg, priority);
         return result.results;
     }
     public static async UpdateOne(options: UpdateOneOptions): Promise<any> {
-        const [q, priority, websocket] = UpdateOneMessage.parse(options);
-        const result = await NoderedUtil._UpdateOne(q, priority, websocket);
+        const [q, priority, websocket, traceId, spanId] = UpdateOneMessage.parse(options);
+        const result = await NoderedUtil._UpdateOne(q, priority, websocket, traceId, spanId);
         return result.result;
     }
-    public static async _UpdateOne(q: UpdateOneMessage, priority: number, websocket: WebSocketClient): Promise<UpdateOneMessage> {
+    public static async _UpdateOne(q: UpdateOneMessage, priority: number, websocket: WebSocketClient, traceId: string, spanId: string): Promise<UpdateOneMessage> {
         const _msg: Message = new Message();
         _msg.command = 'updateone';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: UpdateOneMessage = await websocket.Send<UpdateOneMessage>(_msg, priority);
         return result;
     }
     public static async UpdateMany(options: UpdateManyOptions): Promise<any> {
-        const [q, priority, websocket] = UpdateOneMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = UpdateOneMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'updatemany';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: UpdateManyMessage = await websocket.Send<UpdateManyMessage>(_msg, priority);
         return result;
     }
     public static async InsertOrUpdateOne(options: InsertOrUpdateOneOptions): Promise<any> {
-        const [q, priority, websocket] = InsertOrUpdateOneMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = InsertOrUpdateOneMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'insertorupdateone';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: QueryMessage = await websocket.Send<QueryMessage>(_msg, priority);
         return result.result;
     }
     public static async InsertOrUpdateMany(options: InsertOrUpdateManyOptions): Promise<any[]> {
-        const [q, priority, websocket] = InsertOrUpdateManyMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = InsertOrUpdateManyMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'Insertorupdatemany';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: InsertOrUpdateManyMessage = await websocket.Send<InsertOrUpdateManyMessage>(_msg, priority);
         return result.results;
     }
     public static async DeleteOne(options: DeleteOneOptions): Promise<any> {
-        const [q, priority, websocket] = DeleteOneMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = DeleteOneMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'deleteone';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: QueryMessage = await websocket.Send<QueryMessage>(_msg, priority);
         return result.result;
     }
     public static async DeleteMany(options: DeleteManyOptions): Promise<number> {
-        const [q, priority, websocket] = DeleteManyMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = DeleteManyMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'deletemany';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: DeleteManyMessage = await websocket.Send<DeleteManyMessage>(_msg, priority);
         return result.affectedrows;
@@ -314,27 +338,33 @@ export class NoderedUtil {
     }
 
     public static async Aggregate(options: AggregateOptions): Promise<any> {
-        const [q, priority, websocket] = AggregateMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = AggregateMessage.parse(options);
         const msg: Message = new Message();
         msg.command = 'aggregate';
+        msg.traceId = traceId;
+        msg.spanId = spanId;
         msg.data = JSONfn.stringify(q);
         const result: QueryMessage = await websocket.Send<QueryMessage>(msg, priority);
         return result.result;
     }
     public static watchcb: IHashTable<WatchOnMessage> = {};
     public static async Watch(options: WatchOptions): Promise<any> {
-        const [q, priority, websocket, callback] = WatchMessage.parse(options);
+        const [q, priority, websocket, callback, traceId, spanId] = WatchMessage.parse(options);
         const msg: Message = new Message();
         msg.command = 'watch';
+        msg.traceId = traceId;
+        msg.spanId = spanId;
         msg.data = JSONfn.stringify(q);
         const result: WatchMessage = await websocket.Send<WatchMessage>(msg, priority);
         if (!NoderedUtil.IsNullEmpty(result.id)) NoderedUtil.watchcb[result.id] = callback;
         return result.id;
     }
     public static async UnWatch(options: UnWatchOptions): Promise<void> {
-        const [q, priority, websocket] = UnWatchMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = UnWatchMessage.parse(options);
         const msg: Message = new Message();
         msg.command = 'unwatch';
+        msg.traceId = traceId;
+        msg.spanId = spanId;
         msg.data = JSONfn.stringify(q);
         const result: WatchMessage = await websocket.Send<WatchMessage>(msg, priority);
         if (NoderedUtil.watchcb != null && NoderedUtil.watchcb[q.id] != null) {
@@ -343,42 +373,52 @@ export class NoderedUtil {
     }
 
     public static async GetFile(options: GetFileOptions): Promise<GetFileMessage> {
-        const [q, priority, websocket] = GetFileMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = GetFileMessage.parse(options);
         const msg: Message = new Message();
         msg.command = 'getfile';
+        msg.traceId = traceId;
+        msg.spanId = spanId;
         msg.data = JSONfn.stringify(q);
         const result: GetFileMessage = await websocket.Send<GetFileMessage>(msg, priority);
         return result;
     }
 
     public static async SaveFile(options: SaveFileOptions): Promise<SaveFileMessage> {
-        const [q, priority, websocket] = SaveFileMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = SaveFileMessage.parse(options);
         const msg: Message = new Message();
         msg.command = 'savefile';
+        msg.traceId = traceId;
+        msg.spanId = spanId;
         msg.data = JSONfn.stringify(q);
         const result: SaveFileMessage = await websocket.Send<SaveFileMessage>(msg, priority);
         return result;
     }
     public static async GetKubeNodeLabels(options: GetKubeNodeLabelsOptions): Promise<any[]> {
-        const [q, priority, websocket] = GetKubeNodeLabelsMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = GetKubeNodeLabelsMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'getkubenodelabels';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: GetKubeNodeLabelsMessage = await websocket.Send<GetKubeNodeLabelsMessage>(_msg, priority);
         return result.result;
     }
     public static async GetNoderedInstance(options: GetNoderedInstanceOptions): Promise<any[]> {
-        const [q, priority, websocket] = GetKubeNodeLabelsMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = GetKubeNodeLabelsMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'getnoderedinstance';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: GetNoderedInstanceMessage = await websocket.Send<GetNoderedInstanceMessage>(_msg, priority);
         return result.results;
     }
     public static async GetNoderedInstanceLog(options: GetNoderedInstanceLogOptions): Promise<string> {
-        const [q, priority, websocket] = GetNoderedInstanceLogMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = GetNoderedInstanceLogMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'getnoderedinstancelog';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: GetNoderedInstanceLogMessage = await websocket.Send<GetNoderedInstanceLogMessage>(_msg, priority);
         return result.result;
@@ -389,25 +429,31 @@ export class NoderedUtil {
         return !isNaN(num);
     }
     public static async RenewToken(options: RenewTokenOptions): Promise<SigninMessage> {
-        const [q, priority, websocket] = SigninMessage.parserenew(options);
+        const [q, priority, websocket, traceId, spanId] = SigninMessage.parserenew(options);
         const _msg: Message = new Message();
         _msg.command = 'signin';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: SigninMessage = await websocket.Send<SigninMessage>(_msg, priority);
         return result;
     }
     public static async GetTokenFromSAML(options: GetTokenFromSAMLOptions): Promise<SigninMessage> {
-        const [q, priority, websocket] = SigninMessage.parsefromsaml(options);
+        const [q, priority, websocket, traceId, spanId] = SigninMessage.parsefromsaml(options);
         const _msg: Message = new Message();
         _msg.command = 'signin';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: SigninMessage = await websocket.Send<SigninMessage>(_msg, priority);
         return result;
     }
     public static async SigninWithToken(options: SigninWithTokenOptions): Promise<SigninMessage> {
-        const [q, priority, websocket] = SigninMessage.parsesigninwithtoken(options);
+        const [q, priority, websocket, traceId, spanId] = SigninMessage.parsesigninwithtoken(options);
         const _msg: Message = new Message();
         _msg.command = 'signin';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: SigninMessage = await websocket.Send<SigninMessage>(_msg, priority);
         websocket.user = result.user;
@@ -417,9 +463,11 @@ export class NoderedUtil {
         return result;
     }
     public static async SigninWithUsername(options: SigninWithUsernameOptions): Promise<SigninMessage> {
-        const [q, priority, websocket] = SigninMessage.parsesigninwithpassword(options);
+        const [q, priority, websocket, traceId, spanId] = SigninMessage.parsesigninwithpassword(options);
         const _msg: Message = new Message();
         _msg.command = 'signin';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: SigninMessage = await websocket.Send<SigninMessage>(_msg, priority);
         websocket.user = result.user;
@@ -432,9 +480,11 @@ export class NoderedUtil {
     public static messageQueueclosedcb: IHashTable<QueueClosed> = {};
     public static messageExchangeclosedcb: IHashTable<ExchangeClosed> = {};
     public static async RegisterQueue(options: RegisterQueueOptions): Promise<string> {
-        const [q, priority, websocket, callback, closedcallback] = RegisterQueueMessage.parse(options);
+        const [q, priority, websocket, callback, closedcallback, traceId, spanId] = RegisterQueueMessage.parse(options);
         const msg: Message = new Message();
         msg.command = 'registerqueue';
+        msg.traceId = traceId;
+        msg.spanId = spanId;
         msg.data = JSON.stringify(q);
         const result: RegisterQueueMessage = await websocket.Send(msg, priority);
         if (result && !NoderedUtil.IsNullEmpty(result.queuename)) {
@@ -445,9 +495,11 @@ export class NoderedUtil {
         return null;
     }
     public static async CloseQueue(options: CloseQueueOptions): Promise<void> {
-        const [q, priority, websocket] = CloseQueueMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = CloseQueueMessage.parse(options);
         const msg: Message = new Message();
         msg.command = 'closequeue';
+        msg.traceId = traceId;
+        msg.spanId = spanId;
         msg.data = JSON.stringify(q);
         const result: CloseQueueMessage = await websocket.Send(msg, priority);
         if (result && !NoderedUtil.IsNullEmpty(result.queuename)) {
@@ -458,9 +510,11 @@ export class NoderedUtil {
         }
     }
     public static async RegisterExchange(options: RegisterExchangeOptions): Promise<RegisterExchangeResponse> {
-        const [q, priority, websocket, callback, closedcallback] = RegisterExchangeMessage.parse(options);
+        const [q, priority, websocket, callback, closedcallback, traceId, spanId] = RegisterExchangeMessage.parse(options);
         const msg: Message = new Message();
         msg.command = 'registerexchange';
+        msg.traceId = traceId;
+        msg.spanId = spanId;
         msg.data = JSON.stringify(q);
         const result: RegisterExchangeMessage = await websocket.Send(msg, priority);
         if (result && !NoderedUtil.IsNullEmpty(result.exchangename) && !NoderedUtil.IsNullEmpty(result.queuename)) {
@@ -471,81 +525,103 @@ export class NoderedUtil {
         return null;
     }
     public static async Queue(options: QueueOptions): Promise<void> {
-        const [q, priority, websocket] = QueueMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = QueueMessage.parse(options);
         const msg: Message = new Message();
         msg.command = 'queuemessage';
+        msg.traceId = traceId;
+        msg.spanId = spanId;
         msg.data = JSON.stringify(q);
         await websocket.Send(msg, priority);
     }
     public static async ListCollections(options: ListCollectionsOptions): Promise<any[]> {
-        const [q, priority, websocket] = ListCollectionsMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = ListCollectionsMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'listcollections';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: ListCollectionsMessage = await websocket.Send<ListCollectionsMessage>(_msg, priority);
         return result.result;
     }
     public static async DropCollection(options: DropCollectionOptions): Promise<void> {
-        const [q, priority, websocket] = DropCollectionMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = DropCollectionMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'dropcollection';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         await websocket.Send<DropCollectionMessage>(_msg, priority);
     }
     public static async EnsureNoderedInstance(options: EnsureNoderedInstanceOptions): Promise<void> {
-        const [q, priority, websocket] = EnsureNoderedInstanceMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = EnsureNoderedInstanceMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'ensurenoderedinstance';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         await websocket.Send<EnsureNoderedInstanceMessage>(_msg, priority);
     }
     public static async DeleteNoderedInstance(options: DeleteNoderedInstanceOptions): Promise<void> {
-        const [q, priority, websocket] = DeleteNoderedInstanceMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = DeleteNoderedInstanceMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'deletenoderedinstance';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         await websocket.Send<EnsureNoderedInstanceMessage>(_msg, priority);
     }
     public static async DeleteNoderedPod(options: DeleteNoderedPodOptions): Promise<void> {
-        const [q, priority, websocket] = DeleteNoderedPodMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = DeleteNoderedPodMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'deletenoderedpod';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         await websocket.Send<DeleteNoderedPodMessage>(_msg, priority);
     }
     public static async RestartNoderedInstance(options: RestartNoderedInstanceOptions): Promise<void> {
-        const [q, priority, websocket] = RestartNoderedInstanceMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = RestartNoderedInstanceMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'restartnoderedinstance';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         await websocket.Send<RestartNoderedInstanceMessage>(_msg, priority);
     }
     public static async StartNoderedInstance(options: StartNoderedInstanceOptions): Promise<void> {
-        const [q, priority, websocket] = StartNoderedInstanceMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = StartNoderedInstanceMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'startnoderedinstance';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         await websocket.Send<StartNoderedInstanceMessage>(_msg, priority);
     }
     public static async StopNoderedInstance(options: StopNoderedInstanceOptions): Promise<void> {
-        const [q, priority, websocket] = StopNoderedInstanceMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = StopNoderedInstanceMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'stopnoderedinstance';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         await websocket.Send<StopNoderedInstanceMessage>(_msg, priority);
     }
     public static async StripeAddPlan(options: StripeAddPlanOptions): Promise<StripeAddPlanMessage> {
-        const [q, priority, websocket] = StripeAddPlanMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = StripeAddPlanMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'stripeaddplan';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result = await websocket.Send<StripeAddPlanMessage>(_msg, priority);
         return result;
     }
     public static async StripeCancelPlan(options: StripeCancelPlanOptions): Promise<void> {
-        const [q, priority, websocket] = StripeCancelPlanMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = StripeCancelPlanMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'stripecancelplan';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         await websocket.Send<StripeCancelPlanMessage>(_msg, priority);
     }
@@ -555,39 +631,47 @@ export class NoderedUtil {
         this.Stripe({ method: "POST", object: "usage_records", id: siid, payload, jwt, priority });
     }
     public static async GetNextInvoice(options: GetNextInvoiceOptions): Promise<stripe_invoice> {
-        const [q, priority, websocket] = GetNextInvoiceMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = GetNextInvoiceMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'getnextinvoice';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result = await websocket.Send<GetNextInvoiceMessage>(_msg, priority);
         return result.invoice;
     }
 
     public static async Stripe<T extends stripe_base>(options: StripeOptions): Promise<T> {
-        const [q, priority, websocket] = StripeMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = StripeMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'stripemessage';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result = await websocket.Send<StripeMessage>(_msg, priority);
         return result.payload as T;
     }
     public static async EnsureCustomer(options: EnsureCustomerOptions): Promise<EnsureCustomerMessage> {
-        const [q, priority, websocket] = EnsureCustomerMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = EnsureCustomerMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'ensurecustomer';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result = await websocket.Send<EnsureCustomerMessage>(_msg, priority);
         return result;
     }
     public static async SelectCustomer(options: SelectCustomerOptions): Promise<void> {
-        const [q, priority, websocket] = SelectCustomerMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = SelectCustomerMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'selectcustomer';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         await websocket.Send<SelectCustomerMessage>(_msg, priority);
     }
     public static async HouseKeeping(options: HouseKeepingOptions): Promise<void> {
-        let { priority, jwt, skipnodered, skipcalculatesize, skipupdateusersize, websocket } = Object.assign({
+        let { priority, jwt, skipnodered, skipcalculatesize, skipupdateusersize, websocket, traceId, spanId } = Object.assign({
             priority: 2,
             skipnodered: false,
             skipcalculatesize: false,
@@ -596,6 +680,8 @@ export class NoderedUtil {
         }, options);
         const _msg: Message = new Message();
         _msg.command = 'housekeeping';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify({ jwt, skipnodered, skipcalculatesize, skipupdateusersize });
         await websocket.Send<EnsureCustomerMessage>(_msg, priority);
     }
@@ -656,78 +742,98 @@ export class NoderedUtil {
         return true;
     }
     public static async AddWorkitem(options: AddWorkitemOptions): Promise<Workitem> {
-        const [q, priority, websocket] = AddWorkitemMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = AddWorkitemMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'addworkitem';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: AddWorkitemMessage = await websocket.Send<AddWorkitemMessage>(_msg, priority);
         return result.result;
     }
     public static async AddWorkitems(options: AddWorkitemsOptions): Promise<void> {
-        const [q, priority, websocket] = AddWorkitemsMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = AddWorkitemsMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'addworkitems';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: AddWorkitemsMessage = await websocket.Send<AddWorkitemsMessage>(_msg, priority);
     }
     public static async UpdateWorkitem(options: UpdateWorkitemOptions): Promise<Workitem> {
-        const [q, priority, websocket] = UpdateWorkitemMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = UpdateWorkitemMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'updateworkitem';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: UpdateWorkitemMessage = await websocket.Send<UpdateWorkitemMessage>(_msg, priority);
         return result.result;
     }
     public static async PopWorkitem(options: PopWorkitemOptions): Promise<Workitem> {
-        const [q, priority, websocket] = PopWorkitemMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = PopWorkitemMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'popworkitem';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: PopWorkitemMessage = await websocket.Send<PopWorkitemMessage>(_msg, priority);
         return result.result;
     }
     public static async DeleteWorkitem(options: DeleteWorkitemOptions): Promise<void> {
-        const [q, priority, websocket] = DeleteWorkitemMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = DeleteWorkitemMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'deleteworkitem';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         await websocket.Send<DeleteWorkitemMessage>(_msg, priority);
     }
     public static async AddWorkitemQueue(options: AddWorkitemQueueOptions): Promise<WorkitemQueue> {
-        const [q, priority, websocket] = AddWorkitemQueueMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = AddWorkitemQueueMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'addworkitemqueue';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: AddWorkitemQueueMessage = await websocket.Send<AddWorkitemQueueMessage>(_msg, priority);
         return result.result;
     }
     public static async GetWorkitemQueue(options: GetWorkitemQueueOptions): Promise<WorkitemQueue> {
-        const [q, priority, websocket] = GetWorkitemQueueMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = GetWorkitemQueueMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'getworkitemqueue';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: GetWorkitemQueueMessage = await websocket.Send<GetWorkitemQueueMessage>(_msg, priority);
         return result.result;
     }
     public static async UpdateWorkitemQueue(options: UpdateWorkitemQueueOptions): Promise<WorkitemQueue> {
-        const [q, priority, websocket] = UpdateWorkitemQueueMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = UpdateWorkitemQueueMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'updateworkitemqueue';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: UpdateWorkitemQueueMessage = await websocket.Send<UpdateWorkitemQueueMessage>(_msg, priority);
         return result.result;
     }
     public static async DeleteWorkitemQueue(options: DeleteWorkitemQueueOptions): Promise<void> {
-        const [q, priority, websocket] = DeleteWorkitemQueueMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = DeleteWorkitemQueueMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'deleteworkitemqueue';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: DeleteWorkitemQueueMessage = await websocket.Send<DeleteWorkitemQueueMessage>(_msg, priority);
     }
     public static async CreateWorkflowInstance(options: CreateWorkflowInstanceOptions): Promise<string> {
-        const [q, priority, websocket] = CreateWorkflowInstanceMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = CreateWorkflowInstanceMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'createworkflowinstance';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: CreateWorkflowInstanceMessage = await websocket.Send<CreateWorkflowInstanceMessage>(
             _msg, priority
@@ -735,9 +841,11 @@ export class NoderedUtil {
         return result.newinstanceid;
     }
     public static async CustomCommand<T>(options: CustomCommandOptions): Promise<T> {
-        const [q, priority, websocket] = CustomCommandMessage.parse(options);
+        const [q, priority, websocket, traceId, spanId] = CustomCommandMessage.parse(options);
         const _msg: Message = new Message();
         _msg.command = 'customcommand';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         const result: CustomCommandMessage = await websocket.Send<CustomCommandMessage>(
             _msg, priority

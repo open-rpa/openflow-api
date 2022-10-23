@@ -7,7 +7,9 @@ export type InsertManyOptions = {
     items: any[],
     w?: number,
     j?: boolean,
-    skipresults: boolean
+    skipresults: boolean,
+    traceId?: string,
+    spanId?: string,
 }
 export class InsertManyDefaults {
     public priority: number = 2;
@@ -17,12 +19,13 @@ export class InsertManyDefaults {
     public skipresults: boolean = false;
 }
 export class InsertManyMessage {
-    public static parse(options: InsertManyOptions): [InsertManyMessage, number, WebSocketClient] {
+    public static parse(options: InsertManyOptions): [InsertManyMessage, number, WebSocketClient, string, string] {
         const defaults = new InsertManyDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: InsertManyMessage = Object.assign(defaults, options) as any;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: string;

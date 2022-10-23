@@ -8,7 +8,9 @@ export type InsertOrUpdateOneOptions = {
     uniqeness: string,
     item: any,
     w?: number,
-    j?: boolean
+    j?: boolean,
+    traceId?: string,
+    spanId?: string,
 }
 export class InsertOrUpdateOneDefaults {
     public priority: number = 2;
@@ -16,12 +18,13 @@ export class InsertOrUpdateOneDefaults {
     public j: boolean = true;
 }
 export class InsertOrUpdateOneMessage {
-    public static parse(options: InsertOrUpdateOneOptions): [InsertOrUpdateOneMessage, number, WebSocketClient] {
+    public static parse(options: InsertOrUpdateOneOptions): [InsertOrUpdateOneMessage, number, WebSocketClient, string, string] {
         const defaults = new InsertOrUpdateOneDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: InsertOrUpdateOneMessage = Object.assign(defaults, options) as any;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: string;

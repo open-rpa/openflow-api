@@ -7,19 +7,22 @@ export type EnsureCustomerOptions = {
     jwt?: string,
     priority?: number,
     websocket?: WebSocketClient,
-    customer: Customer
+    customer: Customer,
+    traceId?: string,
+    spanId?: string,
 }
 export class EnsureCustomerDefaults {
     public priority: number = 2;
 }
 export class EnsureCustomerMessage {
-    public static parse(options: EnsureCustomerOptions): [EnsureCustomerMessage, number, WebSocketClient] {
+    public static parse(options: EnsureCustomerOptions): [EnsureCustomerMessage, number, WebSocketClient, string, string] {
         const defaults = new EnsureCustomerDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: EnsureCustomerMessage = Object.assign(defaults, options) as any;
         delete (q as any).websocket;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: string;

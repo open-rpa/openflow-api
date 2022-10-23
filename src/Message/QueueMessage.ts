@@ -11,7 +11,9 @@ export type QueueOptions = {
     data: any,
     correlationId?: string,
     expiration?: number,
-    striptoken?: boolean
+    striptoken?: boolean,
+    traceId?: string,
+    spanId?: string,
 }
 export class QueueDefaults {
     public priority: number = 2;
@@ -22,14 +24,15 @@ export class QueueDefaults {
     public striptoken: boolean = false;
 }
 export class QueueMessage {
-    public static parse(options: QueueOptions): [QueueMessage, number, WebSocketClient] {
+    public static parse(options: QueueOptions): [QueueMessage, number, WebSocketClient, string, string] {
         const defaults = new QueueDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: QueueMessage = Object.assign(defaults, options) as any;
         if (!q.correlationId || q.correlationId == "") q.correlationId = Math.random().toString(36).substr(2, 9);
         delete (q as any).websocket;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: any;

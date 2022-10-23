@@ -7,23 +7,26 @@ export type RegisterQueueOptions = {
     queuename?: string,
     callback: QueueOnMessage,
     closedcallback: QueueClosed,
-    websocket?: WebSocketClient
+    websocket?: WebSocketClient,
+    traceId?: string,
+    spanId?: string,
 }
 export class RegisterQueueDefaults {
     public priority: number = 2;
 }
 export class RegisterQueueMessage {
-    public static parse(options: RegisterQueueOptions): [RegisterQueueMessage, number, WebSocketClient, QueueOnMessage, QueueClosed] {
+    public static parse(options: RegisterQueueOptions): [RegisterQueueMessage, number, WebSocketClient, QueueOnMessage, QueueClosed, string, string] {
         const defaults = new RegisterQueueDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const callback = (options.callback ? options.callback : undefined);
         const closedcallback = (options.closedcallback ? options.closedcallback : undefined);
         const q: RegisterQueueMessage = Object.assign(defaults, options) as any;
         delete (q as any).callback;
         delete (q as any).closedcallback;
         delete (q as any).websocket;
-        return [q, priority, websocket, callback, closedcallback];
+        return [q, priority, websocket, callback, closedcallback, traceId, spanId];
     }
     public error: string;
     public jwt: any;

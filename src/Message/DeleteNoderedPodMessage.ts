@@ -4,19 +4,22 @@ export type DeleteNoderedPodOptions = {
     priority?: number,
     websocket?: WebSocketClient,
     _id: string,
-    instancename: string
+    instancename: string,
+    traceId?: string,
+    spanId?: string,
 }
 export class DeleteNoderedPodDefaults {
     public priority: number = 2;
 }
 export class DeleteNoderedPodMessage {
-    public static parse(options: DeleteNoderedPodOptions): [DeleteNoderedPodMessage, number, WebSocketClient] {
+    public static parse(options: DeleteNoderedPodOptions): [DeleteNoderedPodMessage, number, WebSocketClient, string, string] {
         const defaults = new DeleteNoderedPodDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: DeleteNoderedPodMessage = Object.assign(defaults, options) as any;
         delete (q as any).websocket;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: any;

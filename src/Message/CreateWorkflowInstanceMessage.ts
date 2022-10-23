@@ -9,21 +9,24 @@ export type CreateWorkflowInstanceOptions = {
     initialrun: boolean,
     correlationId?: string,
     data: any,
-    queue?: string;
-    name?: string;
+    queue?: string,
+    name?: string,
+    traceId?: string,
+    spanId?: string,
 }
 export class CreateWorkflowInstanceDefaults {
     public priority: number = 2;
     public initialrun: boolean = false;
 }
 export class CreateWorkflowInstanceMessage {
-    public static parse(options: CreateWorkflowInstanceOptions): [CreateWorkflowInstanceMessage, number, WebSocketClient] {
+    public static parse(options: CreateWorkflowInstanceOptions): [CreateWorkflowInstanceMessage, number, WebSocketClient, string, string] {
         const defaults = new CreateWorkflowInstanceDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: CreateWorkflowInstanceMessage = Object.assign(defaults, options) as any;
         delete (q as any).websocket;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: any;

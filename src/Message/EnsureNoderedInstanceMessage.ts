@@ -4,20 +4,23 @@ export type EnsureNoderedInstanceOptions = {
     priority?: number,
     websocket?: WebSocketClient,
     _id?: string
-    skipcreate?: boolean;
+    skipcreate?: boolean,
+    traceId?: string,
+    spanId?: string,
 }
 export class EnsureNoderedInstanceDefaults {
     public priority: number = 2;
     public skipcreate: boolean = false;
 }
 export class EnsureNoderedInstanceMessage {
-    public static parse(options: EnsureNoderedInstanceOptions): [EnsureNoderedInstanceMessage, number, WebSocketClient] {
+    public static parse(options: EnsureNoderedInstanceOptions): [EnsureNoderedInstanceMessage, number, WebSocketClient, string, string] {
         const defaults = new EnsureNoderedInstanceDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: EnsureNoderedInstanceMessage = Object.assign(defaults, options) as any;
         delete (q as any).websocket;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public error: string;
     public jwt: any;

@@ -8,6 +8,8 @@ export type RenewTokenOptions = {
     clientagent?: string,
     clientversion?: string,
     validate_only?: boolean,
+    traceId?: string,
+    spanId?: string,
 }
 export class RenewTokenDefaults {
     public priority: number = 2;
@@ -22,7 +24,9 @@ export type GetTokenFromSAMLOptions = {
     clientagent?: string,
     clientversion?: string,
     validate_only?: boolean,
-    rawAssertion: string
+    rawAssertion: string,
+    traceId?: string,
+    spanId?: string,
 }
 export class GetTokenFromSAMLDefaults {
     public priority: number = 2;
@@ -39,6 +43,8 @@ export type SigninWithTokenOptions = {
     validate_only?: boolean,
     rawAssertion?: string,
     impersonate?: string,
+    traceId?: string,
+    spanId?: string,
 }
 export class SigninWithTokenDefaults {
     public priority: number = 2;
@@ -56,6 +62,8 @@ export type SigninWithUsernameOptions = {
     impersonate?: string,
     username: string,
     password: string,
+    traceId?: string,
+    spanId?: string,
 }
 export class SigninWithUsernameDefaults {
     public priority: number = 2;
@@ -64,32 +72,35 @@ export class SigninWithUsernameDefaults {
 }
 
 export class SigninMessage {
-    public static parserenew(options: RenewTokenOptions): [SigninMessage, number, WebSocketClient] {
+    public static parserenew(options: RenewTokenOptions): [SigninMessage, number, WebSocketClient, string, string] {
         const defaults = new RenewTokenDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: SigninMessage = Object.assign(defaults, options) as any;
         if (!q.clientagent || q.clientagent == "") q.clientagent = websocket.agent;
         if (!q.clientversion || q.clientversion == "") q.clientversion = websocket.version;
         q.clientversion = websocket.version;
         delete (q as any).websocket;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
-    public static parsefromsaml(options: GetTokenFromSAMLOptions): [SigninMessage, number, WebSocketClient] {
+    public static parsefromsaml(options: GetTokenFromSAMLOptions): [SigninMessage, number, WebSocketClient, string, string] {
         const defaults = new GetTokenFromSAMLDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: SigninMessage = Object.assign(defaults, options) as any;
         if (!q.clientagent || q.clientagent == "") q.clientagent = websocket.agent;
         if (!q.clientversion || q.clientversion == "") q.clientversion = websocket.version;
         q.clientversion = websocket.version;
         delete (q as any).websocket;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
-    public static parsesigninwithtoken(options: SigninWithTokenOptions): [SigninMessage, number, WebSocketClient] {
+    public static parsesigninwithtoken(options: SigninWithTokenOptions): [SigninMessage, number, WebSocketClient, string, string] {
         const defaults = new SigninWithTokenDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: SigninMessage = Object.assign(defaults, options) as any;
         q.realm = "browser";
         if (this.isNodeJS()) q.realm = "nodejs";
@@ -103,12 +114,13 @@ export class SigninMessage {
             q.clientagent = "mobileapp";
         }
         delete (q as any).websocket;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
-    public static parsesigninwithpassword(options: SigninWithUsernameOptions): [SigninMessage, number, WebSocketClient] {
+    public static parsesigninwithpassword(options: SigninWithUsernameOptions): [SigninMessage, number, WebSocketClient, string, string] {
         const defaults = new SigninWithUsernameDefaults();
         const priority = (options.priority ? options.priority : defaults.priority);
         const websocket = (options.websocket ? options.websocket : WebSocketClient.instance);
+        const { traceId, spanId } = options;
         const q: SigninMessage = Object.assign(defaults, options) as any;
         q.realm = "browser";
         if (this.isNodeJS()) q.realm = "nodejs";
@@ -122,7 +134,7 @@ export class SigninMessage {
             q.clientagent = "mobileapp";
         }
         delete (q as any).websocket;
-        return [q, priority, websocket];
+        return [q, priority, websocket, traceId, spanId];
     }
     public static isNodeJS(): boolean {
         if (typeof process === 'object' && process + '' === '[object process]') {
