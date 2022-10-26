@@ -45,7 +45,7 @@ export class Base implements IBase {
             item._acl = [];
         }
         item._acl.forEach((a, index) => {
-            if (a._id === _id && (a.deny === deny || a.deny)) {
+            if (a._id === _id && (a.deny === deny || a.deny == null)) {
                 result = item._acl[index];
             }
         });
@@ -81,9 +81,9 @@ export class Base implements IBase {
             Ace.resetnone(right);
             item._acl.push(right);
         }
-        right.deny = deny;
+        if (deny == true) right.deny = deny;
         right._id = _id;
-        right.name = name;
+        if (name != null && name != "") right.name = name;
         if (rights[0] === -1) {
             Ace.resetfullcontrol(right)
             // for (let i: number = 0; i < 1000; i++) {
