@@ -6,9 +6,6 @@ interface IBase {
     _id: string;
     _type: string;
     name: string;
-    // getRight(_id: string, deny: boolean): Ace;
-    // addRight(_id: string, name: string, Rights: number[], deny: boolean): void;
-    // removeRight(_id: string, Rights: number[], deny: boolean): void;
 }
 export class Base implements IBase {
     _id: string;
@@ -48,7 +45,7 @@ export class Base implements IBase {
             item._acl = [];
         }
         item._acl.forEach((a, index) => {
-            if (a._id === _id && a.deny === deny) {
+            if (a._id === _id && (a.deny === deny || a.deny)) {
                 result = item._acl[index];
             }
         });
@@ -64,7 +61,7 @@ export class Base implements IBase {
             item._acl = [];
         }
         item._acl.forEach((a, index) => {
-            if (a._id === x._id && a.deny === x.deny) {
+            if (a._id === x._id && (a.deny === x.deny || a.deny == null)) {
                 item._acl[index] = x;
             }
         });
