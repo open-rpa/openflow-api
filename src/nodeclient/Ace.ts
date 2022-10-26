@@ -64,6 +64,16 @@ export class Ace {
         // if rights is number
         let currentValue: number = item.rights as any;
         let mask: number = 1 << bit;
+        if (bit == -2) {
+            if (item.rights == Ace.full_control || item.rights == "//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8=") {
+                return true;
+            }
+            for (var i = 0; i < Ace.ace_right_bits; i++) {
+                if (!Ace.isBitSet(item, i)) {
+                    return false;
+                }
+            }
+        }
         if (typeof currentValue === "number") {
         } else {
             let rights = item.rights;
