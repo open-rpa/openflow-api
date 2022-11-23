@@ -391,8 +391,10 @@ export class WebSocketClient {
       let bail: boolean = false;
       items.files.forEach(item => {
         try {
-          const msg = JSON.parse(item.value);
-          this._sendQueue.push(msg);
+          if (!NoderedUtil.IsNullUndefinded(item) && !NoderedUtil.IsNullUndefinded(item.value)) {
+            const msg = JSON.parse(item.value);
+            this._sendQueue.push(msg);
+          }
         } catch (error) {
           if (ApiConfig.log_error) this._logger.error(error);
           bail = true;

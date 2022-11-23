@@ -1,6 +1,6 @@
 {
   "name": "@openiap/openflow-api",
-  "version": "2.1.6",
+  "version": "2.1.7",
   "description": "",
   "files": [
     "lib/**/*"
