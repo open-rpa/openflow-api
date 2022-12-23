@@ -197,6 +197,7 @@ export type AddWorkitemOptions = {
     failed_wiq?: string;
     traceId?: string,
     spanId?: string,
+    wipriority?: number,
 }
 export class AddWorkitemDefaults {
     public priority: number = 2;
@@ -219,6 +220,7 @@ export class AddWorkitemMessage {
     public payload: any;
     public nextrun: Date;
     public priority: number;
+    public wipriority: number;
     public files: MessageWorkitemFile[];
     public success_wiqid: string;
     public failed_wiqid: string;
@@ -244,6 +246,7 @@ export type AddWorkitemBaseOptions = {
     failed_wiq?: string;
     traceId?: string,
     spanId?: string,
+    wipriority?: number,
 }
 export class AddWorkitem {
     static parse(options: AddWorkitemBaseOptions) {
@@ -258,6 +261,7 @@ export class AddWorkitem {
 export type AddWorkitemsOptions = {
     jwt?: string;
     priority?: number;
+    wipriority?: number,
     websocket?: WebSocketClient;
     wiqid?: string;
     wiq?: string;
@@ -284,6 +288,7 @@ export class AddWorkitemsMessage {
     public error: string;
     public jwt: string;
 
+    public wipriority: number;
     public wiqid: string;
     public wiq: string;
     public items: AddWorkitem[];
@@ -303,6 +308,7 @@ export type UpdateWorkitemOptions = {
     priority?: number;
     websocket?: WebSocketClient;
     _id: string;
+    wipriority?: number;
     name?: string;
     state?: "failed" | "successful" | "processing" | "retry";
     payload?: any;
@@ -338,6 +344,7 @@ export class UpdateWorkitemMessage {
     public name: string;
     public state: "failed" | "successful" | "processing" | "retry" | "new";
     public payload: any;
+    public wipriority: number;
     public ignoremaxretries: boolean;
     public errormessage: string;
     public errorsource: string;
