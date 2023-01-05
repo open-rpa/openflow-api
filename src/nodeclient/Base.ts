@@ -323,6 +323,7 @@ export type UpdateWorkitemOptions = {
     failed_wiq?: string;
     traceId?: string,
     spanId?: string,
+    nextrun?: Date,
 }
 export class UpdateWorkitemDefaults {
     public priority: number = 2;
@@ -355,6 +356,7 @@ export class UpdateWorkitemMessage {
     public success_wiq: string;
     public failed_wiq: string;
     public result: Workitem;
+    public nextrun: Date;
     static assign(o: any): UpdateWorkitemMessage {
         if (typeof o === "string" || o instanceof String) {
             return Object.assign(new UpdateWorkitemMessage(), JSON.parse(o.toString()));
