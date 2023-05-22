@@ -18,7 +18,7 @@ import { GetNoderedInstanceMessage, GetNoderedInstanceOptions } from '../Message
 import { GetTokenFromSAMLOptions, RenewTokenOptions, SigninMessage, SigninWithTokenOptions, SigninWithUsernameOptions } from '../Message/SigninMessage';
 import { RegisterQueueMessage, RegisterQueueOptions } from '../Message/RegisterQueueMessage';
 import { ListCollectionsMessage, ListCollectionsOptions } from '../Message/ListCollectionsMessage';
-import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage, QueueClosedMessage, ExchangeClosedMessage, WellknownIds, Rights, Ace, EnsureCustomerMessage, SelectCustomerMessage, GetNextInvoiceMessage, subscription_item, stripe_invoice, AddWorkitemMessage, AddWorkitemQueueMessage, AddWorkitemQueueOptions, AddWorkitemsMessage, AddWorkitemsOptions, DeleteWorkitemMessage, DeleteWorkitemOptions, DeleteWorkitemQueueMessage, DeleteWorkitemQueueOptions, GetWorkitemQueueMessage, PopWorkitemMessage, PopWorkitemOptions, UpdateWorkitemMessage, UpdateWorkitemOptions, UpdateWorkitemQueueMessage, UpdateWorkitemQueueOptions, Workitem, WorkitemQueue, GetKubeNodeLabelsMessage, CloseQueueMessage, MessageWorkitemFile } from '..';
+import { EnsureNoderedInstanceMessage, DeleteNoderedInstanceMessage, RestartNoderedInstanceMessage, StartNoderedInstanceMessage, StopNoderedInstanceMessage, DropCollectionMessage, DeleteNoderedPodMessage, GetNoderedInstanceLogMessage, stripe_customer, StripeCancelPlanMessage, StripeAddPlanMessage, stripe_base, StripeMessage, TokenUser, UnWatchMessage, GetDocumentVersionMessage, InsertManyMessage, QueueClosedMessage, ExchangeClosedMessage, WellknownIds, Rights, Ace, EnsureCustomerMessage, SelectCustomerMessage, GetNextInvoiceMessage, subscription_item, stripe_invoice, AddWorkitemMessage, AddWorkitemQueueMessage, AddWorkitemQueueOptions, AddWorkitemsMessage, AddWorkitemsOptions, DeleteWorkitemMessage, DeleteWorkitemOptions, DeleteWorkitemQueueMessage, DeleteWorkitemQueueOptions, GetWorkitemQueueMessage, PopWorkitemMessage, PopWorkitemOptions, UpdateWorkitemMessage, UpdateWorkitemOptions, UpdateWorkitemQueueMessage, UpdateWorkitemQueueOptions, Workitem, WorkitemQueue, GetKubeNodeLabelsMessage, CloseQueueMessage, MessageWorkitemFile, CreateCollectionMessage, CreateCollectionOptions } from '..';
 import { WatchMessage, WatchOptions } from '../Message/WatchMessage';
 import { RegisterExchangeMessage, RegisterExchangeOptions } from '../Message/RegisterExchangeMessage';
 import { GetDocumentVersionOptions } from '../Message/GetDocumentVersionMessage';
@@ -156,7 +156,7 @@ export class NoderedUtil {
 
     public static GetUniqueIdentifier(): string {
         // crypto.randomBytes(16).toString("hex")
-        return Math.random().toString(36).substr(2, 9);
+        return Math.random().toString(36).substring(2, 11);
     }
 
 
@@ -551,6 +551,15 @@ export class NoderedUtil {
         _msg.spanId = spanId;
         _msg.data = JSON.stringify(q);
         await websocket.Send<DropCollectionMessage>(_msg, priority);
+    }
+    public static async CreateCollection(options: CreateCollectionOptions): Promise<void> {
+        const [q, priority, websocket, traceId, spanId] = CreateCollectionMessage.parse(options);
+        const _msg: Message = new Message();
+        _msg.command = 'createcollection';
+        _msg.traceId = traceId;
+        _msg.spanId = spanId;
+        _msg.data = JSON.stringify(q);
+        await websocket.Send<CreateCollectionMessage>(_msg, priority);
     }
     public static async EnsureNoderedInstance(options: EnsureNoderedInstanceOptions): Promise<void> {
         const [q, priority, websocket, traceId, spanId] = EnsureNoderedInstanceMessage.parse(options);

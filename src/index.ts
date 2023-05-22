@@ -29,6 +29,7 @@ export { DeleteNoderedPodMessage, DeleteNoderedPodOptions } from "./Message/Dele
 export { DeleteOneMessage, DeleteOneOptions } from "./Message/DeleteOneMessage";
 export { DeleteManyMessage, DeleteManyOptions } from "./Message/DeleteManyMessage";
 export { DropCollectionMessage, DropCollectionOptions } from "./Message/DropCollectionMessage";
+export { CreateCollectionMessage, CreateCollectionDefaults, CreateCollectionOptions, col_timeseries,col_collation, col_validationAction, col_validationLevel, col_timeseries_granularity } from "./Message/CreateCollection";
 export { EnsureCustomerMessage, EnsureCustomerOptions } from "./Message/EnsureCustomerMessage"
 export { EnsureNoderedInstanceMessage, EnsureNoderedInstanceOptions } from "./Message/EnsureNoderedInstanceMessage";
 export { GetFileMessage, GetFileOptions } from "./Message/GetFileMessage";
