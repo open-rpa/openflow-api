@@ -53,5 +53,15 @@ import { WebSocketClient, SigninMessage, Message, NoderedUtil } from "../src/ind
         assert.notStrictEqual(users, null);
         assert.strictEqual(users.length, 1);
     }
+    @timeout(5000)
+    @test async 'createcollection'() {
+        try {
+            await NoderedUtil.DropCollection({ collectionname: "testcollection" })
+        } catch (error) {
+        }
+
+        await NoderedUtil.CreateCollection({ collectionname: "testcollection", timeseries: { timeField: "timestamp", metaField: "metadata" } } )
+
+    }
 }
-// cls | ts-mocha --paths -p test/tsconfig.json .\test\queries.test.ts
+// cls | ts-mocha --paths -p test/tsconfig.json ./test/queries.test.ts
