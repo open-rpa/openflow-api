@@ -11,9 +11,6 @@ export class Role extends Base {
     members: Rolemember[] = [];
     static assign<T>(o: any): T {
         const res = Object.assign(new Role(), o);
-        if (res.nodered === null || res.nodered === undefined) {
-            res.nodered = new Role();
-        }
         return res;
     }
     IsMember(_id: string): boolean {

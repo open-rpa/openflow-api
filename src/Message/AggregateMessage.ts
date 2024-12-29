@@ -8,6 +8,7 @@ export type AggregateOptions = {
     hint?: object | string,
     traceId?: string,
     spanId?: string,
+    queryas?: string,
 }
 export class AggregateDefaults {
     public priority: number = 2;
@@ -27,6 +28,7 @@ export class AggregateMessage {
     public aggregates: object[];
     public collectionname: string;
     public hint: object | string;
+    public queryas: string;
     public result: any[];
     static assign(o: any): AggregateMessage {
         if (typeof o === 'string' || o instanceof String) {

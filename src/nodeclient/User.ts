@@ -8,9 +8,6 @@ export class User extends Base {
     }
     static assign<T>(o: any): T {
         const res = Object.assign(new User(), o);
-        if (res.nodered === null || res.nodered === undefined) {
-            res.nodered = new User();
-        }
         return res;
     }
     public noderedname: string;
